@@ -26,7 +26,7 @@ npm start
 
 ## Notes
 
-This began life as a straight clone of the [electron-quick-start](https://github.com/electron/electron-quick-start).
+This began life as a straight clone of the [electron-quick-start](https://github.com/electron/electron-quick-start) application.
 
 ## See also
 
