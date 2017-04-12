@@ -23,7 +23,7 @@
 		
 		g.mapzen = g.mapzen || {};
 		g.mapzen.whosonfirst = g.mapzen.whosonfirst || {};
-		g.mapzen.whosonfirst.partyparrot = g.mapzen.whosonfirst.partyparrot = f();		
+		g.mapzen.whosonfirst.api = g.mapzen.whosonfirst.api = f();		
         }
 	
 }(function(){
