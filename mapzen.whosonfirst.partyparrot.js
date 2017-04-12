@@ -14,6 +14,10 @@
 
 			var el = document.getElementById("party-parrot");
 
+			if (! el){
+				return false;
+			}
+			
 			var img = document.createElement("img");
 			img.setAttribute("src", "images/party-parrot.gif");
 
@@ -22,12 +26,20 @@
 
 			el.appendChild(img);
 			el.appendChild(span);
+
+			return true;
 		},
 
 		'stop': function() {
 
 			var el = document.getElementById("party-parrot");
+
+			if (! el){
+				return false;
+			}
+			
 			el.innerHTML = "";
+			return true;
 		},
 		
 	};
