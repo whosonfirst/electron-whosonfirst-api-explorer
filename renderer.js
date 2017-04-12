@@ -2,14 +2,12 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const party = require("./partyparrot.js");
-
+const parrot = require("./mapzen.whosonfirst.partyparrot.js");
 const api = require("./mapzen.whosonfirst.api.js");
-var client = api();
 
 var success = function(rsp){
 
-	party.stop();
+	parrot.stop();
 	
 	var ul = document.getElementById("methods");
 
@@ -56,5 +54,5 @@ var success = function(rsp){
 var method = "api.spec.methods";
 var args = {};
 
-client.execute_method(method, args, success);
-party.start("Fetching API methods...");
+api.execute_method(method, args, success);
+parrot.start("Fetching API methods...");
