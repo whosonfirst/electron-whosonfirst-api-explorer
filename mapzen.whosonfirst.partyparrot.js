@@ -1,19 +1,39 @@
-(function (root, factory) {
+(function(f){
 
-    if (typeof module === 'object' && module.exports) {
-        module.exports = factory();
-    } else {
-        root.returnExports = factory();
-    }
+        if (typeof exports === "object" && typeof module !== "undefined"){
+		module.exports = f();
+        }
 	
-}(this, function (b) {
+        else if (typeof define === "function" && define.amd){
+		define([],f);
+        }
+	
+        else {
+		var g;
+		
+		if (typeof window!=="undefined") {
+			g=window;
+		} else if (typeof global!=="undefined") {
+			g=global;
+		} else if (typeof self!=="undefined") {
+			g=self;
+		} else {
+			g=this;
+		}
+		
+		g.mapzen = g.mapzen || {};
+		g.mapzen.whosonfirst = g.mapzen.whosonfirst || {};
+		g.mapzen.whosonfirst.partyparrot = g.mapzen.whosonfirst.partyparrot = f();		
+        }
+	
+}(function(){
 
 	var self = {
-
+		
 		'start': function(msg){
-
+			
 			var el = document.getElementById("party-parrot");
-
+			
 			if (! el){
 				return false;
 			}
