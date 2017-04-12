@@ -2,8 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const parrot = require("./mapzen.whosonfirst.parrot.js");
-var party = parrot();
+const party = require("./partyparrot.js");
 
 const api = require("./mapzen.whosonfirst.api.js");
 var client = api();

@@ -1,9 +1,9 @@
 (function (root, factory) {
 
     if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('partyparrot'));
+        module.exports = factory();
     } else {
-        root.returnExports = factory(root.partyparrot);
+        root.returnExports = factory();
     }
 	
 }(this, function (b) {
