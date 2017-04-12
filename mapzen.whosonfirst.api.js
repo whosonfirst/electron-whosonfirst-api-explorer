@@ -37,14 +37,14 @@
 	};
 
 	var mapzen_authentication = function(){
-		return "FIX ME"
+		return undefined;
 	};
 	
 	var self = {
 		
 		'_handlers': {
 			'endpoint': mapzen_endpoint,
-			'authentication': mapzen_authentication,
+			'authentication': null_handler,
 		},
 		
 		'set_handler': function(target, handler){

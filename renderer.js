@@ -3,7 +3,13 @@
 // All of the Node.js APIs are available in this process.
 
 const partyparrot = require("./mapzen.whosonfirst.partyparrot.js");
+
+const config = require("./mapzen.whosonfirst.config.js");
 const api = require("./mapzen.whosonfirst.api.js");
+
+api.set_handler('authentication', function(){
+	return config.api_key()
+});
 
 var success = function(rsp){
 
