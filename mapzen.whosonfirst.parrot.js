@@ -1,4 +1,12 @@
-module.exports = function() {
+(function (root, factory) {
+
+    if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('partyparrot'));
+    } else {
+        root.returnExports = factory(root.partyparrot);
+    }
+	
+}(this, function (b) {
 
 	var self = {
 
@@ -26,4 +34,4 @@ module.exports = function() {
 
 	return self;
 
-};
+}));
