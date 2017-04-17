@@ -1,17 +1,19 @@
 body {
     margin: 0px;
     padding: 0px;
+    background-color:pink;
 }
 
 #header {
     height: 10%;
     max-height: 10%;
+    background-color: yellow;
 }
 
 #sidebar {
     background-color: #adadad;
     font-side: small;
-    height: 90%;
+    min-height: 90%;
     max-height:90%;
     overflow: scroll;
 }

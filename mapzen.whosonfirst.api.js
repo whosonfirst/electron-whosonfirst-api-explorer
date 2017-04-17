@@ -209,6 +209,11 @@
 			
 			return false;
 		},
+
+		'execute_method_paginated': function(method, data, on_success, on_error){
+
+			// please write me
+		},
 		
 		'destruct': function(msg){
 			
