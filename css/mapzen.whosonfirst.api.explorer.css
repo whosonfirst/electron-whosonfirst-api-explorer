@@ -23,3 +23,10 @@ body {
     max-height:90%;
     overflow: scroll;
 }
+
+.sidebar-item {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    font-size: small;
+}

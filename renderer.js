@@ -18,7 +18,19 @@ partyparrot.start("Fetching API data...");
 var cb = function(){
 
 	partyparrot.stop();
-	explorer.draw_method_list(spec);
+
+	explorer.init(api, spec);
+	
+	var show_m = document.getElementById("show-methods");
+	show_m.onclick = function(){ explorer.draw_methods_list(); };
+
+	var show_e = document.getElementById("show-errors");
+	show_e.onclick = function(){ explorer.draw_errors_list(); };
+
+	var show_f = document.getElementById("show-formats");
+	show_f.onclick = function(){ explorer.draw_formats_list(); };
+
+	show_m.click();
 };
 
 spec.init(api, cb);
