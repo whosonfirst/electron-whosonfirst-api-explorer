@@ -3,13 +3,29 @@
   <head>
     <meta charset="UTF-8">
     <title>Who's On First API Explorer</title>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapzen.whosonfirst.api.explorer.css" />
+    
   </head>
   <body>
-    <h1>Who's On First API Explorer</h1>
 
-    <div id="party-parrot"></div>
-    
-    <ul id="methods"></ul>
+      <div class="row" id="header">
+	<h1>Who's On First API Explorer</h1>
+      </div>
+
+      <div class="row">
+	
+	<div class="col-md-3" id="sidebar" style="border:1px solid red;">
+	  <ul id="methods"></ul>	  
+	</div>
+
+	<div class="col-md-9" id="main" style="border:1px solid blue;">	
+	  <div id="party-parrot"></div>
+	</div>
+	
+      </div>
+
   </body>
 
   <script>

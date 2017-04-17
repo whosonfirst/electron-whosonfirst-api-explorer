@@ -1,0 +1,23 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+#header {
+    height: 10%;
+    max-height: 10%;
+}
+
+#sidebar {
+    background-color: #adadad;
+    font-side: small;
+    height: 90%;
+    max-height:90%;
+    overflow: scroll;
+}
+
+#main {
+    height: 90%;
+    max-height:90%;
+    overflow: scroll;
+}
