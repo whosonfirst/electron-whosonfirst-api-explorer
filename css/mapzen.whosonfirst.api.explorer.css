@@ -5,23 +5,24 @@ body {
 }
 
 #header {
-    height: 10%;
-    max-height: 10%;
+    height: 100px;
+    max-height: 100px;
     background-color: yellow;
 }
 
 #sidebar {
     background-color: #adadad;
     font-side: small;
-    min-height: 90%;
-    max-height:90%;
+    min-height: 500px;
+    max-height:500px;
     overflow: scroll;
 }
 
 #main {
-    height: 90%;
-    max-height:90%;
+    min-height: 500px;
+    max-height:500px;
     overflow: scroll;
+    padding-bottom:100px;
 }
 
 .sidebar-item {

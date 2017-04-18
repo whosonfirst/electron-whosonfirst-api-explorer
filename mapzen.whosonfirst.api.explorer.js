@@ -166,10 +166,177 @@
 
 		'draw_method': function(name) {
 
-			var d = document.createElement("div");
-			d.appendChild(document.createTextNode(name));
+			var method = undefined;
+			
+			var methods = _spec.methods();
+			var count = methods.length;
 
-			return self.draw_main(d);
+			for (var i=0; i < count; i++) {
+				
+				var m = methods[i];
+				
+				if (m["name"] == name){
+					method = m;
+					break;
+				}
+			}
+				
+			var root = document.createElement("div");
+
+			var h2 = document.createElement("h2");
+			h2.appendChild(document.createTextNode(name));
+
+			var desc = document.createElement("p");
+
+			root.appendChild(h2);
+			root.appendChild(desc);
+
+			var try_me = document.createElement("button");
+			try_me.appendChild(document.createTextNode("Take this API for a spin"));
+			root.appendChild(try_me);
+
+			// parameters
+			
+			var params_header = document.createElement("h3");
+			params_header.appendChild(document.createTextNode("Parameters"));
+
+			root.appendChild(params_header);
+
+			var params = m["parameters"];
+			var params_count = params.length;
+
+			if (params_count){
+				
+				var params_list = document.createElement("ul");
+
+				var params_lookup = {};
+				var params_names = [];
+
+				for (var p=0; p < params_count; p++){
+
+					var param = params[p];
+					var name = param["name"];
+
+					params_lookup[name] = param;
+					params_names.push(name);
+				}
+
+				params_names.sort();
+				
+				for (var p=0; p < params_count; p++){
+
+					var name = params_names[p];
+					var param = params_lookup[name];
+					
+					var desc = param["description"];					
+					
+					var param_name = document.createElement("code");
+					param_name.appendChild(document.createTextNode(name));
+
+					var param_desc = document.createElement("span");
+					param_desc.appendChild(document.createTextNode(desc));
+					
+					var item = document.createElement("li");
+					item.appendChild(param_name);
+					item.appendChild(param_desc);					
+
+					params_list.appendChild(item);
+				}
+
+				root.appendChild(params_list);
+			}
+
+			else {
+
+				var p = document.createElement("p");
+				p.appendChild(document.createTextNode("This API method has no parameters."));
+
+				root.appendChild(p);
+			}
+
+			// errors
+			
+			var errors_header = document.createElement("h3");
+			errors_header.appendChild(document.createTextNode("Errors"));
+
+			root.appendChild(errors_header);
+
+			var errors = m["errors"];
+			var errors_count = errors.length;
+
+			if (errors_count){
+
+				var errors_list = document.createElement("ul");
+				
+				for (var e=0; e < errors_count; e++){
+
+					var err = errors[e];
+					var item = document.createElement("li");
+
+					var code = document.createElement("code");
+					code.appendChild(document.createTextNode(err["code"]));
+
+					var desc = document.createElement("span");
+					desc.appendChild(document.createTextNode(err["description"]));
+
+					item.appendChild(code);
+					item.appendChild(desc);
+
+					errors_list.appendChild(item);
+				}
+
+				root.appendChild(errors_list);
+			}
+
+			else {
+
+				var msg = "This API method does not define any custom error codes. For the list of error codes common to all API methods please consult the default error codes documentation.";
+				
+				var p = document.createElement("p");
+				p.appendChild(document.createTextNode(msg));
+
+				root.appendChild(p);
+					
+			}
+
+			// notes
+
+			var notes = m["notes"];
+
+			if (notes){
+				
+				var notes_count = notes.length;
+
+				var notes_header = document.createElement("h3");
+				notes_header.appendChild(document.createTextNode("Notes"));
+
+				root.appendChild(notes_header);
+
+				for (var n=0; n < notes_count; n++){
+
+					var note = notes[n];
+
+					var p = document.createElement("p");
+					p.appendChild(document.createTextNode(note));
+
+					root.appendChild(p);
+				}
+
+				// The following output formats are disallowed for this API method:
+			}
+
+			// example
+
+			var example_header = document.createElement("h3");
+			example_header.appendChild(document.createTextNode("Example request"));
+			
+			root.appendChild(example_header);
+
+			// try me (again)
+			
+			root.appendChild(try_me);
+			
+			return self.draw_main(root);
 		},
 
 		'draw_error': function(code){
