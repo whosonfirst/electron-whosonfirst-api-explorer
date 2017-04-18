@@ -37,6 +37,8 @@
 		
 		'draw_methods_list': function(){
 
+			self.clear_all();
+			
 			var methods = _spec.methods();
 			var count = methods.length;
 			
@@ -86,6 +88,7 @@
 				ul.appendChild(li);
 			}
 
+			self.clear_main();
 			self.draw_sidebar(ul);
 		},
 
@@ -126,9 +129,8 @@
 				ul.appendChild(li);
 			}
 
+			self.clear_main();
 			self.draw_sidebar(ul);
-			
-			console.log(_spec.errors());
 		},
 
 		'draw_formats_list': function(){
@@ -161,6 +163,7 @@
 				ul.appendChild(li);
 			}
 
+			self.clear_main();			
 			self.draw_sidebar(ul);
 		},
 
@@ -193,6 +196,11 @@
 
 			var try_me = document.createElement("button");
 			try_me.appendChild(document.createTextNode("Take this API for a spin"));
+
+			try_me.onclick = function(){
+
+			};
+			
 			root.appendChild(try_me);
 
 			// parameters
@@ -349,21 +357,38 @@
 		
 		'draw_sidebar': function(list) {
 
-			var el = document.getElementById("sidebar");
-			el.innerHTML = "";
+			self.clear_sidebar();
 			
+			var el = document.getElementById("sidebar");			
 			el.appendChild(list);
 			return true;
 		},
 
 		'draw_main': function(content) {
 
-			var el = document.getElementById("main");
-			el.innerHTML = "";
+			self.clear_main();
 			
+			var el = document.getElementById("main");
 			el.appendChild(content);
 			return true;			
-		}
+		},
+
+		'clear_sidebar': function() {
+			var el = document.getElementById("sidebar");
+			el.innerHTML = "";
+		},
+
+		'clear_main': function() {
+			var el = document.getElementById("main");
+			el.innerHTML = "";
+		},
+
+		'clear_all': function(){
+
+			self.clear_sidebar();			
+			self.clear_main();
+		},
+		
 	};
 	
 	return self;
