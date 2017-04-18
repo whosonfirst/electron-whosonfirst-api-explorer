@@ -376,10 +376,18 @@
 					errors_table.appendChild(row);
 				}
 
-				var msg = "In addition to the common error codes this API method defines the following custom error responses:";
+				var button = document.createElement("button");
+				button.setAttribute("class", "btn btn-default btn-sm error-codes");				
+				button.appendChild(document.createTextNode("common error codes"));
+
+				button.onclick = function(){
+					self.draw_errors_list();
+				};
 				
 				var p = document.createElement("p");
-				p.appendChild(document.createTextNode(msg));
+				p.appendChild(document.createTextNode("In addition to the "));
+				p.appendChild(button);
+				p.appendChild(document.createTextNode(" this API method defines the following custom error responses:"));
 
 				root.appendChild(p);
 				root.appendChild(errors_table);
@@ -387,11 +395,20 @@
 
 			else {
 
-				var msg = "This API method does not define any custom error codes. For the list of error codes common to all API methods please consult the default error codes documentation.";
+				var button = document.createElement("button");
+				button.setAttribute("class", "btn btn-default btn-sm error-codes");
+				button.appendChild(document.createTextNode("default error codes"));
+
+				button.onclick = function(){
+					self.draw_errors_list();
+				};
 				
 				var p = document.createElement("p");
-				p.appendChild(document.createTextNode(msg));
+				p.appendChild(document.createTextNode("This API method does not define any custom error codes. For the list of error codes common to all API methods please consult the "));
+				p.appendChild(button);
+				p.appendChild(document.createTextNode(" documentation."));
 
+				
 				root.appendChild(p);					
 			}
 
