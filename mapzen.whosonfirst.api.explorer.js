@@ -339,26 +339,48 @@
 			
 			if (errors_count){
 
-				var errors_list = document.createElement("ul");
+				var errors_table = document.createElement("table");
+				errors_table.setAttribute("class", "table");
+
+				var errors_header = document.createElement("tr");
+
+				var code_header = document.createElement("th");
+				code_header.appendChild(document.createTextNode("Code"));
+
+				var desc_header = document.createElement("th");
+				desc_header.appendChild(document.createTextNode("Description"));
+
+				errors_header.appendChild(code_header);
+				errors_header.appendChild(desc_header);				
+
+				errors_table.appendChild(errors_header);
 				
 				for (var code in errors){
 
-					var desc = errors[code];
-					var item = document.createElement("li");
+					var details = errors[code];
 
-					var code_el = document.createElement("code");
-					code_el.appendChild(document.createTextNode(code));
+					var row = document.createElement("tr");
+					
+					var code_cell = document.createElement("td");
+					code_cell.setAttribute("class", "api-error-code");					
+					code_cell.appendChild(document.createTextNode(code));
 
-					var desc_el = document.createElement("span");
-					desc_el.appendChild(document.createTextNode(desc["message"]));
+					var desc_cell = document.createElement("td");
+					desc_cell.appendChild(document.createTextNode(details["message"]));
 
-					item.appendChild(code_el);
-					item.appendChild(desc_el);
+					row.appendChild(code_cell);
+					row.appendChild(desc_cell);
 
-					errors_list.appendChild(item);
+					errors_table.appendChild(row);
 				}
 
-				root.appendChild(errors_list);
+				var msg = "In addition to the common error codes this API method defines the following custom error responses:";
+				
+				var p = document.createElement("p");
+				p.appendChild(document.createTextNode(msg));
+
+				root.appendChild(p);
+				root.appendChild(errors_table);
 			}
 
 			else {

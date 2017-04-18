@@ -11,6 +11,12 @@ body {
     color: #fff !important;
 }
 
+.api-error-code {
+    font-weight: 700;
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
 #header {
     border-bottom: 1px dashed #000;
     position: fixed;
@@ -97,6 +103,7 @@ body {
     display: block;
     text-align: right;
     font-weight: 700;
+    padding-right:1em;
 }
 
 .api-form-example:before {
