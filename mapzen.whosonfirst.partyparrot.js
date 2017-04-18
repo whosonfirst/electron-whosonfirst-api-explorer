@@ -37,16 +37,20 @@
 			if (! el){
 				return false;
 			}
+
+			el.innerHTML = "";
 			
 			var img = document.createElement("img");
 			img.setAttribute("src", "images/party-parrot.gif");
 
 			var span = document.createElement("span");
+			span.setAttribute("id", "party-parrot-text");
+			span.setAttribute("class", "triangle-border right");
 			span.appendChild(document.createTextNode(msg));
 
-			el.appendChild(img);
 			el.appendChild(span);
-
+			el.appendChild(img);
+			
 			return true;
 		},
 

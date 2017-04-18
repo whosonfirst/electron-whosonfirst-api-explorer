@@ -1,9 +1,8 @@
-const partyparrot = require("./mapzen.whosonfirst.partyparrot.js");
-
 const config = require("./mapzen.whosonfirst.config.js");
 const api = require("./mapzen.whosonfirst.api.js");
 const spec = require("./mapzen.whosonfirst.api.spec.js");
 const explorer = require("./mapzen.whosonfirst.api.explorer.js");
+const partyparrot = require("./mapzen.whosonfirst.partyparrot.js");
 
 /*
 
@@ -27,7 +26,7 @@ api.set_handler('authentication', function(){
 	return config.api_key()
 });
 
-partyparrot.start("Fetching API data...");
+partyparrot.start("fetching API data");
 
 var cb = function(){
 

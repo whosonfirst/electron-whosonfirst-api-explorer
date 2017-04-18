@@ -28,6 +28,8 @@
 	var _api = undefined;
 	var _spec = undefined;
 
+	var partyparrot = require("./mapzen.whosonfirst.partyparrot.js");
+	
 	var self = {
 
 		'init': function(api, spec) {
@@ -669,6 +671,8 @@
 			
 			var on_response = function(rsp){
 
+				partyparrot.stop();
+				
 				var str = JSON.stringify(rsp, undefined, 2);
 				
 				var res_body = document.getElementById("api-response-body");
@@ -679,16 +683,10 @@
 			};
 
 			_api.execute_method(method, data, on_response, on_response);
-		},
-		
-		'draw_error': function(code){
-			console.log("draw code");
-		},
 
-		'draw_format': function(format){
-			console.log("draw format");
+			partyparrot.start("invoking " + method);
 		},
-		
+				
 		'draw_sidebar': function(list) {
 
 			self.clear_sidebar();
