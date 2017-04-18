@@ -106,3 +106,24 @@ code {
     content: "for example: ";
     font-weight: 200 !important;
 }
+
+.try-me:after {
+    content: " ▶️";
+}
+
+.modify-me:after {
+    content: " ◀️";
+}
+
+.make-it-so:after {
+    content: " ▶️";
+}
+
+.caveat {
+    font-style: italic;
+    font-size: small;
+}
+
+.docs:after {
+    content: " 📖";
+}

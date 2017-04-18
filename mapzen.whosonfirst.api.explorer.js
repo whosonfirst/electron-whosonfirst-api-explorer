@@ -76,7 +76,15 @@
 				};
 					
 				var p = document.createElement("p");
+				p.setAttribute("class", "try-me");
+				p.setAttribute("data-method-name", name);				
 				p.appendChild(document.createTextNode(desc));
+
+				p.onclick = function(e){
+					var el = e.target;
+					var method = el.getAttribute("data-method-name");
+					self.draw_method_explore(method);
+				};
 				
 				var li = document.createElement("li");
 				li.setAttribute("class", "sidebar-item");
@@ -128,8 +136,8 @@
 				ul.appendChild(li);
 			}
 
-			self.clear_main();
-			self.draw_sidebar(ul);
+			self.clear_sidebar();
+			self.draw_main(ul);
 		},
 
 		'draw_formats_list': function(){
@@ -162,11 +170,11 @@
 				ul.appendChild(li);
 			}
 
-			self.clear_main();			
-			self.draw_sidebar(ul);
+			self.clear_sidebar();			
+			self.draw_main(ul);
 		},
 
-		'draw_method': function(name) {
+		'draw_method': function(method_name) {
 
 			var method = undefined;
 			
@@ -177,7 +185,7 @@
 				
 				var m = methods[i];
 				
-				if (m["name"] == name){
+				if (m["name"] == method_name){
 					method = m;
 					break;
 				}
@@ -186,41 +194,44 @@
 			var root = document.createElement("div");
 
 			var h3 = document.createElement("h3");
-			h3.appendChild(document.createTextNode(name));
+			h3.setAttribute("class", "try-me");
+			h3.setAttribute("data-method-name", method_name);			
+			h3.setAttribute("title", "Take this API method for a spin");
+			h3.appendChild(document.createTextNode(method_name));
 
-			var desc = document.createElement("p");
+			/*
+			var try_me_top = self.tryme_button(method_name, "");
+			h3.appendChild(try_me_top);
+			*/
 
-			root.appendChild(h3);
-			root.appendChild(desc);
-
-			var try_me = document.createElement("button");
-			try_me.setAttribute("class", "btn btn-default");			
-			try_me.setAttribute("data-method-name", name);
-			try_me.appendChild(document.createTextNode("Take this API for a spin"));
-
-			try_me.onclick = function(e){
+			h3.onclick = function(e){
 				var el = e.target;
 				var method = el.getAttribute("data-method-name");
 				self.draw_method_explore(method);
 			};
 			
-			root.appendChild(try_me);
+			var desc = document.createElement("p");
+
+			root.appendChild(h3);
+			root.appendChild(desc);
 
 			// parameters
 			
 			var params_header = document.createElement("h3");
 			params_header.appendChild(document.createTextNode("Parameters"));
-
-			var params_p = document.createElement("p");
-			params_p.appendChild(document.createTextNode("Required parameters are indicated by a \"*\" following their name."));
 			
 			root.appendChild(params_header);
-			root.appendChild(params_p);			
 
 			var params = m["parameters"];
 			var params_count = params.length;
 
 			if (params_count){
+				
+				var params_p = document.createElement("p");
+				params_p.setAttribute("class", "caveat");
+				params_p.appendChild(document.createTextNode("Required parameters are indicated by a \"*\" following their name."));
+
+				root.appendChild(params_p);
 				
 				var params_list = document.createElement("ul");
 
@@ -230,10 +241,10 @@
 				for (var p=0; p < params_count; p++){
 
 					var param = params[p];
-					var name = param["name"];
+					var param_name = param["name"];
 
-					params_lookup[name] = param;
-					params_names.push(name);
+					params_lookup[param_name] = param;
+					params_names.push(param_name);
 				}
 
 				params_names.sort();
@@ -279,6 +290,7 @@
 			else {
 
 				var p = document.createElement("p");
+				p.setAttribute("class", "caveat");
 				p.appendChild(document.createTextNode("This API method has no parameters."));
 
 				root.appendChild(p);
@@ -355,8 +367,12 @@
 			}
 
 			// try me (again)
+
+			var hr = document.createElement("hr");
+			root.appendChild(hr);
 			
-			root.appendChild(try_me);
+			var try_me_bottom = self.tryme_button(method_name);
+			root.appendChild(try_me_bottom);
 		
 			self.draw_main(root);
 		},
@@ -381,8 +397,18 @@
 			var root = document.createElement("div");
 
 			var h2 = document.createElement("h2");
+			h2.setAttribute("class", "docs");
+			h2.setAttribute("data-method-name", name);
+			h2.setAttribute("title", "Return to method documentation");
+			
 			h2.appendChild(document.createTextNode(name));
 
+			h2.onclick = function(e){
+				var el = e.target;
+				var method_name = el.getAttribute("data-method-name");
+				self.draw_method(method_name);
+			};
+						
 			var desc = document.createElement("p");
 
 			root.appendChild(h2);
@@ -390,27 +416,8 @@
 
 			//
 
-			var modify = document.createElement("button");
-			modify.setAttribute("class", "btn btn-default btn-sm");
-			modify.appendChild(document.createTextNode("modify this request"));
-
-			modify.onclick = function(){
-
-				var req = document.getElementById("api-request");
-				var res = document.getElementById("api-response");
-				var form = document.getElementById("api-form");
-
-				var req_body = document.getElementById("api-request-body");
-				var res_body = document.getElementById("api-response-body");
-				
-				req_body.innerHTML = "";
-				res_body.innerHTML = "";
-
-				req.style.display = "none";
-				res.style.display = "none";
-
-				form.style.display = "block";
-			};
+			var modify_req = self.modify_button();
+			var modify_res = self.modify_button();			
 			
 			var req = document.createElement("div");
 			req.setAttribute("id", "api-request");
@@ -424,8 +431,10 @@
 			var res_header = document.createElement("h4");
 			res_header.appendChild(document.createTextNode("Response"));
 
-			req_header.appendChild(modify);
-			// res_header.appendChild(modify);
+			req_header.appendChild(modify_req);
+
+			// this should also go _under_ the response
+			res_header.appendChild(modify_res);
 			
 			req.appendChild(req_header);
 			res.appendChild(res_header);
@@ -534,7 +543,7 @@
 			
 			var submit = document.createElement("button");
 			submit.setAttribute("type", "submit");
-			submit.setAttribute("class", "btn btn-default");			
+			submit.setAttribute("class", "btn btn-default make-it-so");			
 			submit.appendChild(document.createTextNode("Make it so!"));
 
 			var onsubmit = function(){
@@ -544,7 +553,10 @@
 
 			submit.onclick = onsubmit;			
 			form.onsubmit = onsubmit;
-			
+
+			var hr = document.createElement("hr");
+
+			form.appendChild(hr);
 			form.appendChild(submit);
 			root.appendChild(form);
 
@@ -572,7 +584,10 @@
 			];
 
 			for (var pair of data.entries()) {
-				q.push(pair[0] + "=" + pair[1]);
+
+				if (pair[1] != ""){
+					q.push(pair[0] + "=" + pair[1]);
+				}
 			}
 
 			curl += "?" + q.join("&");
@@ -654,7 +669,53 @@
 			self.clear_sidebar();			
 			self.clear_main();
 		},
+
+		'tryme_button': function(method, copy){
+
+			if (copy == undefined){
+				copy = "Take this API for a spin";
+			}
 		
+			var try_me = document.createElement("button");
+			try_me.setAttribute("class", "btn btn-default try-me");			
+			try_me.setAttribute("data-method-name", method);
+			try_me.appendChild(document.createTextNode(copy));
+
+			try_me.onclick = function(e){
+				var el = e.target;
+				var method = el.getAttribute("data-method-name");
+				self.draw_method_explore(method);
+			};
+
+			return try_me;
+		},
+
+		'modify_button': function(){
+
+			var modify = document.createElement("button");
+			modify.setAttribute("class", "btn btn-default btn-sm modify-me");
+			modify.appendChild(document.createTextNode("modify this request"));
+
+			modify.onclick = function(){
+
+				var req = document.getElementById("api-request");
+				var res = document.getElementById("api-response");
+				var form = document.getElementById("api-form");
+
+				var req_body = document.getElementById("api-request-body");
+				var res_body = document.getElementById("api-response-body");
+				
+				req_body.innerHTML = "";
+				res_body.innerHTML = "";
+
+				req.style.display = "none";
+				res.style.display = "none";
+
+				form.style.display = "block";
+			};
+
+			return modify;
+		},
 	};
 	
 	return self;
