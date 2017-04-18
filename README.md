@@ -1,16 +1,12 @@
 # electron-whosonfirst-api-explorer
 
+![](docs/explore.png)
+
 An Electron-based API explorer for the Who's On First API.
 
-## Important
+## Caveats
 
-I have no idea what I am dooooooooing. More specifically "modern Javascript" is weird and I haven't quite figured out how or what library code needs to look like. If you're reading this that means two things:
-
-* The code is ugly but functional
-* The code is ugly but _not quite_ functional because the code to return a Mapzen API key in `apzen.whosonfirst.api.js` is currently hard-coded with the value "FIX ME" because "modern Javascript" is	weird and I haven't quite figured out how or what library code needs to look like.
-
-I'll figure it out eventually but in the meantime patches, suggestions and gentle cluebats are welcome.
-
+Too soon.
 ## Install
 
 ```
