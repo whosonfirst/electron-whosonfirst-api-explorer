@@ -47,3 +47,12 @@ var cb = function(){
 };
 
 spec.init(api, cb);
+
+const ipcRenderer = require('electron').ipcRenderer;
+
+/*
+setInterval(function(){
+	var pong = ipcRenderer.send('asynchronous-message', 'ping');
+	console.log(pong);
+}, 500);
+*/

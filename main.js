@@ -31,15 +31,27 @@ app.on('ready', createWindow)
 
 app.on('window-all-closed', function () {
 	if (process.platform !== 'darwin') {
-		app.quit()
+		app.quit();
 	}
 })
 
 app.on('activate', function () {
 	if (mainWindow === null) {
-		createWindow()
+		createWindow();
 	}
 })
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+const ipcMain = require('electron').ipcMain;
+
+ipcMain.on('asynchronous-message', (event, arg) => {
+
+	/*
+	if (arg == "ping"){
+		event.sender.send('asynchronous-reply', mainWindow.webContents.canGoBack());
+	}
+	*/
+	
+})
