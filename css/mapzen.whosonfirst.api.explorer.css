@@ -5,22 +5,43 @@ body {
 }
 
 #header {
-    height: 100px;
-    max-height: 100px;
+    border-bottom: 1px dashed #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 12%;
+    width:100%;
+    background-color:#fff;
+    z-index: 500;
+    padding:1%;
 }
 
 #sidebar {
+    position: fixed;
     font-side: small;
-    min-height: 500px;
-    max-height:500px;
+    border-right: 1px dashed #000;
     overflow: scroll;
+    top:12%;
+    height:88%;
+    width:25%;
+    padding-left:4%;
+}
+
+#sidebar ul {
+    padding:0px;
+    margin:0px;
+    overflow-wrap: break-word;
 }
 
 #main {
-    min-height: 500px;
-    max-height:500px;
-    overflow: scroll;
+    position: fixed;    
     padding-bottom:100px;
+    background-color:#fff;
+    top:12%;
+    height:88%;
+    left:25%;
+    width: 75%;
+    overflow: scroll;    
 }
 
 .sidebar-item {
@@ -28,6 +49,14 @@ body {
     padding: 0px;
     margin: 0px;
     font-size: small;
+}
+
+.sidebar-item h3 {
+    font-size:.9em;
+}
+
+.sidebar-item:hover {
+    background-color:#ccc;
 }
 
 .api-param-example {
