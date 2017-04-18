@@ -330,25 +330,30 @@
 			root.appendChild(errors_header);
 
 			var errors = m["errors"];
-			var errors_count = errors.length;
+			var errors_count = 0;
 
+			for (var k in errors){
+				errors_count = 1;
+				break;
+			}
+			
 			if (errors_count){
 
 				var errors_list = document.createElement("ul");
 				
-				for (var e=0; e < errors_count; e++){
+				for (var code in errors){
 
-					var err = errors[e];
+					var desc = errors[code];
 					var item = document.createElement("li");
 
-					var code = document.createElement("code");
-					code.appendChild(document.createTextNode(err["code"]));
+					var code_el = document.createElement("code");
+					code_el.appendChild(document.createTextNode(code));
 
-					var desc = document.createElement("span");
-					desc.appendChild(document.createTextNode(err["description"]));
+					var desc_el = document.createElement("span");
+					desc_el.appendChild(document.createTextNode(desc["message"]));
 
-					item.appendChild(code);
-					item.appendChild(desc);
+					item.appendChild(code_el);
+					item.appendChild(desc_el);
 
 					errors_list.appendChild(item);
 				}
