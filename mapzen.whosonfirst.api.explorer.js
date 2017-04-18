@@ -336,13 +336,6 @@
 				// The following output formats are disallowed for this API method:
 			}
 
-			// example
-
-			var example_header = document.createElement("h3");
-			example_header.appendChild(document.createTextNode("Example request"));
-			
-			root.appendChild(example_header);
-
 			// try me (again)
 			
 			root.appendChild(try_me);
@@ -377,8 +370,26 @@
 			root.appendChild(h2);
 			root.appendChild(desc);
 
+			var req = document.createElement("div");
+			req.setAttribute("id", "api-request");
+
+			var req_header = document.createElement("h4");
+			req_header.appendChild(document.createTextNode("Request"));
+			
+			var res = document.createElement("div");
+			res.setAttribute("id", "api-response");
+
+			var res_header = document.createElement("h4");
+			res_header.appendChild(document.createTextNode("Response"));
+
+			req.appendChild(req_header);
+			res.appendChild(res_header);			
+			
+			root.appendChild(req);
+			root.appendChild(res);			
+			
 			var form = document.createElement("form");
-			form.setAttribute("id", "explore");
+			form.setAttribute("id", "api-form");
 			form.setAttribute("data-method-name", name);
 			form.setAttribute("class", "form");
 			
@@ -479,20 +490,52 @@
 
 		'do_method_explore': function(){
 			
-			var form = document.getElementById("explore");
+			var form = document.getElementById("api-form");
 			var data = new FormData(form);
 
 			var method = form.getAttribute("data-method-name");
 
-			var on_success = function(rsp){
-				console.log(rsp);
+			var get_endpoint = _api.get_handler("endpoint");
+			var endpoint = get_endpoint();
+			
+			var curl = "curl -X GET '" + endpoint;
+
+			var q = [ 
+				"method=" + method,
+				"api_key=mapzen-xxxxxx",
+			];
+
+			for (var pair of data.entries()) {
+				q.push(pair[0] + "=" + pair[1]);
+			}
+
+			curl += "?" + q.join("&");
+			curl += "'";
+			
+			var pre = document.createElement("pre");
+			pre.appendChild(document.createTextNode(curl));
+						
+			var req = document.getElementById("api-request");
+
+			req.appendChild(pre);
+			req.style.display = "block";
+
+			form.style.display = "none";
+			
+			var on_response = function(rsp){
+
+
+				var res = document.getElementById("api-response");				
+				res.style.display = "block";
+				
+				var str = JSON.stringify(rsp, undefined, 2);
+				var pre = document.createElement("pre");
+				pre.appendChild(document.createTextNode(str));
+
+				res.appendChild(pre);
 			};
 
-			var on_error = function(){
-				console.log("error");
-			};
-
-			_api.execute_method(method, data, on_success, on_error);
+			_api.execute_method(method, data, on_response, on_response);
 		},
 		
 		'draw_error': function(code){
