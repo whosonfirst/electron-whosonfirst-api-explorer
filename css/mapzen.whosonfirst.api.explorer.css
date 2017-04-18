@@ -2,6 +2,13 @@ body {
     margin: 0px;
     padding: 0px;
     background-color:#fff;
+    line-height: 1.5em;
+}
+
+code {
+    font-weight: 700;
+    background-color: #000 !important;
+    color: #fff !important;
 }
 
 #header {
@@ -43,6 +50,29 @@ body {
     overflow: scroll;
 }
 
+#main ul  {
+    padding: 0px;
+    margin: 0px;
+}
+
+#main ul li {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    line-height:1.8em;
+}
+
+.api-param-required:after {
+    content: " *";
+}
+
+.api-param-example {
+}
+
+.api-param-example:before {
+    content: " For example: ";
+}
+
 .sidebar-item {
     list-style-type: none;
     padding: 0px;
@@ -66,13 +96,13 @@ body {
     display:none;
 }
 
-.api-param-example {
+.api-form-example {
     display: block;
     text-align: right;
     font-weight: 700;
 }
 
-.api-param-example:before {
+.api-form-example:before {
     content: "for example: ";
     font-weight: 200 !important;
 }

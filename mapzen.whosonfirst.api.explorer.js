@@ -211,7 +211,11 @@
 			var params_header = document.createElement("h3");
 			params_header.appendChild(document.createTextNode("Parameters"));
 
+			var params_p = document.createElement("p");
+			params_p.appendChild(document.createTextNode("Required parameters are indicated by a \"*\" following their name."));
+			
 			root.appendChild(params_header);
+			root.appendChild(params_p);			
 
 			var params = m["parameters"];
 			var params_count = params.length;
@@ -242,15 +246,30 @@
 					var desc = param["description"];					
 					
 					var param_name = document.createElement("code");
+
+					if (param["required"]){
+						param_name.setAttribute("class", "api-param-required");
+					}
+					
 					param_name.appendChild(document.createTextNode(name));
 
 					var param_desc = document.createElement("span");
 					param_desc.appendChild(document.createTextNode(desc));
 					
 					var item = document.createElement("li");
+					
 					item.appendChild(param_name);
 					item.appendChild(param_desc);					
 
+					if (param["example"]){
+
+						var example = document.createElement("span");
+						example.setAttribute("class", "api-param-example");
+
+						example.appendChild(document.createTextNode(param["example"]));
+						item.appendChild(example);
+					}
+					
 					params_list.appendChild(item);
 				}
 
@@ -306,8 +325,7 @@
 				var p = document.createElement("p");
 				p.appendChild(document.createTextNode(msg));
 
-				root.appendChild(p);
-					
+				root.appendChild(p);					
 			}
 
 			// notes
@@ -370,6 +388,30 @@
 			root.appendChild(h2);
 			root.appendChild(desc);
 
+			//
+
+			var modify = document.createElement("button");
+			modify.setAttribute("class", "btn btn-default btn-sm");
+			modify.appendChild(document.createTextNode("modify this request"));
+
+			modify.onclick = function(){
+
+				var req = document.getElementById("api-request");
+				var res = document.getElementById("api-response");
+				var form = document.getElementById("api-form");
+
+				var req_body = document.getElementById("api-request-body");
+				var res_body = document.getElementById("api-response-body");
+				
+				req_body.innerHTML = "";
+				res_body.innerHTML = "";
+
+				req.style.display = "none";
+				res.style.display = "none";
+
+				form.style.display = "block";
+			};
+			
 			var req = document.createElement("div");
 			req.setAttribute("id", "api-request");
 
@@ -382,18 +424,31 @@
 			var res_header = document.createElement("h4");
 			res_header.appendChild(document.createTextNode("Response"));
 
+			req_header.appendChild(modify);
+			// res_header.appendChild(modify);
+			
 			req.appendChild(req_header);
-			res.appendChild(res_header);			
+			res.appendChild(res_header);
+
+			var req_body = document.createElement("pre");
+			req_body.setAttribute("id", "api-request-body");
+
+			var res_body = document.createElement("pre");
+			res_body.setAttribute("id", "api-response-body");
+			
+			req.appendChild(req_body);
+			res.appendChild(res_body);			
+
 			
 			root.appendChild(req);
 			root.appendChild(res);			
+
+			//
 			
 			var form = document.createElement("form");
 			form.setAttribute("id", "api-form");
 			form.setAttribute("data-method-name", name);
 			form.setAttribute("class", "form");
-			
-			//
 			
 			var params = m["parameters"];
 			var params_count = params.length;
@@ -443,7 +498,7 @@
 
 					if (param["example"]){
 						var example = document.createElement("small");
-						example.setAttribute("class", "api-param-example");
+						example.setAttribute("class", "api-form-example");
 						example.setAttribute("data-input-id", name);			
 
 						example.onclick = function(e){
@@ -465,6 +520,14 @@
 					
 					form.appendChild(group);
 				}
+			}
+
+			else {
+
+				var p = document.createElement("p");
+				p.appendChild(document.createTextNode("This API method has no parameters."));
+				
+				form.appendChild(p);
 			}
 
 			// 
@@ -496,13 +559,16 @@
 			var method = form.getAttribute("data-method-name");
 
 			var get_endpoint = _api.get_handler("endpoint");
+			var get_auth = _api.get_handler("authentication");
+			
 			var endpoint = get_endpoint();
+			var api_key = get_auth();
 			
 			var curl = "curl -X GET '" + endpoint;
 
 			var q = [ 
 				"method=" + method,
-				"api_key=mapzen-xxxxxx",
+				"api_key=" + "mapzen-xxxxxx",
 			];
 
 			for (var pair of data.entries()) {
@@ -512,27 +578,36 @@
 			curl += "?" + q.join("&");
 			curl += "'";
 			
-			var pre = document.createElement("pre");
-			pre.appendChild(document.createTextNode(curl));
-						
-			var req = document.getElementById("api-request");
+			var req_body = document.getElementById("api-request-body");
+			req_body.appendChild(document.createTextNode(curl));
 
-			req.appendChild(pre);
-			req.style.display = "block";
+			var req = document.getElementById("api-request");
+			req.style.display = "block";			
 
 			form.style.display = "none";
+
+			if (! navigator.onLine){
+
+				var msg = "Can't execute API request because you are offline.";
+			
+				var res_body = document.getElementById("api-response-body");
+				res_body.appendChild(document.createTextNode(msg));
+
+				var res = document.getElementById("api-response");
+				res.style.display = "block";			
+				
+				return;
+			}
 			
 			var on_response = function(rsp){
 
-
-				var res = document.getElementById("api-response");				
-				res.style.display = "block";
-				
 				var str = JSON.stringify(rsp, undefined, 2);
-				var pre = document.createElement("pre");
-				pre.appendChild(document.createTextNode(str));
+				
+				var res_body = document.getElementById("api-response-body");
+				res_body.appendChild(document.createTextNode(str));
 
-				res.appendChild(pre);
+				var res = document.getElementById("api-response");
+				res.style.display = "block";			
 			};
 
 			_api.execute_method(method, data, on_response, on_response);
