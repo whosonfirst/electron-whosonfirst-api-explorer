@@ -35,6 +35,17 @@
 	var self = {
 
 		'init': function(api, cb){
+
+			if (navigator.onLine){
+				self.init_remote(api, cb);
+			} 
+
+			else {
+				self.init_local(cb);
+			}
+		},
+
+		'init_remote': function(api, cb){
 			
 			wg.add(3);
 			
@@ -60,6 +71,40 @@
 
 				self.set("formats", rsp["formats"]);				
 				wg.done();
+			});
+
+			wg.wait(cb);
+		},
+
+		'init_local': function(cb){
+
+			wg.add(3);
+			
+			lf.getItem("methods").then(function(rsp) {
+
+				_methods = rsp;
+				wg.done();
+				
+			}).catch(function (err) {
+				console.log("failed to get 'methods' because " + err);
+			});
+
+			lf.getItem("errors").then(function(rsp) {
+
+				_errors = rsp;
+				wg.done();
+				
+			}).catch(function (err) {
+				console.log("failed to get 'errors' because " + err);
+			});
+
+			lf.getItem("formats").then(function(rsp) {
+
+				_formats = rsp;
+				wg.done();
+				
+			}).catch(function (err) {
+				console.log("failed to get 'formats' because " + err);
 			});
 
 			wg.wait(cb);
