@@ -185,12 +185,12 @@
 				
 			var root = document.createElement("div");
 
-			var h2 = document.createElement("h2");
-			h2.appendChild(document.createTextNode(name));
+			var h3 = document.createElement("h3");
+			h3.appendChild(document.createTextNode(name));
 
 			var desc = document.createElement("p");
 
-			root.appendChild(h2);
+			root.appendChild(h3);
 			root.appendChild(desc);
 
 			var try_me = document.createElement("button");

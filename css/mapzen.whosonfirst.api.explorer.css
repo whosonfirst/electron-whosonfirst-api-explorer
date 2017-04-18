@@ -1,17 +1,15 @@
 body {
     margin: 0px;
     padding: 0px;
-    background-color:pink;
+    background-color:#fff;
 }
 
 #header {
     height: 100px;
     max-height: 100px;
-    background-color: yellow;
 }
 
 #sidebar {
-    background-color: #adadad;
     font-side: small;
     min-height: 500px;
     max-height:500px;
