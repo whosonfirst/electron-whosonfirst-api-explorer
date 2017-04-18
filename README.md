@@ -14,7 +14,7 @@ Too soon. Move along.
 # Clone this repository
 git clone https://github.com/whosonfirst/electron-whosonfirst-api-explorer
 # Go into the repository
-cd electron-quick-start
+cd electron-whosonfirst-api-explorer
 # Install dependencies
 npm install
 # Run the app
