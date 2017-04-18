@@ -31,3 +31,14 @@ body {
     margin: 0px;
     font-size: small;
 }
+
+.api-param-example {
+    display: block;
+    text-align: right;
+    font-weight: 700;
+}
+
+.api-param-example:before {
+    content: "for example: ";
+    font-weight: 200 !important;
+}

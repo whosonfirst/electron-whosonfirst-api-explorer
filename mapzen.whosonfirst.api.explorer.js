@@ -72,7 +72,6 @@
 				h3.onclick = function(e){
 					var el = e.target;
 					var method = el.getAttribute("data-method-name");
-
 					self.draw_method(method);
 				};
 					
@@ -195,10 +194,14 @@
 			root.appendChild(desc);
 
 			var try_me = document.createElement("button");
+			try_me.setAttribute("class", "btn btn-default");			
+			try_me.setAttribute("data-method-name", name);
 			try_me.appendChild(document.createTextNode("Take this API for a spin"));
 
-			try_me.onclick = function(){
-
+			try_me.onclick = function(e){
+				var el = e.target;
+				var method = el.getAttribute("data-method-name");
+				self.draw_method_explore(method);
 			};
 			
 			root.appendChild(try_me);
@@ -343,10 +346,155 @@
 			// try me (again)
 			
 			root.appendChild(try_me);
-			
-			return self.draw_main(root);
+		
+			self.draw_main(root);
 		},
 
+		'draw_method_explore': function(name){
+
+			var method = undefined;
+			
+			var methods = _spec.methods();
+			var count = methods.length;
+
+			for (var i=0; i < count; i++) {
+				
+				var m = methods[i];
+				
+				if (m["name"] == name){
+					method = m;
+					break;
+				}
+			}
+				
+			var root = document.createElement("div");
+
+			var h2 = document.createElement("h2");
+			h2.appendChild(document.createTextNode(name));
+
+			var desc = document.createElement("p");
+
+			root.appendChild(h2);
+			root.appendChild(desc);
+
+			var form = document.createElement("form");
+			form.setAttribute("id", "explore");
+			form.setAttribute("data-method-name", name);
+			form.setAttribute("class", "form");
+			
+			//
+			
+			var params = m["parameters"];
+			var params_count = params.length;
+
+			if (params_count){
+				
+				var params_list = document.createElement("ul");
+
+				var params_lookup = {};
+				var params_names = [];
+
+				for (var p=0; p < params_count; p++){
+
+					var param = params[p];
+					var name = param["name"];
+
+					params_lookup[name] = param;
+					params_names.push(name);
+				}
+
+				params_names.sort();
+				
+				for (var p=0; p < params_count; p++){
+
+					var name = params_names[p];
+					var param = params_lookup[name];
+					
+					var desc = param["description"];					
+
+					var group = document.createElement("div");
+					group.setAttribute("class", "form-group");
+
+					var label = document.createElement("label");
+					label.setAttribute("for", name);
+					label.appendChild(document.createTextNode(name));
+					
+					var input = document.createElement("input");
+					input.setAttribute("class", "form-control");					
+					input.setAttribute("type", "text");
+					input.setAttribute("name", name);
+					input.setAttribute("id", "input-" + name);					
+					input.setAttribute("value", "");
+					input.setAttribute("placeholder", desc);
+
+					group.appendChild(label);
+					group.appendChild(input);
+
+					if (param["example"]){
+						var example = document.createElement("small");
+						example.setAttribute("class", "api-param-example");
+						example.setAttribute("data-input-id", name);			
+
+						example.onclick = function(e){
+							
+							var el = e.target;
+							var ex = el.innerText;
+							
+							var id = "input-" + el.getAttribute("data-input-id");
+							var input = document.getElementById(id);
+							
+							if (input){
+								input.setAttribute("value", ex);
+							}
+						};
+					
+						example.appendChild(document.createTextNode(param["example"]));
+						group.appendChild(example);
+					}
+					
+					form.appendChild(group);
+				}
+			}
+
+			// 
+			
+			var submit = document.createElement("button");
+			submit.setAttribute("type", "submit");
+			submit.setAttribute("class", "btn btn-default");			
+			submit.appendChild(document.createTextNode("Make it so!"));
+
+			var onsubmit = function(){
+				self.do_method_explore();
+				return false;
+			};
+
+			submit.onclick = onsubmit;			
+			form.onsubmit = onsubmit;
+			
+			form.appendChild(submit);
+			root.appendChild(form);
+
+			self.draw_main(root);
+		},
+
+		'do_method_explore': function(){
+			
+			var form = document.getElementById("explore");
+			var data = new FormData(form);
+
+			var method = form.getAttribute("data-method-name");
+
+			var on_success = function(rsp){
+				console.log(rsp);
+			};
+
+			var on_error = function(){
+				console.log("error");
+			};
+
+			_api.execute_method(method, data, on_success, on_error);
+		},
+		
 		'draw_error': function(code){
 			console.log("draw code");
 		},
