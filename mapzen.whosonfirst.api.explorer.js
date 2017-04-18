@@ -117,13 +117,15 @@
 				h3.setAttribute("data-error-code", code);
 				h3.appendChild(document.createTextNode(code));
 
+				/*
 				h3.onclick = function(e){
 					var el = e.target;
 					var code = el.getAttribute("data-error-code");
 
 					self.draw_error(code);
 				};
-					
+				*/
+				
 				var p = document.createElement("p");
 				p.appendChild(document.createTextNode(desc));
 				
@@ -157,12 +159,14 @@
 				h3.setAttribute("data-format-name", name);
 				h3.appendChild(document.createTextNode(name));
 
+				/*
 				h3.onclick = function(e){
 					var el = e.target;
 					var format = el.getAttribute("data-format-name");
 					self.draw_format(format);
 				};
-					
+				*/
+				
 				var li = document.createElement("li");
 				li.setAttribute("class", "sidebar-item");
 				
@@ -226,12 +230,29 @@
 			var params_count = params.length;
 
 			if (params_count){
+								
+				var params_table = document.createElement("table");
+				params_table.setAttribute("class", "table table-condensed");
 				
-				var params_p = document.createElement("p");
-				params_p.setAttribute("class", "caveat");
-				params_p.appendChild(document.createTextNode("Required parameters are indicated by a \"*\" following their name."));
+				var name_header = document.createElement("th");
+				name_header.appendChild(document.createTextNode("Name"));
 
-				root.appendChild(params_p);
+				var desc_header = document.createElement("th");
+				desc_header.appendChild(document.createTextNode("Description"));
+
+				var example_header = document.createElement("th");
+				example_header.appendChild(document.createTextNode("Example"));
+
+				var required_header = document.createElement("th");
+				required_header.appendChild(document.createTextNode("Required"));
+
+				var header_row = document.createElement("tr");
+				header_row.appendChild(name_header);
+				header_row.appendChild(desc_header);
+				header_row.appendChild(example_header);
+				header_row.appendChild(required_header);				
+
+				params_table.appendChild(header_row);
 				
 				var params_list = document.createElement("ul");
 
@@ -256,35 +277,40 @@
 					
 					var desc = param["description"];					
 					
-					var param_name = document.createElement("code");
+					var name_cell = document.createElement("td");
+					name_cell.setAttribute("class", "api-param-name");
+					name_cell.appendChild(document.createTextNode(name));
+
+					var desc_cell = document.createElement("td");
+					desc_cell.appendChild(document.createTextNode(desc));
+					
+					var example_cell = document.createElement("td");
+					example_cell.setAttribute("class", "api-param-example");
+					
+					if (param["example"]){
+						example_cell.appendChild(document.createTextNode(param["example"]));
+					}
+
+					var required_cell = document.createElement("td");
 
 					if (param["required"]){
-						param_name.setAttribute("class", "api-param-required");
+						required_cell.appendChild(document.createTextNode("👍"));
+					}
+
+					else {
+						required_cell.appendChild(document.createTextNode("–"));
 					}
 					
-					param_name.appendChild(document.createTextNode(name));
+					var row = document.createElement("tr");
+					row.appendChild(name_cell);
+					row.appendChild(desc_cell);
+					row.appendChild(example_cell);
+					row.appendChild(required_cell);										
 
-					var param_desc = document.createElement("span");
-					param_desc.appendChild(document.createTextNode(desc));
-					
-					var item = document.createElement("li");
-					
-					item.appendChild(param_name);
-					item.appendChild(param_desc);					
-
-					if (param["example"]){
-
-						var example = document.createElement("span");
-						example.setAttribute("class", "api-param-example");
-
-						example.appendChild(document.createTextNode(param["example"]));
-						item.appendChild(example);
-					}
-					
-					params_list.appendChild(item);
+					params_table.appendChild(row);
 				}
 
-				root.appendChild(params_list);
+				root.appendChild(params_table);				
 			}
 
 			else {

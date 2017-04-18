@@ -5,7 +5,7 @@ body {
     line-height: 1.5em;
 }
 
-code {
+.api-param-name {
     font-weight: 700;
     background-color: #000 !important;
     color: #fff !important;
@@ -67,10 +67,7 @@ code {
 }
 
 .api-param-example {
-}
-
-.api-param-example:before {
-    content: " For example: ";
+    font-style:italic;
 }
 
 .sidebar-item {
@@ -126,4 +123,8 @@ code {
 
 .docs:after {
     content: " 📖";
+}
+
+table tr td {
+    padding: .5em !important;
 }
