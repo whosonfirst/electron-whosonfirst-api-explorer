@@ -6,7 +6,8 @@ An Electron-based API explorer for the Who's On First API.
 
 ## Caveats
 
-Too soon.
+Too soon. Move along.
+
 ## Install
 
 ```
