@@ -26,6 +26,15 @@ api.set_handler('authentication', function(){
 	return config.api_key()
 });
 
+const ipcRenderer = require('electron').ipcRenderer;
+
+/*
+setInterval(function(){
+
+	console.log(pong);
+}, 500);
+*/
+
 partyparrot.start("fetching API data");
 
 var cb = function(){
@@ -43,20 +52,10 @@ var cb = function(){
 	var show_f = document.getElementById("show-formats");
 	show_f.onclick = function(){ explorer.draw_formats_list(); };
 
+	var print_b = document.getElementById("print-button");
+	print_b.onclick = function(){ ipcRenderer.send('asynchronous-message', 'print'); };
+	
 	show_m.click();
 };
 
 spec.init(api, cb);
-
-const ipcRenderer = require('electron').ipcRenderer;
-
-ipcRenderer.on('asynchronous-reply', (event, arg) => {
-	console.log(arg) // prints "pong"
-});
-
-/*
-setInterval(function(){
-	var pong = ipcRenderer.send('asynchronous-message', 'ping');
-	console.log(pong);
-}, 500);
-*/

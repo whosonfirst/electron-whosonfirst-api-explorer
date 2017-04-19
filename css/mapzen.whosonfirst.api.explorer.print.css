@@ -1,0 +1,22 @@
+@media print {
+
+    #header {
+	display: none !important;
+    }
+
+    #sidebar {
+	display: none !important;
+    }
+
+    #main {
+	position: auto !important;
+	top: 0 !important;
+	left: 0 !important;
+	border: solid thin;
+	width: 100%;
+    }
+
+    .modify-me {
+	display:none !important;
+    }
+}
