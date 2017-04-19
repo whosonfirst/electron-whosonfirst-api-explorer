@@ -12,11 +12,23 @@
 	position: auto !important;
 	top: 0 !important;
 	left: 0 !important;
-	border: solid thin;
 	width: 100%;
     }
 
     .modify-me {
 	display:none !important;
+    }
+
+    .try-me:after {
+	content: "" !important;
+	// display:none !important;
+    }
+
+    .try-me-bottom {
+	display:none !important;
+    }
+    
+    hr {
+	display: none !important;
     }
 }

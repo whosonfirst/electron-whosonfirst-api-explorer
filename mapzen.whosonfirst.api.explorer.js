@@ -444,6 +444,7 @@
 			root.appendChild(hr);
 			
 			var try_me_bottom = self.tryme_button(method_name);
+			try_me_bottom.setAttribute("class", try_me_bottom.getAttribute("class") + " try-me-bottom");
 			root.appendChild(try_me_bottom);
 		
 			self.draw_main(root);
