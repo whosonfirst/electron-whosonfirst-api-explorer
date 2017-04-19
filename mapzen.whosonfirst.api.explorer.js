@@ -565,6 +565,13 @@
 					var label = document.createElement("label");
 					label.setAttribute("for", name);
 					label.appendChild(document.createTextNode(name));
+
+					if (param["required"]){
+						var span = document.createElement("span");
+						span.appendChild(document.createTextNode(" 👍"));
+						span.setAttribute("title", "This parameter is required");
+						label.appendChild(span);
+					}
 					
 					var input = document.createElement("input");
 					input.setAttribute("class", "form-control");					
