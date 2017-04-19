@@ -3,6 +3,8 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 
+const ipcMain = require('electron').ipcMain;
+
 const path = require('path')
 const url = require('url')
 
@@ -25,6 +27,23 @@ function createWindow () {
 	mainWindow.on('closed', function () {
 		mainWindow = null
 	})
+
+	let contents = mainWindow.webContents;
+
+	/*
+	contents.capturePage(function(r){
+		console.log(r);
+	});
+	*/
+	
+	contents.on('did-finish-load', (event, arg) => {
+		contents.send('asynchronous-reply', "DID FINISH LOAD");
+	});
+
+	contents.on('did-navigate-in-page', (event, arg) => {
+		contents.send('asynchronous-reply', "DID NAVIGATE");
+	});
+	
 }
 
 app.on('ready', createWindow)
@@ -43,8 +62,8 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-const ipcMain = require('electron').ipcMain;
+    
+// const ipcMain = require('electron').ipcMain;
 
 ipcMain.on('asynchronous-message', (event, arg) => {
 
@@ -53,5 +72,10 @@ ipcMain.on('asynchronous-message', (event, arg) => {
 		event.sender.send('asynchronous-reply', mainWindow.webContents.canGoBack());
 	}
 	*/
+
+	// https://electron.atom.io/docs/api/web-contents/#contentsprinttopdfoptions-callback
 	
+	if (arg == "print"){
+		// contents.print();
+	}
 })

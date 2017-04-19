@@ -50,6 +50,10 @@ spec.init(api, cb);
 
 const ipcRenderer = require('electron').ipcRenderer;
 
+ipcRenderer.on('asynchronous-reply', (event, arg) => {
+	console.log(arg) // prints "pong"
+});
+
 /*
 setInterval(function(){
 	var pong = ipcRenderer.send('asynchronous-message', 'ping');
