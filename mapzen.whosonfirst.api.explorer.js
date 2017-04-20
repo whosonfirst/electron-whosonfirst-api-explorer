@@ -40,6 +40,7 @@
 		'draw_methods_list': function(){
 
 			self.clear_all();
+			self.toggle_print_button(false);
 			
 			var methods = _spec.methods();
 			var count = methods.length;
@@ -103,6 +104,8 @@
 
 		'draw_errors_list': function(){
 
+			self.toggle_print_button(false);
+			
 			var errors = _spec.errors();
 			var count = errors.length;
 			
@@ -146,6 +149,8 @@
 
 		'draw_formats_list': function(){
 
+			self.toggle_print_button(false);
+			
 			var formats = _spec.formats();
 			var count = formats.length;
 			
@@ -182,6 +187,7 @@
 
 		'draw_method': function(method_name) {
 
+			self.toggle_print_button(true);
 			var method = undefined;
 			
 			var methods = _spec.methods();
@@ -452,6 +458,8 @@
 
 		'draw_method_explore': function(name){
 
+			self.toggle_print_button(false);
+			
 			var method = undefined;
 			
 			var methods = _spec.methods();
@@ -693,10 +701,11 @@
 				
 				return;
 			}
-			
+
 			var on_response = function(rsp){
 
 				partyparrot.stop();
+				self.toggle_print_button(true);
 				
 				var str = JSON.stringify(rsp, undefined, 2);
 				
@@ -788,10 +797,20 @@
 				res.style.display = "none";
 
 				form.style.display = "block";
+
+				self.toggle_print_button(false);				
 			};
 
 			return modify;
 		},
+
+		'toggle_print_button': function(enabled){
+
+			var display = (enabled) ? "inline" : "none";
+
+			var el = document.getElementById("print-button");
+			el.style.display = display;
+		}
 	};
 	
 	return self;

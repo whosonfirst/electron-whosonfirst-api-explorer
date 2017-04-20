@@ -190,3 +190,13 @@ table tr td {
     padding-left: .2em !important;
     padding-right: .2em !important;    
 }
+
+#print-button {
+    display:none;
+    color:darkslategray;
+}
+
+#print-button:hover {
+    background-color:darkslategray;    
+    color:#fff;
+}
