@@ -141,12 +141,14 @@
 				
 				var raw = target['responseText'];
 				var data = undefined;
-				
+
 				try {
 					data = JSON.parse(raw);
 				}
 				
 				catch (e){
+
+					// console.log(raw);
 					
 					dothis_onerror(self.destruct("failed to parse JSON " + e));
 					return false;

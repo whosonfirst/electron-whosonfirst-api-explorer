@@ -678,12 +678,55 @@
 
 			else {
 
-				var p = document.createElement("p");
-				p.appendChild(document.createTextNode("This API method has no parameters."));
-				
-				form.appendChild(p);
+				// var p = document.createElement("p");
+				// p.appendChild(document.createTextNode("This API method has no parameters."));
+				// form.appendChild(p);
 			}
 
+			// format
+
+			var group = document.createElement("div");
+			group.setAttribute("class", "form-group");
+			
+			var label = document.createElement("label");
+			label.setAttribute("for", "format");
+			label.appendChild(document.createTextNode("format"));
+								
+			var select = document.createElement("select");
+			select.setAttribute("name", "format");
+			select.setAttribute("id", "format");			
+			select.setAttribute("class", "form-control");
+
+			var formats = _spec.formats();
+			var count = formats.length;
+			
+			formats.sort();
+			
+			for (var i = 0; i < count; i++) {
+				
+				var fmt = formats[i];
+
+				var option = document.createElement("option");
+				option.setAttribute("value", fmt);
+
+				if (fmt != _spec.default_format()){
+					// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/13
+					continue;
+				}
+				
+				if (fmt == _spec.default_format()){
+					option.setAttribute("selected", "selected");
+				}
+				
+				option.appendChild(document.createTextNode(fmt));
+				select.appendChild(option);
+			}
+			
+			group.appendChild(label);
+			group.appendChild(select);
+
+			form.append(group);
+			
 			// 
 			
 			var submit = document.createElement("button");
@@ -763,7 +806,7 @@
 
 				partyparrot.stop();
 				self.toggle_print_button(true);
-				
+
 				var str = JSON.stringify(rsp, undefined, 2);
 				
 				var res_body = document.getElementById("api-response-body");

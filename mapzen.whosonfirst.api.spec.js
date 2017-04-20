@@ -31,6 +31,7 @@
 	var _methods = undefined;
 	var _errors = undefined;
 	var _formats = undefined;
+	var _default_format = undefined;
 	
 	var self = {
 
@@ -68,8 +69,10 @@
 			api.execute_method("api.spec.formats", {}, function(rsp){
 
 				_formats = rsp["formats"];
-
-				self.set("formats", rsp["formats"]);				
+				_default_format = rsp["default_format"];
+				
+				self.set("formats", rsp["formats"]);
+				self.set("default_format", rsp["default_format"]);				
 				wg.done();
 			});
 
@@ -78,7 +81,7 @@
 
 		'init_local': function(cb){
 
-			wg.add(3);
+			wg.add(4);
 			
 			lf.getItem("methods").then(function(rsp) {
 
@@ -107,6 +110,15 @@
 				console.log("failed to get 'formats' because " + err);
 			});
 
+			lf.getItem("default_format").then(function(rsp) {
+
+				_default_format = rsp;
+				wg.done();
+				
+			}).catch(function (err) {
+				console.log("failed to get 'default_format' because " + err);
+			});
+			
 			wg.wait(cb);
 		},
 		
@@ -120,6 +132,10 @@
 		
 		'formats': function(){
 			return _formats;
+		},
+
+		'default_format': function(){
+			return _default_format;
 		},
 		
 		'set': function(key, value) {
