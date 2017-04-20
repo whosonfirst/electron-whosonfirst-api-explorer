@@ -810,6 +810,13 @@
 				group.appendChild(example);
 				form.appendChild(group);				
 			}
+
+			// pagination
+
+			if (method["paginated"]){
+
+
+			}
 			
 			// format
 
