@@ -452,6 +452,24 @@
 				params_table.appendChild(row);
 				root.appendChild(params_table);
 			}
+
+			// pagination
+
+			if ((method["paginated"]) && (method["pagination"] == "cursor")){
+
+			}
+
+			else if ((method["paginated"]) && (method["pagination"] == "mixed")){
+
+			}
+
+			else if (method["paginated"]){
+
+			}
+
+			else {}
+
+			// format
 			
 			var name_cell = document.createElement("td");
 			name_cell.setAttribute("class", "api-param-name");
@@ -813,10 +831,19 @@
 
 			// pagination
 
-			if (method["paginated"]){
-
+			if ((method["paginated"]) && (method["pagination"] == "cursor")){
 
 			}
+
+			else if ((method["paginated"]) && (method["pagination"] == "mixed")){
+
+			}
+
+			else if (method["paginated"]){
+
+			}
+
+			else {}
 			
 			// format
 
