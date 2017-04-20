@@ -828,19 +828,33 @@
 			var formats = _spec.formats();
 			var count = formats.length;
 			
+			var disallow_count = (method["disallow_formats"]) ? method["disallow_formats"].length : 0;
+			
 			formats.sort();
 			
 			for (var i = 0; i < count; i++) {
 				
 				var fmt = formats[i];
+				
+				if (disallow_count){
 
+					var disallow = false;
+
+					for (var d=0; d < disallow_count; d++){
+
+						if (method["disallow_formats"][d] == fmt){
+							disallow = true;
+							break;
+						}
+					}
+
+					if (disallow){
+						continue;
+					}
+				}
+				
 				var option = document.createElement("option");
 				option.setAttribute("value", fmt);
-
-				if (fmt != _spec.default_format()){
-					// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/13
-					continue;
-				}
 				
 				if (fmt == _spec.default_format()){
 					option.setAttribute("selected", "selected");
