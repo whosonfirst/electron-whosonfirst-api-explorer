@@ -424,7 +424,34 @@
 				}
 			}
 
-			// format
+			// extras
+
+			if (method["extras"]){
+
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("extras"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode("A comma-separated list of extra properties to include with each response."));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode("wof:path,mz:uri,name:"));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);
+			}
 			
 			var name_cell = document.createElement("td");
 			name_cell.setAttribute("class", "api-param-name");
@@ -448,7 +475,6 @@
 			row.appendChild(required_cell);										
 			
 			params_table.appendChild(row);
-
 			root.appendChild(params_table);
 			
 			// errors
@@ -740,6 +766,51 @@
 				}
 			}
 
+			// extras
+
+			if (method["extras"]){
+
+				var group = document.createElement("div");
+				group.setAttribute("class", "form-group");
+			
+				var label = document.createElement("label");
+				label.setAttribute("for", "extras");
+				label.appendChild(document.createTextNode("extras"));
+
+				var input = document.createElement("input");
+				input.setAttribute("class", "form-control");					
+				input.setAttribute("type", "text");
+				input.setAttribute("name", "extras");
+				input.setAttribute("id", "input-extras");
+				input.setAttribute("value", "");
+				input.setAttribute("placeholder", "A comma-separated list of extra properties to include with each response.");
+
+				group.appendChild(label);
+				group.appendChild(input);
+
+				var example = document.createElement("small");
+				example.setAttribute("class", "api-form-example");
+				example.setAttribute("data-input-id", "extras");			
+
+				example.onclick = function(e){
+							
+					var el = e.target;
+					var ex = el.innerText;
+							
+					var id = "input-" + el.getAttribute("data-input-id");
+					var input = document.getElementById(id);
+							
+					if (input){
+						input.setAttribute("value", ex);
+					}
+				};
+					
+				example.appendChild(document.createTextNode("mz:uri"));
+				
+				group.appendChild(example);
+				form.appendChild(group);				
+			}
+			
 			// format
 
 			var group = document.createElement("div");
