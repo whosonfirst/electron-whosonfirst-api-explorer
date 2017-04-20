@@ -314,7 +314,7 @@
 			
 			params_table.appendChild(header_row);
 
-			// method
+			// method, api_key
 
 			var name_cell = document.createElement("td");
 			name_cell.setAttribute("class", "api-param-name");
@@ -339,6 +339,29 @@
 			
 			params_table.appendChild(row);
 
+			var name_cell = document.createElement("td");
+			name_cell.setAttribute("class", "api-param-name");
+			name_cell.appendChild(document.createTextNode("api_key"));
+			
+			var desc_cell = document.createElement("td");
+			desc_cell.appendChild(document.createTextNode("A valid API key."));
+			
+			var example_cell = document.createElement("td");
+			example_cell.setAttribute("class", "api-param-example");
+			
+			example_cell.appendChild(document.createTextNode("mapzen-xxxxxx"));
+			
+			var required_cell = document.createElement("td");
+			required_cell.appendChild(document.createTextNode("👍"));
+					
+			var row = document.createElement("tr");
+			row.appendChild(name_cell);
+			row.appendChild(desc_cell);
+			row.appendChild(example_cell);
+			row.appendChild(required_cell);										
+			
+			params_table.appendChild(row);
+			
 			//
 			
 			var params = m["parameters"];

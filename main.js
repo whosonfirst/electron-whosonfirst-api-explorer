@@ -22,10 +22,10 @@ was compiled against a different Node.js version using
 NODE_MODULE_VERSION 51. This version of Node.js requires
 NODE_MODULE_VERSION 53. Please try re-compiling or re-installing
 the module (for instance, using `npm rebuild` or`npm install`).
-
-const keytar = require('keytar')	
-api_key = keytar.getPassword("whosonfirst", "api_explorer")
 */
+
+// const keytar = require('keytar')	
+// api_key = keytar.getPassword("whosonfirst", "api_explorer")
 
 let mainWindow
 
