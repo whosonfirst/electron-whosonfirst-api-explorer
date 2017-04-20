@@ -291,36 +291,61 @@
 			
 			root.appendChild(params_header);
 
+			var params_table = document.createElement("table");
+			params_table.setAttribute("class", "table table-condensed");
+			
+			var name_header = document.createElement("th");
+			name_header.appendChild(document.createTextNode("Name"));
+			
+			var desc_header = document.createElement("th");
+			desc_header.appendChild(document.createTextNode("Description"));
+			
+			var example_header = document.createElement("th");
+			example_header.appendChild(document.createTextNode("Example"));
+			
+			var required_header = document.createElement("th");
+			required_header.appendChild(document.createTextNode("Required"));
+			
+			var header_row = document.createElement("tr");
+			header_row.appendChild(name_header);
+			header_row.appendChild(desc_header);
+			header_row.appendChild(example_header);
+			header_row.appendChild(required_header);				
+			
+			params_table.appendChild(header_row);
+
+			// method
+
+			var name_cell = document.createElement("td");
+			name_cell.setAttribute("class", "api-param-name");
+			name_cell.appendChild(document.createTextNode("method"));
+			
+			var desc_cell = document.createElement("td");
+			desc_cell.appendChild(document.createTextNode("The name of the API method."));
+			
+			var example_cell = document.createElement("td");
+			example_cell.setAttribute("class", "api-param-example");
+			
+			example_cell.appendChild(document.createTextNode(method_name));
+			
+			var required_cell = document.createElement("td");
+			required_cell.appendChild(document.createTextNode("👍"));
+					
+			var row = document.createElement("tr");
+			row.appendChild(name_cell);
+			row.appendChild(desc_cell);
+			row.appendChild(example_cell);
+			row.appendChild(required_cell);										
+			
+			params_table.appendChild(row);
+
+			//
+			
 			var params = m["parameters"];
 			var params_count = params.length;
-
+		
 			if (params_count){
-								
-				var params_table = document.createElement("table");
-				params_table.setAttribute("class", "table table-condensed");
-				
-				var name_header = document.createElement("th");
-				name_header.appendChild(document.createTextNode("Name"));
-
-				var desc_header = document.createElement("th");
-				desc_header.appendChild(document.createTextNode("Description"));
-
-				var example_header = document.createElement("th");
-				example_header.appendChild(document.createTextNode("Example"));
-
-				var required_header = document.createElement("th");
-				required_header.appendChild(document.createTextNode("Required"));
-
-				var header_row = document.createElement("tr");
-				header_row.appendChild(name_header);
-				header_row.appendChild(desc_header);
-				header_row.appendChild(example_header);
-				header_row.appendChild(required_header);				
-
-				params_table.appendChild(header_row);
-				
-				var params_list = document.createElement("ul");
-
+												
 				var params_lookup = {};
 				var params_names = [];
 
@@ -374,19 +399,35 @@
 
 					params_table.appendChild(row);
 				}
-
-				root.appendChild(params_table);				
 			}
 
-			else {
+			// format
+			
+			var name_cell = document.createElement("td");
+			name_cell.setAttribute("class", "api-param-name");
+			name_cell.appendChild(document.createTextNode("format"));
+			
+			var desc_cell = document.createElement("td");
+			desc_cell.appendChild(document.createTextNode("How you'd like API responses to be formatted."));
+			
+			var example_cell = document.createElement("td");
+			example_cell.setAttribute("class", "api-param-example");
+			
+			example_cell.appendChild(document.createTextNode("json"));
+			
+			var required_cell = document.createElement("td");
+			required_cell.appendChild(document.createTextNode("–"));
+					
+			var row = document.createElement("tr");
+			row.appendChild(name_cell);
+			row.appendChild(desc_cell);
+			row.appendChild(example_cell);
+			row.appendChild(required_cell);										
+			
+			params_table.appendChild(row);
 
-				var p = document.createElement("p");
-				p.setAttribute("class", "caveat");
-				p.appendChild(document.createTextNode("This API method has no parameters."));
-
-				root.appendChild(p);
-			}
-
+			root.appendChild(params_table);
+			
 			// errors
 			
 			var errors_header = document.createElement("h3");
@@ -674,13 +715,6 @@
 					
 					form.appendChild(group);
 				}
-			}
-
-			else {
-
-				// var p = document.createElement("p");
-				// p.appendChild(document.createTextNode("This API method has no parameters."));
-				// form.appendChild(p);
 			}
 
 			// format
