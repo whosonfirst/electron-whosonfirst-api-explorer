@@ -36,6 +36,63 @@
 			_api = api;
 			_spec = spec;
 		},
+
+		'draw_api_key': function(){
+
+			self.clear_all();
+			self.toggle_print_button(false);
+
+			var root = document.createElement("div");
+
+			var h3 = document.createElement("h3");
+			h3.appendChild(document.createTextNode("Your API key"));
+
+			root.appendChild(h3);
+			
+			var form = document.createElement("form");
+			form.setAttribute("id", "key-form");
+
+			var group = document.createElement("div");
+			group.setAttribute("class", "form-group");
+			
+			var label = document.createElement("label");
+			label.setAttribute("for", "api_key");
+			label.appendChild(document.createTextNode("API key"));
+
+			var input = document.createElement("input");
+			input.setAttribute("class", "form-control");					
+			input.setAttribute("type", "text");
+			input.setAttribute("name", "api_key");
+			input.setAttribute("id", "api_key");					
+			input.setAttribute("value", "");
+			input.setAttribute("placeholder", "mapzen-xxxxxx");
+
+			group.appendChild(label);
+			group.appendChild(input);
+
+			var submit = document.createElement("button");
+			submit.setAttribute("type", "submit");
+			submit.setAttribute("class", "btn btn-default");			
+			submit.appendChild(document.createTextNode("Add API key"));
+
+			var onsubmit = function(){
+				// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/12
+				alert("please implement me");
+				return false;
+			};
+
+			submit.onclick = onsubmit;
+			form.onsubmit = onsubmit;
+
+			// to do add a remove key button
+			
+			form.appendChild(group);
+			form.appendChild(submit);
+			
+			root.appendChild(form);
+			
+			self.draw_main(root);
+		},
 		
 		'draw_methods_list': function(){
 

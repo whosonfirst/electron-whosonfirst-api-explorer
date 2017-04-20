@@ -8,6 +8,25 @@ const ipcMain = require('electron').ipcMain;
 const path = require('path')
 const url = require('url')
 
+/*
+
+https://medium.com/@ccnokes/how-to-securely-store-sensitive-information-in-electron-with-node-keytar-51af99f1cfc4
+https://github.com/atom/node-keytar
+https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/12
+
+Sigh... (20170418/thisisaaronland)
+
+Uncaught Error: The module
+'electron-whosonfirst-api-explorer/node_modules/keytar/build/Release/keytar.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 51. This version of Node.js requires
+NODE_MODULE_VERSION 53. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or`npm install`).
+
+const keytar = require('keytar')	
+api_key = keytar.getPassword("whosonfirst", "api_explorer")
+*/
+
 let mainWindow
 
 // https://electron.atom.io/docs/api/dialog/
@@ -27,23 +46,6 @@ function createWindow () {
 	mainWindow.on('closed', function () {
 		mainWindow = null
 	})
-
-	let contents = mainWindow.webContents;
-
-	/*
-	contents.capturePage(function(r){
-		console.log(r);
-	});
-	*/
-	
-	contents.on('did-finish-load', (event, arg) => {
-		contents.send('asynchronous-reply', "DID FINISH LOAD");
-	});
-
-	contents.on('did-navigate-in-page', (event, arg) => {
-		contents.send('asynchronous-reply', "DID NAVIGATE");
-	});
-	
 }
 
 app.on('ready', createWindow)
@@ -60,20 +62,20 @@ app.on('activate', function () {
 	}
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-    
-ipcMain.on('asynchronous-message', (event, arg) => {
+ipcMain.on('renderer', (event, arg) => {
 
 	/*
-	if (arg == "ping"){
-		event.sender.send('asynchronous-reply', mainWindow.webContents.canGoBack());
+	if (arg == "question"){
+		const d = require('electron').dialog;
+		d.showMessageBox(mainWindow, {'type': 'question', 'message': 'what', 'buttons': ['submit', 'cancel']})		
 	}
 	*/
-
-	// https://electron.atom.io/docs/api/web-contents/#contentsprinttopdfoptions-callback
 	
 	if (arg == "print"){
+
+		// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/10	
+		// https://electron.atom.io/docs/api/web-contents/#contentsprinttopdfoptions-callback
+		
 		let contents = mainWindow.webContents;
 
 		contents.print();

@@ -185,6 +185,9 @@
 				req.addEventListener("progress", onprogress);
 				req.addEventListener("error", onfailed);
 				req.addEventListener("abort", onabort);
+
+				// please fix me...
+				// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/11
 				
 				var query = [];
 				
