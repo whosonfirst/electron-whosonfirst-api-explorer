@@ -74,7 +74,42 @@ ipcMain.on('asynchronous-message', (event, arg) => {
 	// https://electron.atom.io/docs/api/web-contents/#contentsprinttopdfoptions-callback
 	
 	if (arg == "print"){
-		let contents = mainWindow.webContents;		
+		let contents = mainWindow.webContents;
+
 		contents.print();
+		return;
+
+		// basically all this to default to a PDF file but still only
+		// "prints" a single page/viewport rather than all the content
+		// (20170419/thisisaaronland)
+		
+		var opts = {
+			marginsType: 0,
+			printBackground: false,
+			printSelectionOnly: false,
+			landscape: false
+		};
+
+		var cb = function(err, buf){
+
+			if (err){
+				throw error;
+			}
+
+			const remote = require("electron");
+			const fs = require("fs");			
+			
+			remote.dialog.showSaveDialog(BrowserWindow.getCurrentWindow, (filename) => {
+
+				fs.writeFile(filename, buf, (error) => {
+					
+					if (error){
+						throw error;
+					}
+				});
+			});
+		};
+		
+		contents.printToPDF(opts, cb);
 	}
 })
