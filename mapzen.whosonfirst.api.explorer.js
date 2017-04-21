@@ -1022,14 +1022,213 @@
 
 			if ((method["paginated"]) && (method["pagination"] == "cursor")){
 
+				var group = document.createElement("div");
+				group.setAttribute("class", "form-group");
+			
+				var label = document.createElement("label");
+				label.setAttribute("for", "cursor");
+				label.appendChild(document.createTextNode("cursor"));
+
+				var input = document.createElement("input");
+				input.setAttribute("class", "form-control");					
+				input.setAttribute("type", "text");
+				input.setAttribute("name", "cursor");
+				input.setAttribute("id", "input-cursor");
+				input.setAttribute("value", "");
+				input.setAttribute("placeholder", "");
+
+				group.appendChild(label);
+				group.appendChild(input);
+				
+				group.appendChild(example);
+				form.appendChild(group);				
 			}
 
 			else if ((method["paginated"]) && (method["pagination"] == "mixed")){
 
+				var group = document.createElement("div");
+				group.setAttribute("class", "form-group");
+			
+				var label = document.createElement("label");
+				label.setAttribute("for", "cursor");
+				label.appendChild(document.createTextNode("cursor"));
+
+				var input = document.createElement("input");
+				input.setAttribute("class", "form-control");					
+				input.setAttribute("type", "text");
+				input.setAttribute("name", "cursor");
+				input.setAttribute("id", "input-cursor");
+				input.setAttribute("value", "");
+				input.setAttribute("placeholder", "");
+
+				group.appendChild(label);
+				group.appendChild(input);
+				
+				group.appendChild(example);
+				form.appendChild(group);				
+				
+				var group = document.createElement("div");
+				group.setAttribute("class", "form-group");
+			
+				var label = document.createElement("label");
+				label.setAttribute("for", "extras");
+				label.appendChild(document.createTextNode("page"));
+
+				var input = document.createElement("input");
+				input.setAttribute("class", "form-control");					
+				input.setAttribute("type", "text");
+				input.setAttribute("name", "page");
+				input.setAttribute("id", "input-page");
+				input.setAttribute("value", "");
+				input.setAttribute("placeholder", "");
+
+				group.appendChild(label);
+				group.appendChild(input);
+
+				var example = document.createElement("small");
+				example.setAttribute("class", "api-form-example");
+				example.setAttribute("data-input-id", "page");			
+
+				example.onclick = function(e){
+							
+					var el = e.target;
+					var ex = el.innerText;
+							
+					var id = "input-" + el.getAttribute("data-input-id");
+					var input = document.getElementById(id);
+							
+					if (input){
+						input.setAttribute("value", ex);
+					}
+				};
+					
+				example.appendChild(document.createTextNode("1"));
+				
+				group.appendChild(example);
+				form.appendChild(group);				
+
+				var group = document.createElement("div");
+				group.setAttribute("class", "form-group");
+			
+				var label = document.createElement("label");
+				label.setAttribute("for", "extras");
+				label.appendChild(document.createTextNode("per_page"));
+
+				var input = document.createElement("input");
+				input.setAttribute("class", "form-control");					
+				input.setAttribute("type", "text");
+				input.setAttribute("name", "per_page");
+				input.setAttribute("id", "input-per_page");
+				input.setAttribute("value", "");
+				input.setAttribute("placeholder", "");
+
+				group.appendChild(label);
+				group.appendChild(input);
+
+				var example = document.createElement("small");
+				example.setAttribute("class", "api-form-example");
+				example.setAttribute("data-input-id", "per_page");			
+
+				example.onclick = function(e){
+							
+					var el = e.target;
+					var ex = el.innerText;
+							
+					var id = "input-" + el.getAttribute("data-input-id");
+					var input = document.getElementById(id);
+							
+					if (input){
+						input.setAttribute("value", ex);
+					}
+				};
+					
+				example.appendChild(document.createTextNode("10"));
+				
+				group.appendChild(example);
+				form.appendChild(group);
 			}
 
 			else if (method["paginated"]){
 
+				var group = document.createElement("div");
+				group.setAttribute("class", "form-group");
+			
+				var label = document.createElement("label");
+				label.setAttribute("for", "extras");
+				label.appendChild(document.createTextNode("page"));
+
+				var input = document.createElement("input");
+				input.setAttribute("class", "form-control");					
+				input.setAttribute("type", "text");
+				input.setAttribute("name", "page");
+				input.setAttribute("id", "input-page");
+				input.setAttribute("value", "");
+				input.setAttribute("placeholder", "");
+
+				group.appendChild(label);
+				group.appendChild(input);
+
+				var example = document.createElement("small");
+				example.setAttribute("class", "api-form-example");
+				example.setAttribute("data-input-id", "page");			
+
+				example.onclick = function(e){
+							
+					var el = e.target;
+					var ex = el.innerText;
+							
+					var id = "input-" + el.getAttribute("data-input-id");
+					var input = document.getElementById(id);
+							
+					if (input){
+						input.setAttribute("value", ex);
+					}
+				};
+					
+				example.appendChild(document.createTextNode("1"));
+				
+				group.appendChild(example);
+				form.appendChild(group);				
+
+				var group = document.createElement("div");
+				group.setAttribute("class", "form-group");
+			
+				var label = document.createElement("label");
+				label.setAttribute("for", "extras");
+				label.appendChild(document.createTextNode("per_page"));
+
+				var input = document.createElement("input");
+				input.setAttribute("class", "form-control");					
+				input.setAttribute("type", "text");
+				input.setAttribute("name", "per_page");
+				input.setAttribute("id", "input-per_page");
+				input.setAttribute("value", "");
+				input.setAttribute("placeholder", "");
+
+				group.appendChild(label);
+				group.appendChild(input);
+
+				var example = document.createElement("small");
+				example.setAttribute("class", "api-form-example");
+				example.setAttribute("data-input-id", "per_page");			
+
+				example.onclick = function(e){
+							
+					var el = e.target;
+					var ex = el.innerText;
+							
+					var id = "input-" + el.getAttribute("data-input-id");
+					var input = document.getElementById(id);
+							
+					if (input){
+						input.setAttribute("value", ex);
+					}
+				};
+					
+				example.appendChild(document.createTextNode("10"));
+				
+				group.appendChild(example);
+				form.appendChild(group);				
 			}
 
 			else {}
