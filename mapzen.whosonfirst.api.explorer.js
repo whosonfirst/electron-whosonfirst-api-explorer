@@ -663,9 +663,39 @@
 			var name_cell = document.createElement("td");
 			name_cell.setAttribute("class", "api-param-name");
 			name_cell.appendChild(document.createTextNode("format"));
-			
+
 			var desc_cell = document.createElement("td");
 			desc_cell.appendChild(document.createTextNode("How you'd like API responses to be formatted."));
+
+			if ((method["disallow_formats"]) && (method["disallow_formats"].length)){
+
+				var disallow = method["disallow_formats"];
+				var disallow_count = disallow.length;
+				
+				desc_cell.appendChild(document.createTextNode(" The following output formats are disallowed for this API method: "));
+				
+				var list = document.createElement("ul");
+				list.setAttribute("class", "list-inline disallowed-formats");
+				
+				for (var d=0; d < disallow_count; d++){
+
+					var fmt = disallow[d];
+					item = document.createElement("li");
+					item.appendChild(document.createTextNode(fmt));
+					list.appendChild(item);
+				}
+				
+				desc_cell.appendChild(list);
+			}
+
+			desc_cell.appendChild(document.createTextNode(" The default format is "));
+
+			var span = document.createElement("span");
+			span.setAttribute("class", "default-format");
+			span.appendChild(document.createTextNode(_spec.default_format()));
+
+			desc_cell.appendChild(span);
+			desc_cell.appendChild(document.createTextNode("."));
 			
 			var example_cell = document.createElement("td");
 			example_cell.setAttribute("class", "api-param-example");
@@ -774,11 +804,18 @@
 
 			// notes
 
+			var has_notes = false;
+			
 			var notes = m["notes"];
+			var disallow = m["disallow_formats"];			
 
-			if (notes){
+			if ((notes) || (disallow)){
+
+				// this kind of hoop-jumping should not be necessary
+				// but still is because... computers?
 				
-				var notes_count = notes.length;
+				var notes_count = (notes) ? notes.length : 0;
+				var disallow_count = (disallow) ? disallow.length : 0;
 
 				var notes_header = document.createElement("h3");
 				notes_header.appendChild(document.createTextNode("Notes"));
@@ -795,6 +832,27 @@
 					root.appendChild(p);
 				}
 
+				if (disallow_count){
+
+					var p = document.createElement("p");
+
+					p.appendChild(document.createTextNode("The following output formats are disallowed for this API method: "));
+
+					var list = document.createElement("ul");
+					list.setAttribute("class", "list-inline disallowed-formats");
+					
+					for (var d=0; d < disallow_count; d++){
+
+						var fmt = disallow[d];
+						item = document.createElement("li");
+						item.appendChild(document.createTextNode(fmt));
+						list.appendChild(item);
+					}
+
+					p.appendChild(list);
+					root.appendChild(p);
+				}
+				
 				// The following output formats are disallowed for this API method:
 			}
 
