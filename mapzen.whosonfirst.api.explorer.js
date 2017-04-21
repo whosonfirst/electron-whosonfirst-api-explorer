@@ -462,7 +462,7 @@
 				name_cell.appendChild(document.createTextNode("cursor"));
 			
 				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode(""));
+				desc_cell.appendChild(document.createTextNode("A valid API pagination cursor."));
 			
 				var example_cell = document.createElement("td");
 				example_cell.setAttribute("class", "api-param-example");
@@ -513,7 +513,7 @@
 				name_cell.appendChild(document.createTextNode("cursor"));
 			
 				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode(""));
+				desc_cell.appendChild(document.createTextNode("Valid API pagination cursor."));
 			
 				var example_cell = document.createElement("td");
 				example_cell.setAttribute("class", "api-param-example");
@@ -537,7 +537,7 @@
 				name_cell.appendChild(document.createTextNode("page"));
 			
 				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode(""));
+				desc_cell.appendChild(document.createTextNode("The page of results to return."));
 			
 				var example_cell = document.createElement("td");
 				example_cell.setAttribute("class", "api-param-example");
@@ -561,7 +561,7 @@
 				name_cell.appendChild(document.createTextNode("per_page"));
 			
 				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode(""));
+				desc_cell.appendChild(document.createTextNode("The number of results to return per page."));
 			
 				var example_cell = document.createElement("td");
 				example_cell.setAttribute("class", "api-param-example");
@@ -588,7 +588,7 @@
 				name_cell.appendChild(document.createTextNode("cursor"));
 			
 				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode(""));
+				desc_cell.appendChild(document.createTextNode("A valid API pagination cursor."));
 			
 				var example_cell = document.createElement("td");
 				example_cell.setAttribute("class", "api-param-example");
@@ -612,7 +612,7 @@
 				name_cell.appendChild(document.createTextNode("page"));
 			
 				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode(""));
+				desc_cell.appendChild(document.createTextNode("The page of results to return."));
 			
 				var example_cell = document.createElement("td");
 				example_cell.setAttribute("class", "api-param-example");
@@ -636,7 +636,7 @@
 				name_cell.appendChild(document.createTextNode("per_page"));
 			
 				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode(""));
+				desc_cell.appendChild(document.createTextNode("The number of results to return per page."));
 			
 				var example_cell = document.createElement("td");
 				example_cell.setAttribute("class", "api-param-example");
@@ -1035,12 +1035,11 @@
 				input.setAttribute("name", "cursor");
 				input.setAttribute("id", "input-cursor");
 				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "");
+				input.setAttribute("placeholder", "A valid API pagination cursor.");
 
 				group.appendChild(label);
 				group.appendChild(input);
 				
-				group.appendChild(example);
 				form.appendChild(group);				
 			}
 
@@ -1059,12 +1058,11 @@
 				input.setAttribute("name", "cursor");
 				input.setAttribute("id", "input-cursor");
 				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "");
+				input.setAttribute("placeholder", "A valid API pagination cursor.");
 
 				group.appendChild(label);
 				group.appendChild(input);
 				
-				group.appendChild(example);
 				form.appendChild(group);				
 				
 				var group = document.createElement("div");
@@ -1080,7 +1078,7 @@
 				input.setAttribute("name", "page");
 				input.setAttribute("id", "input-page");
 				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "");
+				input.setAttribute("placeholder", "The page of results to return.");
 
 				group.appendChild(label);
 				group.appendChild(input);
@@ -1120,7 +1118,7 @@
 				input.setAttribute("name", "per_page");
 				input.setAttribute("id", "input-per_page");
 				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "");
+				input.setAttribute("placeholder", "The number of results to return per page.");
 
 				group.appendChild(label);
 				group.appendChild(input);
@@ -1163,7 +1161,7 @@
 				input.setAttribute("name", "page");
 				input.setAttribute("id", "input-page");
 				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "");
+				input.setAttribute("placeholder", "The page of results to return.");
 
 				group.appendChild(label);
 				group.appendChild(input);
@@ -1203,7 +1201,7 @@
 				input.setAttribute("name", "per_page");
 				input.setAttribute("id", "input-per_page");
 				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "");
+				input.setAttribute("placeholder", "The number of results to return per page.");
 
 				group.appendChild(label);
 				group.appendChild(input);

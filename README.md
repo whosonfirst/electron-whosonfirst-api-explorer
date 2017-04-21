@@ -1,12 +1,18 @@
 # electron-whosonfirst-api-explorer
 
-![](docs/explore.png)
-
 An Electron-based API explorer for the Who's On First API.
+
+## Pictures or it didn't happen!
+
+![](docs/api-explorer-docs.png)
+
+![](docs/api-explorer-query.png)
+
+![](docs/api-explorer-results.png)
 
 ## Caveats
 
-Too soon. Move along.
+Work in progress. All the usual caveats apply.
 
 ## Install
 
