@@ -457,14 +457,203 @@
 
 			if ((method["paginated"]) && (method["pagination"] == "cursor")){
 
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("cursor"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode(""));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode(""));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);
+
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("per_page"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode(""));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode("10"));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);								
 			}
 
 			else if ((method["paginated"]) && (method["pagination"] == "mixed")){
 
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("cursor"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode(""));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode(""));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);
+
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("page"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode(""));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode("1"));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);
+
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("per_page"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode(""));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode("10"));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);				
 			}
 
 			else if (method["paginated"]){
 
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("cursor"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode(""));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode(""));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);
+
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("page"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode(""));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode("1"));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);
+
+				var name_cell = document.createElement("td");
+				name_cell.setAttribute("class", "api-param-name");
+				name_cell.appendChild(document.createTextNode("per_page"));
+			
+				var desc_cell = document.createElement("td");
+				desc_cell.appendChild(document.createTextNode(""));
+			
+				var example_cell = document.createElement("td");
+				example_cell.setAttribute("class", "api-param-example");
+			
+				example_cell.appendChild(document.createTextNode("10"));
+			
+				var required_cell = document.createElement("td");
+				required_cell.appendChild(document.createTextNode("–"));
+					
+				var row = document.createElement("tr");
+				row.appendChild(name_cell);
+				row.appendChild(desc_cell);
+				row.appendChild(example_cell);
+				row.appendChild(required_cell);										
+			
+				params_table.appendChild(row);
+				root.appendChild(params_table);				
 			}
 
 			else {}
