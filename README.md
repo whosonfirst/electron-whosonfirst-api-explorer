@@ -12,7 +12,7 @@ An Electron-based API explorer for the Who's On First API.
 
 ## Caveats
 
-Work in progress. All the usual caveats apply.
+[Work in progress](https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues). All the usual caveats apply.
 
 ## Install
 
