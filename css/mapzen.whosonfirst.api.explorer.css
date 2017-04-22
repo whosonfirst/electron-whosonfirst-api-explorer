@@ -7,14 +7,14 @@ body {
 
 .api-param-name {
     font-weight: 700;
-    background-color: #000 !important;
-    color: #fff !important;
+    // background-color: #000 !important;
+    // color: #fff !important;
 }
 
 .api-error-code {
     font-weight: 700;
-    background-color: #000 !important;
-    color: #fff !important;
+    // background-color: #000 !important;
+    // color: #fff !important;
 }
 
 #header {

@@ -937,7 +937,7 @@
 				
 				return;
 			}
-
+			
 			var on_response = function(rsp){
 
 				_parrot.stop();
@@ -952,7 +952,9 @@
 				res.style.display = "block";			
 			};
 
-			_api.execute_method(method, data, on_response, on_response);
+			var  m = _api.method(method);
+			
+			_api.execute_method(m, data, on_response, on_response);
 
 			_parrot.start("invoking " + method);
 		},

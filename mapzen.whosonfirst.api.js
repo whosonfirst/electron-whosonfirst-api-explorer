@@ -70,10 +70,35 @@
 			
 			return self._handlers[target];
 		},
+
+		'method': function(name, args){
+
+			if (! args){
+				args = {"verb": "GET"};
+			}
+			
+			var m = function(n, v){
+
+				var self = {
+					'name': function(){ return n; },
+					'verb': function(){ return v; },
+				};
+
+				return self;
+			};
+
+			return m(name, args["verb"]);
+		},
 		
 		'execute_method': function(method, data, on_success, on_error){
+
+			if (typeof(method) == "string"){
+				method = self.method(method);
+			}
 			
 			var dothis_onsuccess = function(rsp){
+
+				console.log("OK");
 				
 				if (on_success){
 					on_success(rsp);
@@ -81,7 +106,8 @@
 			};
 			
 			var dothis_onerror = function(rsp){
-				
+
+				console.log("ERROR");				
 				console.log(rsp);
 				
 				if (on_error){
@@ -114,7 +140,9 @@
 				}
 			}
 			
-			form_data.append('method', method);
+			form_data.append('method', method.name());
+
+			// sudo make this a generic apply_authentication thingy
 			
 			if (! form_data.get("api_key")){
 				
@@ -129,6 +157,8 @@
 			}
 			
 			var onload = function(rsp){
+
+				console.log("LOAD");
 				
 				var target = rsp.target;
 				
@@ -142,22 +172,27 @@
 				var raw = target['responseText'];
 				var data = undefined;
 
-				try {
-					data = JSON.parse(raw);
-				}
+				var fmt = form_data.get("format");
 				
-				catch (e){
+				if ((fmt == "json") || (fmt == "")){
+					
+					try {
+						data = JSON.parse(raw);
+					}
+				
+					catch (e){
+						dothis_onerror(self.destruct("failed to parse JSON " + e));
+						return false;
+					}
+				
+					if (data['stat'] != 'ok'){
+						dothis_onerror(data);
+						return false;
+					}
+				}
 
-					// console.log(raw);
-					
-					dothis_onerror(self.destruct("failed to parse JSON " + e));
-					return false;
-				}
-				
-				if (data['stat'] != 'ok'){
-					
-					dothis_onerror(data);
-					return false;
+				else {
+					data = raw;
 				}
 				
 				dothis_onsuccess(data);
@@ -165,16 +200,16 @@
 			};
 			
 			var onprogress = function(rsp){
-				// console.log("progress");
+				console.log("PROGRESS");
 			};
 			
 			var onfailed = function(rsp){
-				
+				console.log("FAILED");				
 				dothis_onerror(self.destruct("connection failed " + rsp));
 			};
 			
 			var onabort = function(rsp){
-				
+				console.log("ABORT");					
 				dothis_onerror(self.destruct("connection aborted " + rsp));
 			};
 			
@@ -191,20 +226,24 @@
 				// please fix me...
 				// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/11
 
-				var get = true;
+				if (method.verb() == "GET"){
 
-				if (get){
-					var query = [];
+					if (form_data.keys()){
+
+						var query = [];
 				
-					for (var pair of form_data.entries()) {
-						var k = pair[0];
-						var v = pair[1];
-						query.push(k + "=" + encodeURIComponent(v));
+						for (var pair of form_data.entries()) {
+							query.push(pair[0] + "=" + encodeURIComponent(pair[1]));
+						}
+						
+						var query_string = query.join("&");
+						var sep = (endpoint.indexOf('?') == -1) ? '?' : '&';
+						
+						endpoint = endpoint + sep + query.join("&");
 					}
-				
-					endpoint = endpoint + "?" + query.join("&");
-					req.open("GET", endpoint, true);					
 
+					console.log("GET " + endpoint);
+					req.open("GET", endpoint, true);
 					return;
 				}
 
