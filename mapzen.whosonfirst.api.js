@@ -190,20 +190,25 @@
 
 				// please fix me...
 				// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/11
+
+				var get = true;
+
+				if (get){
+					var query = [];
 				
-				var query = [];
+					for (var pair of form_data.entries()) {
+						var k = pair[0];
+						var v = pair[1];
+						query.push(k + "=" + encodeURIComponent(v));
+					}
 				
-				for (var pair of form_data.entries()) {
-					var k = pair[0];
-					var v = pair[1];
-					
-					query.push(k + "=" + encodeURIComponent(v));
+					endpoint = endpoint + "?" + query.join("&");
+					req.open("GET", endpoint, true);					
+
+					return;
 				}
-				
-				endpoint = endpoint + "?" + query.join("&");
-				console.log(endpoint);
-				
-				req.open("GET", endpoint, true);
+
+				req.open("POST", endpoint, true);					
 				req.send(form_data);
 				
 			} catch (e) {
