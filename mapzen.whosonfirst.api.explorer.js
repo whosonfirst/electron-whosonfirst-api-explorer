@@ -96,7 +96,6 @@
 		
 		'draw_methods_list': function(){
 			
-			self.clear_all();
 			self.toggle_print_button(false);
 			
 			var methods = _spec.methods();
@@ -155,15 +154,14 @@
 				ul.appendChild(li);
 			}
 
-			// self.clear_main();
-
 			var root = document.createElement("div");
 			root.appendChild(ul);
 			
-			var reload = self.reload_button();
+			var reload = self.reload_button(self.draw_methods_list);
 			reload.setAttribute("title", "reload API methods");
 			root.appendChild(reload);
-			
+
+			self.clear_all();			
 			self.draw_sidebar(root);
 		},
 
@@ -208,15 +206,14 @@
 				ul.appendChild(li);
 			}
 
-			self.clear_sidebar();
-
 			var root = document.createElement("div");
 			root.appendChild(ul);
 			
-			var reload = self.reload_button();
+			var reload = self.reload_button(self.draw_errors_list);
 			reload.setAttribute("title", "reload API errors");
 			root.appendChild(reload);
-			
+
+			self.clear_sidebar();			
 			self.draw_main(root);
 		},
 
@@ -238,14 +235,6 @@
 				var h3 = document.createElement("h3");
 				h3.setAttribute("data-format-name", name);
 				h3.appendChild(document.createTextNode(name));
-
-				/*
-				h3.onclick = function(e){
-					var el = e.target;
-					var format = el.getAttribute("data-format-name");
-					self.draw_format(format);
-				};
-				*/
 				
 				var li = document.createElement("li");
 				li.setAttribute("class", "sidebar-item");
@@ -259,7 +248,7 @@
 			var root = document.createElement("div");
 			root.appendChild(ul);
 			
-			var reload = self.reload_button();
+			var reload = self.reload_button(self.draw_formats_list);
 			reload.setAttribute("title", "reload API formats");
 			root.appendChild(reload);
 			
@@ -291,11 +280,6 @@
 			h3.setAttribute("data-method-name", method_name);			
 			h3.setAttribute("title", "Take this API method for a spin");
 			h3.appendChild(document.createTextNode(method_name));
-
-			/*
-			var try_me_top = self.tryme_button(method_name, "");
-			h3.appendChild(try_me_top);
-			*/
 
 			h3.onclick = function(e){
 				var el = e.target;
@@ -338,55 +322,11 @@
 			
 			params_table.appendChild(header_row);
 
-			// method, api_key
+			var method_row = self.table_row("method", "The name of the API method.", method_name, true);
+			params_table.appendChild(method_row);
 
-			var name_cell = document.createElement("td");
-			name_cell.setAttribute("class", "api-param-name");
-			name_cell.appendChild(document.createTextNode("method"));
-			
-			var desc_cell = document.createElement("td");
-			desc_cell.appendChild(document.createTextNode("The name of the API method."));
-			
-			var example_cell = document.createElement("td");
-			example_cell.setAttribute("class", "api-param-example");
-			
-			example_cell.appendChild(document.createTextNode(method_name));
-			
-			var required_cell = document.createElement("td");
-			required_cell.appendChild(document.createTextNode("👍"));
-					
-			var row = document.createElement("tr");
-			row.appendChild(name_cell);
-			row.appendChild(desc_cell);
-			row.appendChild(example_cell);
-			row.appendChild(required_cell);										
-			
-			params_table.appendChild(row);
-
-			var name_cell = document.createElement("td");
-			name_cell.setAttribute("class", "api-param-name");
-			name_cell.appendChild(document.createTextNode("api_key"));
-			
-			var desc_cell = document.createElement("td");
-			desc_cell.appendChild(document.createTextNode("A valid API key."));
-			
-			var example_cell = document.createElement("td");
-			example_cell.setAttribute("class", "api-param-example");
-			
-			example_cell.appendChild(document.createTextNode("mapzen-xxxxxx"));
-			
-			var required_cell = document.createElement("td");
-			required_cell.appendChild(document.createTextNode("👍"));
-					
-			var row = document.createElement("tr");
-			row.appendChild(name_cell);
-			row.appendChild(desc_cell);
-			row.appendChild(example_cell);
-			row.appendChild(required_cell);										
-			
-			params_table.appendChild(row);
-			
-			//
+			var key_row = self.table_row("api_key", "A valid API key", "mapzen-xxxxxx", true);
+			params_table.appendChild(key_row);
 			
 			var params = m["parameters"];
 			var params_count = params.length;
@@ -410,41 +350,10 @@
 				for (var p=0; p < params_count; p++){
 
 					var name = params_names[p];
-					var param = params_lookup[name];
-					
-					var desc = param["description"];					
-					
-					var name_cell = document.createElement("td");
-					name_cell.setAttribute("class", "api-param-name");
-					name_cell.appendChild(document.createTextNode(name));
+					var param = params_lookup[name];		
 
-					var desc_cell = document.createElement("td");
-					desc_cell.appendChild(document.createTextNode(desc));
-					
-					var example_cell = document.createElement("td");
-					example_cell.setAttribute("class", "api-param-example");
-					
-					if (param["example"]){
-						example_cell.appendChild(document.createTextNode(param["example"]));
-					}
-
-					var required_cell = document.createElement("td");
-
-					if (param["required"]){
-						required_cell.appendChild(document.createTextNode("👍"));
-					}
-
-					else {
-						required_cell.appendChild(document.createTextNode("–"));
-					}
-					
-					var row = document.createElement("tr");
-					row.appendChild(name_cell);
-					row.appendChild(desc_cell);
-					row.appendChild(example_cell);
-					row.appendChild(required_cell);										
-
-					params_table.appendChild(row);
+					var param_row = self.table_row(name, param["description"], param["example"], param["required"]);
+					params_table.appendChild(param_row);
 				}
 			}
 
@@ -452,251 +361,55 @@
 
 			if (method["extras"]){
 
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("extras"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode("A comma-separated list of extra properties to include with each response."));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode("wof:path,mz:uri,name:"));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);
+				var extras_row = self.table_row("extras","A comma-separated list of extra properties to include with each response.", "wof:path,mz:uri,name:", false);
+				params_table.appendChild(extras_row);
 			}
 
 			// pagination
 
 			if ((method["paginated"]) && (method["pagination"] == "cursor")){
 
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("cursor"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode("A valid API pagination cursor."));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode(""));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);
+				var cursor_row = self.table_row("cursor", "A valid API pagination cursor.", "", false);
+				params_table.appendChild(cursor_row);
 
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("per_page"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode(""));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode("10"));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);								
+				var perpage_row = self.table_row("per_page", "The number of results to return per page.", 10, false);
+				params_table.appendChild(perpage_row);
 			}
 
 			else if ((method["paginated"]) && (method["pagination"] == "mixed")){
 
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("cursor"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode("Valid API pagination cursor."));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode(""));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);
+				var cursor_row = self.table_row("cursor", "A valid API pagination cursor.", "", false);
+				params_table.appendChild(cursor_row);
 
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("page"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode("The page of results to return."));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode("1"));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);
+				var page_row = self.table_row("page", "The page of results to return.", 1, false);
+				params_table.appendChild(page_row);
 
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("per_page"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode("The number of results to return per page."));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode("10"));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);				
+				var perpage_row = self.table_row("per_page", "The number of results to return per page.", 10, false);
+				params_table.appendChild(perpage_row);				
 			}
 
 			else if (method["paginated"]){
 
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("cursor"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode("A valid API pagination cursor."));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode(""));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);
+				var page_row = self.table_row("page", "The page of results to return.", 1, false);
+				params_table.appendChild(page_row);
 
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("page"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode("The page of results to return."));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode("1"));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);
-
-				var name_cell = document.createElement("td");
-				name_cell.setAttribute("class", "api-param-name");
-				name_cell.appendChild(document.createTextNode("per_page"));
-			
-				var desc_cell = document.createElement("td");
-				desc_cell.appendChild(document.createTextNode("The number of results to return per page."));
-			
-				var example_cell = document.createElement("td");
-				example_cell.setAttribute("class", "api-param-example");
-			
-				example_cell.appendChild(document.createTextNode("10"));
-			
-				var required_cell = document.createElement("td");
-				required_cell.appendChild(document.createTextNode("–"));
-					
-				var row = document.createElement("tr");
-				row.appendChild(name_cell);
-				row.appendChild(desc_cell);
-				row.appendChild(example_cell);
-				row.appendChild(required_cell);										
-			
-				params_table.appendChild(row);
-				root.appendChild(params_table);				
+				var perpage_row = self.table_row("per_page", "The number of results to return per page.", 10, false);
+				params_table.appendChild(perpage_row);				
 			}
 
 			else {}
 
 			// format
-			
-			var name_cell = document.createElement("td");
-			name_cell.setAttribute("class", "api-param-name");
-			name_cell.appendChild(document.createTextNode("format"));
 
-			var desc_cell = document.createElement("td");
-			desc_cell.appendChild(document.createTextNode("How you'd like API responses to be formatted."));
+			var format_desc = document.createElement("div");
+			format_desc.appendChild(document.createTextNode("How you'd like API responses to be formatted."));		
 
 			if ((method["disallow_formats"]) && (method["disallow_formats"].length)){
 
 				var disallow = method["disallow_formats"];
 				var disallow_count = disallow.length;
 				
-				desc_cell.appendChild(document.createTextNode(" The following output formats are disallowed for this API method: "));
+				format_desc.appendChild(document.createTextNode(" The following output formats are disallowed for this API method: "));
 				
 				var list = document.createElement("ul");
 				list.setAttribute("class", "list-inline disallowed-formats");
@@ -709,33 +422,21 @@
 					list.appendChild(item);
 				}
 				
-				desc_cell.appendChild(list);
+				format_desc.appendChild(list);
 			}
 
-			desc_cell.appendChild(document.createTextNode(" The default format is "));
-
+			format_desc.appendChild(document.createTextNode(" The default format is "));
+			
 			var span = document.createElement("span");
 			span.setAttribute("class", "default-format");
 			span.appendChild(document.createTextNode(_spec.default_format()));
 
-			desc_cell.appendChild(span);
-			desc_cell.appendChild(document.createTextNode("."));
-			
-			var example_cell = document.createElement("td");
-			example_cell.setAttribute("class", "api-param-example");
-			
-			example_cell.appendChild(document.createTextNode("json"));
-			
-			var required_cell = document.createElement("td");
-			required_cell.appendChild(document.createTextNode("–"));
-					
-			var row = document.createElement("tr");
-			row.appendChild(name_cell);
-			row.appendChild(desc_cell);
-			row.appendChild(example_cell);
-			row.appendChild(required_cell);										
-			
-			params_table.appendChild(row);
+			format_desc.appendChild(span);
+			format_desc.appendChild(document.createTextNode("."));
+
+			var format_row = self.table_row("format", format_desc, _spec.default_format(), false);
+			params_table.appendChild(format_row);
+
 			root.appendChild(params_table);
 			
 			// errors
@@ -1004,53 +705,7 @@
 					
 					var desc = param["description"];					
 
-					var group = document.createElement("div");
-					group.setAttribute("class", "form-group");
-
-					var label = document.createElement("label");
-					label.setAttribute("for", name);
-					label.appendChild(document.createTextNode(name));
-
-					if (param["required"]){
-						var span = document.createElement("span");
-						span.appendChild(document.createTextNode(" 👍"));
-						span.setAttribute("title", "This parameter is required");
-						label.appendChild(span);
-					}
-					
-					var input = document.createElement("input");
-					input.setAttribute("class", "form-control");					
-					input.setAttribute("type", "text");
-					input.setAttribute("name", name);
-					input.setAttribute("id", "input-" + name);					
-					input.setAttribute("value", "");
-					input.setAttribute("placeholder", desc);
-
-					group.appendChild(label);
-					group.appendChild(input);
-
-					if (param["example"]){
-						var example = document.createElement("small");
-						example.setAttribute("class", "api-form-example");
-						example.setAttribute("data-input-id", name);			
-
-						example.onclick = function(e){
-							
-							var el = e.target;
-							var ex = el.innerText;
-							
-							var id = "input-" + el.getAttribute("data-input-id");
-							var input = document.getElementById(id);
-							
-							if (input){
-								input.setAttribute("value", ex);
-							}
-						};
-					
-						example.appendChild(document.createTextNode(param["example"]));
-						group.appendChild(example);
-					}
-					
+					var group = self.input_group(name, desc, param["example"], param["required"]);
 					form.appendChild(group);
 				}
 			}
@@ -1059,44 +714,7 @@
 
 			if (method["extras"]){
 
-				var group = document.createElement("div");
-				group.setAttribute("class", "form-group");
-			
-				var label = document.createElement("label");
-				label.setAttribute("for", "extras");
-				label.appendChild(document.createTextNode("extras"));
-
-				var input = document.createElement("input");
-				input.setAttribute("class", "form-control");					
-				input.setAttribute("type", "text");
-				input.setAttribute("name", "extras");
-				input.setAttribute("id", "input-extras");
-				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "A comma-separated list of extra properties to include with each response.");
-
-				group.appendChild(label);
-				group.appendChild(input);
-
-				var example = document.createElement("small");
-				example.setAttribute("class", "api-form-example");
-				example.setAttribute("data-input-id", "extras");			
-
-				example.onclick = function(e){
-							
-					var el = e.target;
-					var ex = el.innerText;
-							
-					var id = "input-" + el.getAttribute("data-input-id");
-					var input = document.getElementById(id);
-							
-					if (input){
-						input.setAttribute("value", ex);
-					}
-				};
-					
-				example.appendChild(document.createTextNode("mz:uri"));
-				
-				group.appendChild(example);
+				var group = self.input_group("extras", "A comma-separated list of extra properties to include with each response.", "mz:uri", false);
 				form.appendChild(group);				
 			}
 
@@ -1104,215 +722,33 @@
 
 			if ((method["paginated"]) && (method["pagination"] == "cursor")){
 
-				var group = document.createElement("div");
-				group.setAttribute("class", "form-group");
-			
-				var label = document.createElement("label");
-				label.setAttribute("for", "cursor");
-				label.appendChild(document.createTextNode("cursor"));
-
-				var input = document.createElement("input");
-				input.setAttribute("class", "form-control");					
-				input.setAttribute("type", "text");
-				input.setAttribute("name", "cursor");
-				input.setAttribute("id", "input-cursor");
-				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "A valid API pagination cursor.");
-
-				group.appendChild(label);
-				group.appendChild(input);
-				
-				form.appendChild(group);				
+				var cursor_group = self.input_group("cursor", "A valid API pagination cursor.", "", false);
+				form.appendChild(cursor_group);				
 			}
 
 			else if ((method["paginated"]) && (method["pagination"] == "mixed")){
 
-				var group = document.createElement("div");
-				group.setAttribute("class", "form-group");
-			
-				var label = document.createElement("label");
-				label.setAttribute("for", "cursor");
-				label.appendChild(document.createTextNode("cursor"));
+				var cursor_group = self.input_group("cursor", "A valid API pagination cursor.", "", false);
+				form.appendChild(cursor_group);				
 
-				var input = document.createElement("input");
-				input.setAttribute("class", "form-control");					
-				input.setAttribute("type", "text");
-				input.setAttribute("name", "cursor");
-				input.setAttribute("id", "input-cursor");
-				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "A valid API pagination cursor.");
+				var page_group = self.input_group("page", "The page of results to return.", 1, false);
+				form.appendChild(page_group);				
 
-				group.appendChild(label);
-				group.appendChild(input);
-				
-				form.appendChild(group);				
-				
-				var group = document.createElement("div");
-				group.setAttribute("class", "form-group");
-			
-				var label = document.createElement("label");
-				label.setAttribute("for", "extras");
-				label.appendChild(document.createTextNode("page"));
-
-				var input = document.createElement("input");
-				input.setAttribute("class", "form-control");					
-				input.setAttribute("type", "text");
-				input.setAttribute("name", "page");
-				input.setAttribute("id", "input-page");
-				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "The page of results to return.");
-
-				group.appendChild(label);
-				group.appendChild(input);
-
-				var example = document.createElement("small");
-				example.setAttribute("class", "api-form-example");
-				example.setAttribute("data-input-id", "page");			
-
-				example.onclick = function(e){
-							
-					var el = e.target;
-					var ex = el.innerText;
-							
-					var id = "input-" + el.getAttribute("data-input-id");
-					var input = document.getElementById(id);
-							
-					if (input){
-						input.setAttribute("value", ex);
-					}
-				};
-					
-				example.appendChild(document.createTextNode("1"));
-				
-				group.appendChild(example);
-				form.appendChild(group);				
-
-				var group = document.createElement("div");
-				group.setAttribute("class", "form-group");
-			
-				var label = document.createElement("label");
-				label.setAttribute("for", "extras");
-				label.appendChild(document.createTextNode("per_page"));
-
-				var input = document.createElement("input");
-				input.setAttribute("class", "form-control");					
-				input.setAttribute("type", "text");
-				input.setAttribute("name", "per_page");
-				input.setAttribute("id", "input-per_page");
-				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "The number of results to return per page.");
-
-				group.appendChild(label);
-				group.appendChild(input);
-
-				var example = document.createElement("small");
-				example.setAttribute("class", "api-form-example");
-				example.setAttribute("data-input-id", "per_page");			
-
-				example.onclick = function(e){
-							
-					var el = e.target;
-					var ex = el.innerText;
-							
-					var id = "input-" + el.getAttribute("data-input-id");
-					var input = document.getElementById(id);
-							
-					if (input){
-						input.setAttribute("value", ex);
-					}
-				};
-					
-				example.appendChild(document.createTextNode("10"));
-				
-				group.appendChild(example);
-				form.appendChild(group);
+				var perpage_group = self.input_group("per_page", "The number of results to return per page.", 10, false);
+				form.appendChild(perpage_group);
 			}
 
 			else if (method["paginated"]){
 
-				var group = document.createElement("div");
-				group.setAttribute("class", "form-group");
-			
-				var label = document.createElement("label");
-				label.setAttribute("for", "extras");
-				label.appendChild(document.createTextNode("page"));
+				var page_group = self.input_group("page", "The page of results to return.", 1, false);
+				form.appendChild(page_group);				
 
-				var input = document.createElement("input");
-				input.setAttribute("class", "form-control");					
-				input.setAttribute("type", "text");
-				input.setAttribute("name", "page");
-				input.setAttribute("id", "input-page");
-				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "The page of results to return.");
-
-				group.appendChild(label);
-				group.appendChild(input);
-
-				var example = document.createElement("small");
-				example.setAttribute("class", "api-form-example");
-				example.setAttribute("data-input-id", "page");			
-
-				example.onclick = function(e){
-							
-					var el = e.target;
-					var ex = el.innerText;
-							
-					var id = "input-" + el.getAttribute("data-input-id");
-					var input = document.getElementById(id);
-							
-					if (input){
-						input.setAttribute("value", ex);
-					}
-				};
-					
-				example.appendChild(document.createTextNode("1"));
-				
-				group.appendChild(example);
-				form.appendChild(group);				
-
-				var group = document.createElement("div");
-				group.setAttribute("class", "form-group");
-			
-				var label = document.createElement("label");
-				label.setAttribute("for", "extras");
-				label.appendChild(document.createTextNode("per_page"));
-
-				var input = document.createElement("input");
-				input.setAttribute("class", "form-control");					
-				input.setAttribute("type", "text");
-				input.setAttribute("name", "per_page");
-				input.setAttribute("id", "input-per_page");
-				input.setAttribute("value", "");
-				input.setAttribute("placeholder", "The number of results to return per page.");
-
-				group.appendChild(label);
-				group.appendChild(input);
-
-				var example = document.createElement("small");
-				example.setAttribute("class", "api-form-example");
-				example.setAttribute("data-input-id", "per_page");			
-
-				example.onclick = function(e){
-							
-					var el = e.target;
-					var ex = el.innerText;
-							
-					var id = "input-" + el.getAttribute("data-input-id");
-					var input = document.getElementById(id);
-							
-					if (input){
-						input.setAttribute("value", ex);
-					}
-				};
-					
-				example.appendChild(document.createTextNode("10"));
-				
-				group.appendChild(example);
-				form.appendChild(group);				
+				var perpage_group = self.input_group("per_page", "The number of results to return per page.", 10, false);
+				form.appendChild(perpage_group);
 			}
 
 			else {}
-			
+
 			// format
 
 			var group = document.createElement("div");
@@ -1435,7 +871,7 @@
 
 			if (! navigator.onLine){
 
-				var msg = "Can't execute API request because you are offline.";
+				var msg = "Can't execute API request because the Internets are not available.";
 			
 				var res_body = document.getElementById("api-response-body");
 				res_body.appendChild(document.createTextNode(msg));
@@ -1556,24 +992,131 @@
 			el.style.display = display;
 		},
 
-		'reload_button': function(){
+		'reload_button': function(cb){
 
 			var button = document.createElement("button");
 			button.setAttribute("class", "btn btn-sm reload-button");
 			button.appendChild(document.createTextNode("Reload"))
 
-			button.onclick = function(){
+			button.onclick = function(cb){
 
+				if (! navigator.onLine){
+					alert("Unable to reload API data because the Internets are unavailable.");
+					return false;
+					
+				}
+
+				partyparrot.start("Reloading API data");
+				
 				_spec.init(_api, function(){
-					alert("reloaded");
+					partyparrot.stop();
+					cb();
 				});
 				
+				return true;
 			};
 
 			return button;
+		},
+
+		'table_row': function(name, desc, example, required){
+
+			var name_cell = document.createElement("td");
+			name_cell.setAttribute("class", "api-param-name");
+			name_cell.appendChild(document.createTextNode(name));
+
+			console.log(typeof(desc));
+			
+			var desc_cell = document.createElement("td");
+
+			if (typeof(desc) == "string"){
+				desc_cell.appendChild(document.createTextNode(desc));
+			}
+
+			else {
+
+				console.log(desc);
+				console.log("WHAT WHAT");
+				desc_cell.appendChild(desc);
+			}
+			
+			var example_cell = document.createElement("td");
+			example_cell.setAttribute("class", "api-param-example");
+			
+			example_cell.appendChild(document.createTextNode(example));
+			
+			var required_cell = document.createElement("td");
+
+			if (required){
+				required_cell.appendChild(document.createTextNode("👍"));
+			}
+
+			else {
+				required_cell.appendChild(document.createTextNode("–"));
+			}
+			
+			var row = document.createElement("tr");
+			row.appendChild(name_cell);
+			row.appendChild(desc_cell);
+			row.appendChild(example_cell);
+			row.appendChild(required_cell);										
+
+			return row;
+		},
+
+		'input_group': function(name, desc, example, required) {
+
+			var group = document.createElement("div");
+			group.setAttribute("class", "form-group");
+			
+			var label = document.createElement("label");
+			label.setAttribute("for", name);
+			label.appendChild(document.createTextNode(name));
+
+			if (required){
+				var span = document.createElement("span");
+				span.appendChild(document.createTextNode(" 👍"));
+				span.setAttribute("title", "This parameter is required");
+				label.appendChild(span);
+			}
+					
+			var input = document.createElement("input");
+			input.setAttribute("class", "form-control");					
+			input.setAttribute("type", "text");
+			input.setAttribute("name", name);
+			input.setAttribute("id", "input-" + name);					
+			input.setAttribute("value", "");
+			input.setAttribute("placeholder", desc);
+
+			group.appendChild(label);
+			group.appendChild(input);
+			
+			if (example){
+				
+				var example_block = document.createElement("small");
+				example_block.setAttribute("class", "api-form-example");
+				example_block.setAttribute("data-input-id", name);			
+				
+				example_block.onclick = function(e){
+					
+					var el = e.target;
+					var ex = el.innerText;
+					
+					var id = "input-" + el.getAttribute("data-input-id");
+					var input = document.getElementById(id);
+					
+					if (input){
+						input.setAttribute("value", ex);
+					}
+				};
+				
+				example_block.appendChild(document.createTextNode(example));
+				group.appendChild(example_block);
+			}
+
+			return group;
 		}
 	};
 	
 	return self;
 }));
-		
