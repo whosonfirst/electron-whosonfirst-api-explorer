@@ -296,73 +296,126 @@
 			
 			var params_header = document.createElement("h3");
 			params_header.appendChild(document.createTextNode("Parameters"));
-			
+
 			root.appendChild(params_header);
+			
+			var required_header = document.createElement("h4");
+			required_header.appendChild(document.createTextNode("Required parameters"));
 
-			var params_table = document.createElement("table");
-			params_table.setAttribute("class", "table table-condensed");
+			root.appendChild(required_header);
 			
-			var name_header = document.createElement("th");
-			name_header.appendChild(document.createTextNode("Name"));
-			
-			var desc_header = document.createElement("th");
-			desc_header.appendChild(document.createTextNode("Description"));
-			
-			var example_header = document.createElement("th");
-			example_header.appendChild(document.createTextNode("Example"));
-			
-			var required_header = document.createElement("th");
-			required_header.appendChild(document.createTextNode("Required"));
-			
-			var header_row = document.createElement("tr");
-			header_row.appendChild(name_header);
-			header_row.appendChild(desc_header);
-			header_row.appendChild(example_header);
-			header_row.appendChild(required_header);				
-			
-			params_table.appendChild(header_row);
+			var required_table = self.params_table();
 
-			var method_row = self.table_row("method", "The name of the API method.", method_name, true);
-			params_table.appendChild(method_row);
-
-			var key_row = self.table_row("api_key", "A valid API key", "mapzen-xxxxxx", true);
-			params_table.appendChild(key_row);
+			// We need to do this to prevent m["parameters"] from being updated
+			// globally and printing the 'method' and 'api_key' parameters in
+			// explore mode. I don't love it either... (20170422/thisisaaronland)
 			
-			var params = m["parameters"];
+			var params = new Array();
+			var _count = m["parameters"].length;
+
+			if (_count){
+			
+				for (var c = 0; c <= _count; c++){
+
+					// Why do I need to do this?
+					
+					var p = m["parameters"][c];
+					console.log(p);
+					
+					if (p){
+						params.push(p);
+					}
+				}		
+			}
+			
+			// these should be returned as part of the API response itself
+			
+			params.push({"name": "method", "description": "The name of the API method.", "example": method_name, "required": true});
+			params.push({"name": "api_key", "description": "A valid API key.", "example": "mapzen-xxxxxx", "required": true});			
+				    
 			var params_count = params.length;
 		
+			var required_params_lookup = {};
+			var required_params_names = [];
+			var required_params_count = 0;
+			
+			var optional_params_lookup = {};
+			var optional_params_names = [];
+			var optional_params_count = 0;
+			
 			if (params_count){
-												
-				var params_lookup = {};
-				var params_names = [];
-
+				
 				for (var p=0; p < params_count; p++){
 
 					var param = params[p];
 					var param_name = param["name"];
 
-					params_lookup[param_name] = param;
-					params_names.push(param_name);
+					if (param["required"]){
+						required_params_lookup[param_name] = param;
+						required_params_names.push(param_name);
+					}
+
+					else {
+						optional_params_lookup[param_name] = param;
+						optional_params_names.push(param_name);
+					}
 				}
 
-				params_names.sort();
-				
-				for (var p=0; p < params_count; p++){
+				required_params_names.sort();
+				optional_params_names.sort();				
 
-					var name = params_names[p];
-					var param = params_lookup[name];		
-
-					var param_row = self.table_row(name, param["description"], param["example"], param["required"]);
-					params_table.appendChild(param_row);
-				}
+				required_params_count = required_params_names.length;				
+				optional_params_count = optional_params_names.length;
 			}
 
+			if (required_params_count){
+				
+				for (var p=0; p < required_params_count; p++){
+
+					var name = required_params_names[p];
+					var param = required_params_lookup[name];		
+
+					var param_row = self.table_row(name, param["description"], param["example"], param["required"]);
+					required_table.appendChild(param_row);
+				}
+			}
+			
+			root.appendChild(required_table);
+
+			if (optional_params_count){
+					
+				var optional_header = document.createElement("h4");
+				optional_header.appendChild(document.createTextNode("Optional parameters"));
+				
+				root.appendChild(optional_header);
+				
+				var optional_table = self.params_table();
+				
+				for (var p=0; p < optional_params_count; p++){
+					
+					var name = optional_params_names[p];
+					var param = optional_params_lookup[name];		
+					
+					var param_row = self.table_row(name, param["description"], param["example"], param["required"]);
+					optional_table.appendChild(param_row);
+				}
+				
+				root.appendChild(optional_table);					
+			}
+
+			var common_header = document.createElement("h4");
+			common_header.appendChild(document.createTextNode("Common parameters"));
+
+			root.appendChild(common_header);
+			
+			var common_table = self.params_table();
+			
 			// extras
 
 			if (method["extras"]){
 
 				var extras_row = self.table_row("extras","A comma-separated list of extra properties to include with each response.", "wof:path,mz:uri,name:", false);
-				params_table.appendChild(extras_row);
+				common_table.appendChild(extras_row);
 			}
 
 			// pagination
@@ -370,31 +423,31 @@
 			if ((method["paginated"]) && (method["pagination"] == "cursor")){
 
 				var cursor_row = self.table_row("cursor", "A valid API pagination cursor.", "", false);
-				params_table.appendChild(cursor_row);
+				common_table.appendChild(cursor_row);
 
 				var perpage_row = self.table_row("per_page", "The number of results to return per page.", 10, false);
-				params_table.appendChild(perpage_row);
+				common_table.appendChild(perpage_row);
 			}
 
 			else if ((method["paginated"]) && (method["pagination"] == "mixed")){
 
 				var cursor_row = self.table_row("cursor", "A valid API pagination cursor.", "", false);
-				params_table.appendChild(cursor_row);
+				common_table.appendChild(cursor_row);
 
 				var page_row = self.table_row("page", "The page of results to return.", 1, false);
-				params_table.appendChild(page_row);
+				common_table.appendChild(page_row);
 
 				var perpage_row = self.table_row("per_page", "The number of results to return per page.", 10, false);
-				params_table.appendChild(perpage_row);				
+				common_table.appendChild(perpage_row);				
 			}
 
 			else if (method["paginated"]){
 
 				var page_row = self.table_row("page", "The page of results to return.", 1, false);
-				params_table.appendChild(page_row);
+				common_table.appendChild(page_row);
 
 				var perpage_row = self.table_row("per_page", "The number of results to return per page.", 10, false);
-				params_table.appendChild(perpage_row);				
+				common_table.appendChild(perpage_row);				
 			}
 
 			else {}
@@ -435,9 +488,9 @@
 			format_desc.appendChild(document.createTextNode("."));
 
 			var format_row = self.table_row("format", format_desc, _spec.default_format(), false);
-			params_table.appendChild(format_row);
+			common_table.appendChild(format_row);
 
-			root.appendChild(params_table);
+			root.appendChild(common_table);
 			
 			// errors
 			
@@ -1019,6 +1072,33 @@
 			return button;
 		},
 
+		'params_table': function(){
+
+			var table = document.createElement("table");
+			table.setAttribute("class", "table table-condensed");
+			
+			var name_header = document.createElement("th");
+			name_header.appendChild(document.createTextNode("Name"));
+			
+			var desc_header = document.createElement("th");
+			desc_header.appendChild(document.createTextNode("Description"));
+			
+			var example_header = document.createElement("th");
+			example_header.appendChild(document.createTextNode("Example"));
+			
+			var required_header = document.createElement("th");
+			required_header.appendChild(document.createTextNode("Required"));
+			
+			var header_row = document.createElement("tr");
+			header_row.appendChild(name_header);
+			header_row.appendChild(desc_header);
+			header_row.appendChild(example_header);
+			header_row.appendChild(required_header);				
+			
+			table.appendChild(header_row);
+			return table;
+		},
+		
 		'table_row': function(name, desc, example, required){
 
 			var name_cell = document.createElement("td");
