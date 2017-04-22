@@ -1563,7 +1563,11 @@
 			button.appendChild(document.createTextNode("Reload"))
 
 			button.onclick = function(){
-				alert("reload");
+
+				_spec.init(_api, function(){
+					alert("reloaded");
+				});
+				
 			};
 
 			return button;
