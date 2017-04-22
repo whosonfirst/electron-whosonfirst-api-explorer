@@ -28,7 +28,7 @@
 	var _api = undefined;
 	var _spec = undefined;
 
-	var partyparrot = require("./mapzen.whosonfirst.partyparrot.js");
+	var _parrot = require("./mapzen.whosonfirst.partyparrot.js");
 	
 	var self = {
 
@@ -403,6 +403,8 @@
 				root.appendChild(optional_table);					
 			}
 
+			// this: https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/20
+			
 			var common_header = document.createElement("h4");
 			common_header.appendChild(document.createTextNode("Common parameters"));
 
@@ -586,7 +588,7 @@
 			
 			var notes = m["notes"];
 			var disallow = m["disallow_formats"];			
-
+						
 			if ((notes) || (disallow)){
 
 				// this kind of hoop-jumping should not be necessary
@@ -595,43 +597,44 @@
 				var notes_count = (notes) ? notes.length : 0;
 				var disallow_count = (disallow) ? disallow.length : 0;
 
-				var notes_header = document.createElement("h3");
-				notes_header.appendChild(document.createTextNode("Notes"));
-
-				root.appendChild(notes_header);
-
-				for (var n=0; n < notes_count; n++){
-
-					var note = notes[n];
-
-					var p = document.createElement("p");
-					p.appendChild(document.createTextNode(note));
-
-					root.appendChild(p);
-				}
-
-				if (disallow_count){
-
-					var p = document.createElement("p");
-
-					p.appendChild(document.createTextNode("The following output formats are disallowed for this API method: "));
-
-					var list = document.createElement("ul");
-					list.setAttribute("class", "list-inline disallowed-formats");
+				// see above inre: hoop-jumping
+				
+				if ((notes_count) || (disallow_count)){
+									
+					var notes_header = document.createElement("h3");
+					notes_header.appendChild(document.createTextNode("Notes"));
 					
-					for (var d=0; d < disallow_count; d++){
-
-						var fmt = disallow[d];
-						item = document.createElement("li");
-						item.appendChild(document.createTextNode(fmt));
-						list.appendChild(item);
+					root.appendChild(notes_header);
+					
+					for (var n=0; n < notes_count; n++){
+						
+						var note = notes[n];
+						
+						var p = document.createElement("p");
+						p.appendChild(document.createTextNode(note));
+						root.appendChild(p);
 					}
 
-					p.appendChild(list);
-					root.appendChild(p);
+					if (disallow_count){
+
+						var p = document.createElement("p");
+						
+						p.appendChild(document.createTextNode("The following output formats are disallowed for this API method: "));
+						
+						var list = document.createElement("ul");
+						list.setAttribute("class", "list-inline disallowed-formats");
+						
+						for (var d=0; d < disallow_count; d++){
+							var fmt = disallow[d];
+							item = document.createElement("li");
+							item.appendChild(document.createTextNode(fmt));
+							list.appendChild(item);
+						}
+
+						p.appendChild(list);
+						root.appendChild(p);
+					}
 				}
-				
-				// The following output formats are disallowed for this API method:
 			}
 
 			// try me (again)
@@ -937,7 +940,7 @@
 
 			var on_response = function(rsp){
 
-				partyparrot.stop();
+				_parrot.stop();
 				self.toggle_print_button(true);
 
 				var str = JSON.stringify(rsp, undefined, 2);
@@ -951,7 +954,7 @@
 
 			_api.execute_method(method, data, on_response, on_response);
 
-			partyparrot.start("invoking " + method);
+			_parrot.start("invoking " + method);
 		},
 				
 		'draw_sidebar': function(list) {
@@ -1059,10 +1062,10 @@
 					
 				}
 
-				partyparrot.start("Reloading API data");
+				_parrot.start("Reloading API data");
 				
 				_spec.init(_api, function(){
-					partyparrot.stop();
+					_parrot.stop();
 					cb();
 				});
 				
