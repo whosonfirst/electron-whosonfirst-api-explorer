@@ -43,7 +43,7 @@
 			self.toggle_print_button(false);
 
 			var root = document.createElement("div");
-
+			
 			var h3 = document.createElement("h3");
 			h3.appendChild(document.createTextNode("Your API key"));
 
@@ -95,7 +95,7 @@
 		},
 		
 		'draw_methods_list': function(){
-
+			
 			self.clear_all();
 			self.toggle_print_button(false);
 			
@@ -155,8 +155,16 @@
 				ul.appendChild(li);
 			}
 
-			self.clear_main();
-			self.draw_sidebar(ul);
+			// self.clear_main();
+
+			var root = document.createElement("div");
+			root.appendChild(ul);
+			
+			var reload = self.reload_button();
+			reload.setAttribute("title", "reload API methods");
+			root.appendChild(reload);
+			
+			self.draw_sidebar(root);
 		},
 
 		'draw_errors_list': function(){
@@ -201,7 +209,15 @@
 			}
 
 			self.clear_sidebar();
-			self.draw_main(ul);
+
+			var root = document.createElement("div");
+			root.appendChild(ul);
+			
+			var reload = self.reload_button();
+			reload.setAttribute("title", "reload API errors");
+			root.appendChild(reload);
+			
+			self.draw_main(root);
 		},
 
 		'draw_formats_list': function(){
@@ -238,8 +254,16 @@
 				ul.appendChild(li);
 			}
 
-			self.clear_sidebar();			
-			self.draw_main(ul);
+			self.clear_sidebar();
+
+			var root = document.createElement("div");
+			root.appendChild(ul);
+			
+			var reload = self.reload_button();
+			reload.setAttribute("title", "reload API formats");
+			root.appendChild(reload);
+			
+			self.draw_main(root);
 		},
 
 		'draw_method': function(method_name) {
@@ -1530,6 +1554,19 @@
 
 			var el = document.getElementById("print-button");
 			el.style.display = display;
+		},
+
+		'reload_button': function(){
+
+			var button = document.createElement("button");
+			button.setAttribute("class", "btn btn-sm reload-button");
+			button.appendChild(document.createTextNode("Reload"))
+
+			button.onclick = function(){
+				alert("reload");
+			};
+
+			return button;
 		}
 	};
 	

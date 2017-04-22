@@ -222,3 +222,16 @@ table tr td {
 .default-format {
     font-weight:700;
 }
+
+.reload-button {
+    margin-bottom:1em;
+    padding-left: 0 !important;    
+    padding-right: 0 !important;
+    background-color: transparent !important;
+}
+
+.reload-button:before {
+    content: "🔁 ";
+    padding-right: .5em;
+
+}
