@@ -736,28 +736,49 @@
 			var params = m["parameters"];
 			var params_count = params.length;
 
+			var required_params_lookup = {};
+			var required_params_names = [];
+			var required_params_count = 0;
+			
+			var optional_params_lookup = {};
+			var optional_params_names = [];
+			var optional_params_count = 0;
+			
 			if (params_count){
 				
-				var params_list = document.createElement("ul");
-
-				var params_lookup = {};
-				var params_names = [];
-
 				for (var p=0; p < params_count; p++){
 
 					var param = params[p];
-					var name = param["name"];
+					var param_name = param["name"];
 
-					params_lookup[name] = param;
-					params_names.push(name);
+					if (param["required"]){
+						required_params_lookup[param_name] = param;
+						required_params_names.push(param_name);
+					}
+
+					else {
+						optional_params_lookup[param_name] = param;
+						optional_params_names.push(param_name);
+					}
 				}
 
-				params_names.sort();
-				
-				for (var p=0; p < params_count; p++){
+				required_params_names.sort();
+				optional_params_names.sort();				
 
-					var name = params_names[p];
-					var param = params_lookup[name];
+				required_params_count = required_params_names.length;				
+				optional_params_count = optional_params_names.length;
+			}
+			
+			if (required_params_count){
+
+				h4 = document.createElement("h4");
+				h4.appendChild(document.createTextNode("Required parameters"));
+				form.appendChild(h4);
+								
+				for (var p=0; p < required_params_count; p++){
+
+					var name = required_params_names[p];
+					var param = required_params_lookup[name];
 					
 					var desc = param["description"];					
 
@@ -766,6 +787,28 @@
 				}
 			}
 
+			if (optional_params_count){
+
+				h4 = document.createElement("h4");
+				h4.appendChild(document.createTextNode("Optional parameters"));
+				form.appendChild(h4);
+								
+				for (var p=0; p < optional_params_count; p++){
+
+					var name = optional_params_names[p];
+					var param = optional_params_lookup[name];
+					
+					var desc = param["description"];					
+
+					var group = self.input_group(name, desc, param["example"], param["required"]);
+					form.appendChild(group);
+				}
+			}
+			
+			h4 = document.createElement("h4");
+			h4.appendChild(document.createTextNode("Common parameters"));
+			form.appendChild(h4);
+			
 			// extras
 
 			if (method["extras"]){
@@ -1068,6 +1111,13 @@
 				
 				_spec.init(_api, function(cb){
 					_parrot.stop();
+
+					_parrot.start("API data successfully updated");
+
+					setTimeout(function(){
+						_parrot.stop();
+					}, 1500);
+					
 					cb();
 				});
 				
