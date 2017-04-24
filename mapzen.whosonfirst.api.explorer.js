@@ -1066,7 +1066,7 @@
 
 				_parrot.start("Reloading API data");
 				
-				_spec.init(_api, function(){
+				_spec.init(_api, function(cb){
 					_parrot.stop();
 					cb();
 				});

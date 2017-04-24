@@ -98,8 +98,6 @@
 			
 			var dothis_onsuccess = function(rsp){
 
-				console.log("OK");
-				
 				if (on_success){
 					on_success(rsp);
 				}
@@ -107,9 +105,6 @@
 			
 			var dothis_onerror = function(rsp){
 
-				console.log("ERROR");				
-				console.log(rsp);
-				
 				if (on_error){
 					on_error(rsp);
 				}
@@ -158,8 +153,6 @@
 			
 			var onload = function(rsp){
 
-				console.log("LOAD");
-				
 				var target = rsp.target;
 				
 				if (target.readyState != 4){
@@ -173,8 +166,8 @@
 				var data = undefined;
 
 				var fmt = form_data.get("format");
-				
-				if ((fmt == "json") || (fmt == "")){
+
+				if ((fmt == "json") || (fmt == null)){
 					
 					try {
 						data = JSON.parse(raw);
@@ -200,16 +193,13 @@
 			};
 			
 			var onprogress = function(rsp){
-				console.log("PROGRESS");
 			};
 			
 			var onfailed = function(rsp){
-				console.log("FAILED");				
 				dothis_onerror(self.destruct("connection failed " + rsp));
 			};
 			
 			var onabort = function(rsp){
-				console.log("ABORT");					
 				dothis_onerror(self.destruct("connection aborted " + rsp));
 			};
 			
@@ -242,8 +232,9 @@
 						endpoint = endpoint + sep + query.join("&");
 					}
 
-					console.log("GET " + endpoint);
 					req.open("GET", endpoint, true);
+					req.send();
+					
 					return;
 				}
 
