@@ -37,7 +37,7 @@
 			_spec = spec;
 		},
 
-		'draw_api_key': function(){
+		'draw_settings': function(){
 
 			self.clear_all();
 			self.toggle_print_button(false);
@@ -45,35 +45,27 @@
 			var root = document.createElement("div");
 			
 			var h3 = document.createElement("h3");
-			h3.appendChild(document.createTextNode("Your API key"));
-
+			h3.appendChild(document.createTextNode("API Explorer Settings"));
 			root.appendChild(h3);
+
+			var p = document.createElement("p");
+			p.appendChild(document.createTextNode("THIS DOES NOT WORK YET"));
+			root.appendChild(p);
+			
 			
 			var form = document.createElement("form");
 			form.setAttribute("id", "key-form");
 
-			var group = document.createElement("div");
-			group.setAttribute("class", "form-group");
+			var key_group = self.input_group_prefs("API key", "api_key", "mapzen-xxxxxx", "");
+			form.appendChild(key_group);
+
+			var ep_group = self.input_group_prefs("API endpoint", "api_endpoint", "https://whosonfirst-api.mapzen.com", "https://whosonfirst-api.mapzen.com");
+			form.appendChild(ep_group);
 			
-			var label = document.createElement("label");
-			label.setAttribute("for", "api_key");
-			label.appendChild(document.createTextNode("API key"));
-
-			var input = document.createElement("input");
-			input.setAttribute("class", "form-control");					
-			input.setAttribute("type", "text");
-			input.setAttribute("name", "api_key");
-			input.setAttribute("id", "api_key");					
-			input.setAttribute("value", "");
-			input.setAttribute("placeholder", "mapzen-xxxxxx");
-
-			group.appendChild(label);
-			group.appendChild(input);
-
 			var submit = document.createElement("button");
 			submit.setAttribute("type", "submit");
-			submit.setAttribute("class", "btn btn-default");			
-			submit.appendChild(document.createTextNode("Add API key"));
+			submit.setAttribute("class", "btn btn-default submit-button");			
+			submit.appendChild(document.createTextNode("Save"));
 
 			var onsubmit = function(){
 				// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/12
@@ -86,7 +78,6 @@
 
 			// to do add a remove key button
 			
-			form.appendChild(group);
 			form.appendChild(submit);
 			
 			root.appendChild(form);
@@ -639,8 +630,8 @@
 
 			// try me (again)
 
-			var hr = document.createElement("hr");
-			root.appendChild(hr);
+			// var hr = document.createElement("hr");
+			// root.appendChild(hr);
 			
 			var try_me_bottom = self.tryme_button(method_name);
 			try_me_bottom.setAttribute("class", try_me_bottom.getAttribute("class") + " try-me-bottom");
@@ -910,7 +901,7 @@
 			
 			var submit = document.createElement("button");
 			submit.setAttribute("type", "submit");
-			submit.setAttribute("class", "btn btn-default make-it-so");			
+			submit.setAttribute("class", "btn btn-default make-it-so submit-button");			
 			submit.appendChild(document.createTextNode("Make it so!"));
 
 			var onsubmit = function(){
@@ -921,9 +912,9 @@
 			submit.onclick = onsubmit;			
 			form.onsubmit = onsubmit;
 
-			var hr = document.createElement("hr");
-
-			form.appendChild(hr);
+			// var hr = document.createElement("hr");
+			// form.appendChild(hr);
+			
 			form.appendChild(submit);
 			root.appendChild(form);
 
@@ -1043,7 +1034,7 @@
 			}
 		
 			var try_me = document.createElement("button");
-			try_me.setAttribute("class", "btn btn-default try-me");			
+			try_me.setAttribute("class", "btn btn-default try-me submit-button");
 			try_me.setAttribute("data-method-name", method);
 			try_me.appendChild(document.createTextNode(copy));
 
@@ -1250,7 +1241,31 @@
 			}
 
 			return group;
+		},
+
+		'input_group_prefs': function(label_txt, name, desc, pref) {
+
+			var group = document.createElement("div");
+			group.setAttribute("class", "form-group");
+			
+			var label = document.createElement("label");
+			label.setAttribute("for", name);
+			label.appendChild(document.createTextNode(label_txt));
+					
+			var input = document.createElement("input");
+			input.setAttribute("class", "form-control");					
+			input.setAttribute("type", "text");
+			input.setAttribute("name", name);
+			input.setAttribute("id", "input-" + name);					
+			input.setAttribute("value", pref);
+			input.setAttribute("placeholder", desc);
+
+			group.appendChild(label);
+			group.appendChild(input);
+			
+			return group;
 		}
+		
 	};
 	
 	return self;

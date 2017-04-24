@@ -18,8 +18,8 @@ var cb = function(){
 
 	explorer.init(api, spec);
 
-	var show_k = document.getElementById("show-key");
-	show_k.onclick = function(){ explorer.draw_api_key(); };
+	var show_s = document.getElementById("show-settings");
+	show_s.onclick = function(){ explorer.draw_settings(); };
 	
 	var show_m = document.getElementById("show-methods");
 	show_m.onclick = function(){ explorer.draw_methods_list(); };
