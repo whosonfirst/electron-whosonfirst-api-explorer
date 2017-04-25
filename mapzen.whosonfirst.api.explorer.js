@@ -97,7 +97,24 @@
 			_parrot.start("API settings have been saved");
 
 			setTimeout(function(){
+				
 				_parrot.stop();
+
+				if (! _spec.loaded()){
+
+					_parrot.start("Reloading API data");
+				
+					_spec.init(_api, function(){
+					
+						_parrot.stop();
+						_parrot.start("API data successfully updated");
+						
+						setTimeout(function(){
+							_parrot.stop();
+						}, 1500);					
+					});
+				}
+				
 			}, 1500);
 				
 			return false;			
@@ -365,7 +382,6 @@
 					// Why do I need to do this?
 					
 					var p = m["parameters"][c];
-					console.log(p);
 					
 					if (p){
 						params.push(p);
@@ -1157,7 +1173,7 @@
 			button.setAttribute("class", "btn btn-sm reload-button");
 			button.appendChild(document.createTextNode("Reload"))
 
-			button.onclick = function(cb){
+			button.onclick = function(){
 
 				if (! navigator.onLine){
 					alert("Unable to reload API data because the Internets are unavailable.");
@@ -1167,9 +1183,9 @@
 
 				_parrot.start("Reloading API data");
 				
-				_spec.init(_api, function(cb){
+				_spec.init(_api, function(){
+					
 					_parrot.stop();
-
 					_parrot.start("API data successfully updated");
 
 					setTimeout(function(){
@@ -1218,8 +1234,6 @@
 			name_cell.setAttribute("class", "api-param-name");
 			name_cell.appendChild(document.createTextNode(name));
 
-			console.log(typeof(desc));
-			
 			var desc_cell = document.createElement("td");
 
 			if (typeof(desc) == "string"){
@@ -1227,9 +1241,6 @@
 			}
 
 			else {
-
-				console.log(desc);
-				console.log("WHAT WHAT");
 				desc_cell.appendChild(desc);
 			}
 			

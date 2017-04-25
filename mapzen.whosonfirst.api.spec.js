@@ -146,6 +146,23 @@
 				console.log("failed to set '" + key + "' because " + err);
 			});
 
+		},
+
+		'loaded': function(){
+
+			if (! _methods){
+				return false;
+			}
+
+			if (! _errors){
+				return false;
+			}
+
+			if (! formats){
+				return false;
+			}
+
+			return true;
 		}
 	};
 	
