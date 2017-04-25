@@ -60,7 +60,6 @@
 			form.appendChild(key_group);
 
 			if (api_key == ""){
-				
 				var p = document.createElement("p");
 				p.setAttribute("class", "caveat");
 				p.appendChild(document.createTextNode("You can create a new Mapzen API key..."));
@@ -89,6 +88,11 @@
 			root.appendChild(form);
 			
 			self.draw_main(root);
+
+			if (api_key == ""){
+				var el = document.getElementById("label-api_key");
+				self.add_warning(el);
+			}
 		},
 
 		'save_settings': function(){
@@ -109,6 +113,9 @@
 				
 			} else {
 				var el = document.getElementById("show-settings");
+				self.remove_warning(el);
+
+				var el = document.getElementById("label-api_key");
 				self.remove_warning(el);
 			}
 			
@@ -1355,7 +1362,8 @@
 			group.setAttribute("class", "form-group");
 			
 			var label = document.createElement("label");
-			label.setAttribute("for", name);			
+			label.setAttribute("for", name);
+			label.setAttribute("id", "label-"+ name);			
 			label.appendChild(document.createTextNode(label_txt));
 
 			var input = document.createElement("input");
@@ -1380,7 +1388,8 @@
 			}
 			
 			var c = el.getAttribute("class");
-			c = c.split(" ");
+			c = (c) ? c.split(" ") : [];
+			
 			c.push("warning");
 			c = c.join(" ");
 			
@@ -1395,7 +1404,7 @@
 			}
 
 			var c = el.getAttribute("class");
-			c = c.split(" ");
+			c = (c) ? c.split(" ") : [];			
 
 			var count = c.length;
 			var tmp = [];
