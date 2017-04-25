@@ -54,6 +54,7 @@
 			form.setAttribute("id", "settings-form");
 
 			var api_key = _cfg.get("api_key");
+			var api_endpoint = _cfg.get("api_endpoint");			
 			
 			var key_group = self.input_group_prefs("API key", "api_key", "Please add a valid Mapzen API key", api_key);
 			form.appendChild(key_group);
@@ -65,8 +66,8 @@
 				form.appendChild(p);
 			}
 			
-			// var ep_group = self.input_group_prefs("API endpoint", "api_endpoint", "https://whosonfirst-api.mapzen.com", "https://whosonfirst-api.mapzen.com");
-			// form.appendChild(ep_group);
+			var ep_group = self.input_group_prefs("API endpoint", "api_endpoint", "https://whosonfirst-api.mapzen.com", api_endpoint);
+			form.appendChild(ep_group);
 			
 			var submit = document.createElement("button");
 			submit.setAttribute("type", "submit");
@@ -95,20 +96,22 @@
 			var data = new FormData(form);
 
 			var api_key = data.get("api_key");
-
-			try {
-				_cfg.set("api_key", api_key);
-			} catch(e){
-				console.log(e);
-				return false;
-			}
+			_cfg.set("api_key", api_key);
 			
 			_api.set_handler('authentication', function(){
 				return api_key;
 			});				
 
-			// var api_endpoint = data.get("api_endpoint");			
+			var api_endpoint = data.get("api_endpoint");
+			_cfg.set("api_endpoint", api_endpoint);
 
+			_api.set_handler('endpoint', function(){
+				return api_endpoint;
+			});				
+
+			// TO DO: check whether API endpoint has changed and
+			// reload if true (20170425/thisisaaronland)
+			
 			_parrot.start("API settings have been saved");
 
 			setTimeout(function(){
@@ -131,7 +134,7 @@
 				}
 				
 			}, 1500);
-				
+			
 			return false;			
 		},
 		
