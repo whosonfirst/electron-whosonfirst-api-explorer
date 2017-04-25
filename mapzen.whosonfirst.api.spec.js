@@ -56,7 +56,7 @@
 
 				self.set("methods", rsp["methods"]);
 				wg.done();
-			});
+			}, function(){ wg.done(); });
 
 			api.execute_method("api.spec.errors", {}, function(rsp){
 
@@ -64,7 +64,7 @@
 
 				self.set("errors", rsp["errors"]);				
 				wg.done();
-			});
+			}, function(){ wg.done(); });
 
 			api.execute_method("api.spec.formats", {}, function(rsp){
 
@@ -74,9 +74,13 @@
 				self.set("formats", rsp["formats"]);
 				self.set("default_format", rsp["default_format"]);				
 				wg.done();
-			});
+			}, function(){ wg.done(); });
 
 			wg.wait(cb);
+
+			if (! self.loaded()){
+				self.init_local(cb);
+			}
 		},
 
 		'init_local': function(cb){
@@ -84,39 +88,39 @@
 			wg.add(4);
 			
 			lf.getItem("methods").then(function(rsp) {
-
 				_methods = rsp;
 				wg.done();
 				
 			}).catch(function (err) {
 				console.log("failed to get 'methods' because " + err);
+				wg.done();				
 			});
 
 			lf.getItem("errors").then(function(rsp) {
-
 				_errors = rsp;
 				wg.done();
 				
 			}).catch(function (err) {
 				console.log("failed to get 'errors' because " + err);
+				wg.done();
 			});
 
 			lf.getItem("formats").then(function(rsp) {
-
 				_formats = rsp;
 				wg.done();
 				
 			}).catch(function (err) {
 				console.log("failed to get 'formats' because " + err);
+				wg.done();
 			});
 
 			lf.getItem("default_format").then(function(rsp) {
-
 				_default_format = rsp;
 				wg.done();
 				
 			}).catch(function (err) {
 				console.log("failed to get 'default_format' because " + err);
+				wg.done();
 			});
 			
 			wg.wait(cb);
@@ -158,7 +162,7 @@
 				return false;
 			}
 
-			if (! formats){
+			if (! _formats){
 				return false;
 			}
 

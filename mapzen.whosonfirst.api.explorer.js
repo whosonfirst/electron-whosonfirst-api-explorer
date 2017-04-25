@@ -53,9 +53,18 @@
 			var form = document.createElement("form");
 			form.setAttribute("id", "settings-form");
 
-			var key_group = self.input_group_prefs("API key", "api_key", "mapzen-xxxxxx", "");
+			var api_key = _cfg.get("api_key");
+			
+			var key_group = self.input_group_prefs("API key", "api_key", "Please add a valid Mapzen API key", api_key);
 			form.appendChild(key_group);
 
+			if (api_key == ""){
+				var p = document.createElement("p");
+				p.setAttribute("class", "caveat");
+				p.appendChild(document.createTextNode("You can create a new Mapzen API key..."));
+				form.appendChild(p);
+			}
+			
 			// var ep_group = self.input_group_prefs("API endpoint", "api_endpoint", "https://whosonfirst-api.mapzen.com", "https://whosonfirst-api.mapzen.com");
 			// form.appendChild(ep_group);
 			
@@ -86,8 +95,14 @@
 			var data = new FormData(form);
 
 			var api_key = data.get("api_key");
-			_cfg.set("api_key", api_key);
 
+			try {
+				_cfg.set("api_key", api_key);
+			} catch(e){
+				console.log(e);
+				return false;
+			}
+			
 			_api.set_handler('authentication', function(){
 				return api_key;
 			});				

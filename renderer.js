@@ -6,6 +6,12 @@ const partyparrot = require("./mapzen.whosonfirst.partyparrot.js");
 
 const ipcRenderer = require('electron').ipcRenderer;
 
+const electron = require('electron');
+const app = electron.app || electron.remote.app;
+
+var udata = app.getPath("userData");
+
+config.init(udata);
 explorer.init(config, api, spec);
 
 var show_s = document.getElementById("show-settings");
@@ -23,16 +29,36 @@ show_f.onclick = function(){ explorer.draw_formats_list(); };
 var print_b = document.getElementById("print-button");
 print_b.onclick = function(){ ipcRenderer.send('renderer', 'print'); };
 
+/*
 if (! config.has("api_key")){
 	explorer.draw_settings();
 	return;
+}
+*/
+
+if (config.has("api_key")){
+	api.set_handler('authentication', function(){
+		return config.get("api_key");
+	});				
 }
 
 partyparrot.start("fetching API data");
 
 var cb = function(){
+	
 	partyparrot.stop();
-	show_m.click();
+
+	if (spec.loaded()){
+		show_m.click();
+		return;
+	}
+
+	if (! config.has("api_key")){
+		explorer.draw_settings();
+		return;
+	}
+
+	alert("INVISIBLE ERROR CAT HISSES AT YOU. HISSSSSS. HISSSSSSSSSSSSSS");
 };
 
 spec.init(api, cb);
