@@ -1,6 +1,7 @@
-const config = require("./mapzen.whosonfirst.config.js");
+const config = require("./mapzen.whosonfirst.api.config.js");
 const api = require("./mapzen.whosonfirst.api.js");
 const spec = require("./mapzen.whosonfirst.api.spec.js");
+
 const explorer = require("./mapzen.whosonfirst.api.explorer.js");
 const partyparrot = require("./mapzen.whosonfirst.partyparrot.js");
 
@@ -8,8 +9,7 @@ const ipcRenderer = require('electron').ipcRenderer;
 
 const electron = require('electron');
 const app = electron.app || electron.remote.app;
-
-var udata = app.getPath("userData");
+const udata = app.getPath("userData");
 
 config.init(udata);
 explorer.init(config, api, spec);
@@ -28,13 +28,6 @@ show_f.onclick = function(){ explorer.draw_formats_list(); };
 
 var print_b = document.getElementById("print-button");
 print_b.onclick = function(){ ipcRenderer.send('renderer', 'print'); };
-
-/*
-if (! config.has("api_key")){
-	explorer.draw_settings();
-	return;
-}
-*/
 
 if (config.has("api_key")){
 	api.set_handler('authentication', function(){

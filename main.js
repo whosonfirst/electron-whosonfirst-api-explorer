@@ -29,8 +29,6 @@ the module (for instance, using `npm rebuild` or`npm install`).
 
 let mainWindow
 
-// https://electron.atom.io/docs/api/dialog/
-
 function createWindow () {
 
 	mainWindow = new BrowserWindow({width: 1024, height: 600})
@@ -41,7 +39,7 @@ function createWindow () {
 		slashes: true
 	}))
 	
-	mainWindow.webContents.openDevTools()
+	// mainWindow.webContents.openDevTools()
 	
 	mainWindow.on('closed', function () {
 		mainWindow = null
