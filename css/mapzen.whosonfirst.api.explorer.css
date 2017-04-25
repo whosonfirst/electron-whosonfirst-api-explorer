@@ -246,3 +246,7 @@ h4 {
     margin-top:2.5em;
     margin-bottom: 2em;
 }
+
+.warning {
+    color: red !important;
+}

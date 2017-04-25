@@ -30,9 +30,16 @@ var print_b = document.getElementById("print-button");
 print_b.onclick = function(){ ipcRenderer.send('renderer', 'print'); };
 
 if (config.has("api_key")){
+
 	api.set_handler('authentication', function(){
 		return config.get("api_key");
-	});				
+	});	
+}
+
+else {
+
+	var el = document.getElementById("show-settings");
+	explorer.add_warning(el);
 }
 
 partyparrot.start("fetching API data");

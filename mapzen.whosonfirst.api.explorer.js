@@ -60,6 +60,7 @@
 			form.appendChild(key_group);
 
 			if (api_key == ""){
+				
 				var p = document.createElement("p");
 				p.setAttribute("class", "caveat");
 				p.appendChild(document.createTextNode("You can create a new Mapzen API key..."));
@@ -102,6 +103,15 @@
 				return api_key;
 			});				
 
+			if (api_key == ""){
+				var el = document.getElementById("show-settings");
+				self.add_warning(el);
+				
+			} else {
+				var el = document.getElementById("show-settings");
+				self.remove_warning(el);
+			}
+			
 			var api_endpoint = data.get("api_endpoint");
 			_cfg.set("api_endpoint", api_endpoint);
 
@@ -1108,7 +1118,7 @@
 			self.clear_main();
 			
 			var el = document.getElementById("main");
-			el.appendChild(content);
+			el.appendChild(content);			
 			return true;			
 		},
 
@@ -1345,9 +1355,9 @@
 			group.setAttribute("class", "form-group");
 			
 			var label = document.createElement("label");
-			label.setAttribute("for", name);
+			label.setAttribute("for", name);			
 			label.appendChild(document.createTextNode(label_txt));
-					
+
 			var input = document.createElement("input");
 			input.setAttribute("class", "form-control");					
 			input.setAttribute("type", "text");
@@ -1360,6 +1370,47 @@
 			group.appendChild(input);
 			
 			return group;
+		},
+
+		'add_warning': function(el){
+
+			if (! el){
+				console.log("trying to call add_warning on a null element");
+				return;
+			}
+			
+			var c = el.getAttribute("class");
+			c = c.split(" ");
+			c.push("warning");
+			c = c.join(" ");
+			
+			el.setAttribute("class", c);
+		},
+
+		'remove_warning': function(el){
+
+			if (! el){
+				console.log("trying to call remove_warning on a null element");
+				return;
+			}
+
+			var c = el.getAttribute("class");
+			c = c.split(" ");
+
+			var count = c.length;
+			var tmp = [];
+
+			for (var i = 0; i < count; i++){
+
+				var cl = c[i];
+
+				if (cl != "warning"){
+					tmp.push(cl);
+				}
+			}
+
+			c = tmp.join(" ");
+			el.setAttribute("class", c);
 		}
 		
 	};
