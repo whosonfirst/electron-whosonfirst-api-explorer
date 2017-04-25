@@ -1101,7 +1101,7 @@
 			
 			_api.execute_method(m, data, on_response, on_response);
 
-			_parrot.start("invoking " + method);
+			_parrot.start("calling " + method);
 		},
 				
 		'draw_sidebar': function(list) {
