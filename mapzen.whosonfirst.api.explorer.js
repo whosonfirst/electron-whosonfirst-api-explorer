@@ -27,12 +27,14 @@
 
 	var _api = undefined;
 	var _spec = undefined;
-
+	var _cfg = undefined;
+	
 	var _parrot = require("./mapzen.whosonfirst.partyparrot.js");
 	
 	var self = {
 
-		'init': function(api, spec) {
+		'init': function(config, api, spec) {
+			_cfg = config;
 			_api = api;
 			_spec = spec;
 		},
@@ -48,19 +50,14 @@
 			h3.appendChild(document.createTextNode("API Explorer Settings"));
 			root.appendChild(h3);
 
-			var p = document.createElement("p");
-			p.appendChild(document.createTextNode("THIS DOES NOT WORK YET"));
-			root.appendChild(p);
-			
-			
 			var form = document.createElement("form");
 			form.setAttribute("id", "settings-form");
 
 			var key_group = self.input_group_prefs("API key", "api_key", "mapzen-xxxxxx", "");
 			form.appendChild(key_group);
 
-			var ep_group = self.input_group_prefs("API endpoint", "api_endpoint", "https://whosonfirst-api.mapzen.com", "https://whosonfirst-api.mapzen.com");
-			form.appendChild(ep_group);
+			// var ep_group = self.input_group_prefs("API endpoint", "api_endpoint", "https://whosonfirst-api.mapzen.com", "https://whosonfirst-api.mapzen.com");
+			// form.appendChild(ep_group);
 			
 			var submit = document.createElement("button");
 			submit.setAttribute("type", "submit");
@@ -89,17 +86,40 @@
 			var data = new FormData(form);
 
 			var api_key = data.get("api_key");
-			var api_endpoint = data.get("api_endpoint");			
-			
-			alert("please implement me");
+			_cfg.set("api_key", api_key);
+
+			_api.set_handler('authentication', function(){
+				return api_key;
+			});				
+
+			// var api_endpoint = data.get("api_endpoint");			
+
+			_parrot.start("API settings have been saved");
+
+			setTimeout(function(){
+				_parrot.stop();
+			}, 1500);
+				
 			return false;			
 		},
 		
 		'draw_methods_list': function(){
 			
 			self.toggle_print_button(false);
-			
 			var methods = _spec.methods();
+
+			if (! methods){
+
+				var root = document.createElement("div");
+				
+				var reload = self.reload_button(self.draw_methods_list);
+				reload.setAttribute("title", "reload API methods");
+				root.appendChild(reload);
+
+				self.draw_sidebar(root);
+				return;
+			}
+			
 			var count = methods.length;
 			
 			var lookup = {};
@@ -168,9 +188,21 @@
 
 		'draw_errors_list': function(){
 
-			self.toggle_print_button(false);
-			
+			self.toggle_print_button(false);			
 			var errors = _spec.errors();
+
+			if (! errors){
+
+				var root = document.createElement("div");
+				
+				var reload = self.reload_button(self.draw_errors_list);
+				reload.setAttribute("title", "reload API errors");
+				root.appendChild(reload);
+
+				self.draw_sidebar(root);
+				return;
+			}
+			
 			var count = errors.length;
 			
 			var ul = document.createElement("ul");
@@ -221,8 +253,20 @@
 		'draw_formats_list': function(){
 
 			self.toggle_print_button(false);
-			
 			var formats = _spec.formats();
+
+			if (! errors){
+
+				var root = document.createElement("div");
+				
+				var reload = self.reload_button(self.draw_formats_list);
+				reload.setAttribute("title", "reload API formats");
+				root.appendChild(reload);
+
+				self.draw_sidebar(root);
+				return;
+			}
+			
 			var count = formats.length;
 			
 			formats.sort();
@@ -972,6 +1016,19 @@
 			if (! navigator.onLine){
 
 				var msg = "Can't execute API request because the Internets are not available.";
+			
+				var res_body = document.getElementById("api-response-body");
+				res_body.appendChild(document.createTextNode(msg));
+
+				var res = document.getElementById("api-response");
+				res.style.display = "block";			
+				
+				return;
+			}
+
+			if (! _cfg.has("api_key")){
+
+				var msg = "Can't execute API request because you haven't added an API key.";
 			
 				var res_body = document.getElementById("api-response-body");
 				res_body.appendChild(document.createTextNode(msg));

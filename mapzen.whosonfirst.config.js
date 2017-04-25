@@ -27,13 +27,32 @@
         }
 	
 }(function(){
+
+	// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/23
+	
+	var _cfg = {};
 	
 	var self = {
 
-		'api_key': function(){
-			   return 'API_KEY';	// https://mapzen.com/developers
+		'get': function(key){
+
+			return _cfg[key];
 		},
-		
+
+		'set': function(key, value){
+
+			_cfg[key] = value;
+			return true;
+		},
+
+		'has': function(key){
+
+			if (! _cfg[key]){
+				return false;
+			}
+
+			return true;
+		}
 	}
 	
 	return self;
