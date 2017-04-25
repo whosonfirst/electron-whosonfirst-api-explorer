@@ -54,7 +54,7 @@
 			
 			
 			var form = document.createElement("form");
-			form.setAttribute("id", "key-form");
+			form.setAttribute("id", "settings-form");
 
 			var key_group = self.input_group_prefs("API key", "api_key", "mapzen-xxxxxx", "");
 			form.appendChild(key_group);
@@ -68,8 +68,7 @@
 			submit.appendChild(document.createTextNode("Save"));
 
 			var onsubmit = function(){
-				// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/12
-				alert("please implement me");
+				self.save_settings();
 				return false;
 			};
 
@@ -78,11 +77,22 @@
 
 			// to do add a remove key button
 			
-			form.appendChild(submit);
-			
+			form.appendChild(submit);			
 			root.appendChild(form);
 			
 			self.draw_main(root);
+		},
+
+		'save_settings': function(){
+
+			var form = document.getElementById("settings-form");
+			var data = new FormData(form);
+
+			var api_key = data.get("api_key");
+			var api_endpoint = data.get("api_endpoint");			
+			
+			alert("please implement me");
+			return false;			
 		},
 		
 		'draw_methods_list': function(){

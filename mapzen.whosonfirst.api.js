@@ -167,7 +167,7 @@
 
 				var fmt = form_data.get("format");
 
-				if ((fmt == "json") || (fmt == null)){
+				if ((fmt == "json") || (fmt == "geojson") || (fmt == null)){
 					
 					try {
 						data = JSON.parse(raw);

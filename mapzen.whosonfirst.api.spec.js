@@ -25,7 +25,7 @@
 	
 }(function(){
 
-	const lf = require("./javascript/localforage.min.js");			
+	const lf = require("./javascript/localforage.min.js");
 	const wg = require("./mapzen.whosonfirst.waitgroup.js");
 	
 	var _methods = undefined;
