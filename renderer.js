@@ -14,11 +14,13 @@ const udata = app.getPath("userData");
 window.addEventListener("offline", function(e){
 	var el = document.getElementById("network-status");
 	el.setAttribute("class", "offline");
+	el.setAttribute("title", "unable to locate the internets");	
 });
 
 window.addEventListener("online", function(e){
 	var el = document.getElementById("network-status");
 	el.setAttribute("class", "online");
+	el.setAttribute("title", "you are awake and connected to the network");		
 });
 
 config.init(udata);
