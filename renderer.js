@@ -11,6 +11,16 @@ const electron = require('electron');
 const app = electron.app || electron.remote.app;
 const udata = app.getPath("userData");
 
+window.addEventListener("offline", function(e){
+	var el = document.getElementById("network-status");
+	el.setAttribute("class", "offline");
+});
+
+window.addEventListener("online", function(e){
+	var el = document.getElementById("network-status");
+	el.setAttribute("class", "online");
+});
+
 config.init(udata);
 explorer.init(config, api, spec);
 
