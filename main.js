@@ -2,6 +2,7 @@ const electron = require('electron')
 
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
+const Tray = electron.Tray
 
 const ipcMain = require('electron').ipcMain;
 
@@ -31,7 +32,9 @@ let mainWindow
 
 function createWindow () {
 
-	mainWindow = new BrowserWindow({width: 1024, height: 600})
+	const icon_path = path.join(__dirname, 'images/64x64.png')
+	
+	mainWindow = new BrowserWindow({width: 1024, height: 600, icon: icon_path})
 	
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, 'index.html'),
