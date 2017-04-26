@@ -14,13 +14,36 @@ const udata = app.getPath("userData");
 window.addEventListener("offline", function(e){
 	var el = document.getElementById("network-status");
 	el.setAttribute("class", "offline");
-	el.setAttribute("title", "unable to locate the internets");	
+	el.setAttribute("title", "unable to locate the internets");
+
+	var headers = document.getElementsByClassName("sidebar-item-header");
+	var count = headers.length;
+
+	for (var i=0; i < count; i++){
+		var el = headers[i];
+
+		if (el){
+			el.setAttribute("class", "sidebar-item-header-cached");
+		}
+	}
 });
 
 window.addEventListener("online", function(e){
 	var el = document.getElementById("network-status");
 	el.setAttribute("class", "online");
-	el.setAttribute("title", "you are awake and connected to the network");		
+	el.setAttribute("title", "you are awake and connected to the network");
+
+	var headers = document.getElementsByClassName("sitebar-item-header-cached");
+	var count = headers.length;
+
+	for (var i=0; i < count; i++){
+		var el = headers[i];
+
+		if (el){
+			el.setAttribute("class", "sidebar-item-header");
+		}
+	}
+	
 });
 
 config.init(udata);

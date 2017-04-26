@@ -284,3 +284,7 @@ h4 {
     content: "\20E0";
     color: #ff0000 !important;
 }
+
+.sidebar-item-header-cached:after {
+    content: " (cached)";
+}

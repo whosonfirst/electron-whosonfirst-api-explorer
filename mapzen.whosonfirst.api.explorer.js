@@ -189,6 +189,7 @@
 			names.sort();
 
 			var ul = document.createElement("ul");
+			ul.setAttribute("id", "sidebar-list");
 			
 			for (var i = 0; i < count; i++) {
 				
@@ -198,6 +199,7 @@
 				var desc = m["description"];
 				
 				var h3 = document.createElement("h3");
+				h3.setAttribute("class", "sidebar-item-header");				
 				h3.setAttribute("data-method-name", name);
 				h3.appendChild(document.createTextNode(name));
 
@@ -258,6 +260,7 @@
 			var count = errors.length;
 			
 			var ul = document.createElement("ul");
+			ul.setAttribute("id", "sidebar-list");
 			
 			for (var i = 0; i < count; i++) {
 				
@@ -267,6 +270,7 @@
 				var desc = err["message"];
 				
 				var h3 = document.createElement("h3");
+				h3.setAttribute("class", "sidebar-item-header");				
 				h3.setAttribute("data-error-code", code);
 				h3.appendChild(document.createTextNode(code));
 
@@ -324,12 +328,14 @@
 			formats.sort();
 
 			var ul = document.createElement("ul");
+			ul.setAttribute("id", "sidebar-list");
 			
 			for (var i = 0; i < count; i++) {
 				
 				var name = formats[i];
 				
 				var h3 = document.createElement("h3");
+				h3.setAttribute("class", "sidebar-item-header");
 				h3.setAttribute("data-format-name", name);
 				h3.appendChild(document.createTextNode(name));
 				
