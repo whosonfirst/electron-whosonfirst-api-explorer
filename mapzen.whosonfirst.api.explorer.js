@@ -307,7 +307,7 @@
 			self.toggle_print_button(false);
 			var formats = _spec.formats();
 
-			if (! errors){
+			if (! formats){
 
 				var root = document.createElement("div");
 				
