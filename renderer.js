@@ -11,25 +11,6 @@ const electron = require('electron');
 const app = electron.app || electron.remote.app;
 const udata = app.getPath("userData");
 
-window.addEventListener("offline", function(e){
-	var el = document.getElementById("network-status");
-	el.setAttribute("class", "offline");
-	el.setAttribute("title", "unable to locate the internets");
-
-	// explorer.cache_notice(true);
-});
-
-window.addEventListener("online", function(e){
-	var el = document.getElementById("network-status");
-	el.setAttribute("class", "online");
-	el.setAttribute("title", "you are awake and connected to the network");
-
-	// explorer.cache_notice(false);
-});
-
-config.init(udata);
-explorer.init(config, api, spec);
-
 var show_s = document.getElementById("show-settings");
 show_s.onclick = function(){ explorer.draw_settings(); };
 	
@@ -42,49 +23,13 @@ show_e.onclick = function(){ explorer.draw_errors_list(); };
 var show_f = document.getElementById("show-formats");
 show_f.onclick = function(){ explorer.draw_formats_list(); };
 
+var show_l = document.getElementById("show-log");
+show_l.onclick = function(){ explorer.draw_log(); };
+
 var print_b = document.getElementById("print-button");
 print_b.onclick = function(){ ipcRenderer.send('renderer', 'print'); };
 
-if (config.has("api_key")){
+config.init(udata);
 
-	api.set_handler('authentication', function(){
-		return config.get("api_key");
-	});	
-}
-
-else {
-
-	var el = document.getElementById("show-settings");
-	explorer.add_warning(el);
-}
-
-partyparrot.start("fetching API data");
-
-var cb = function(){
-	
-	partyparrot.stop();
-
-	if (spec.loaded()){
-
-		if (spec.is_cache()){
-			explorer.cache_notice(true);
-		}
-
-		else {
-			explorer.cache_notice(false);			
-		}
-		
-		show_m.click();
-		return;
-	}
-
-	if (! config.has("api_key")){
-		explorer.draw_settings();
-		return;
-	}
-
-	alert("INVISIBLE ERROR CAT HISSES AT YOU. HISSSSSS. HISSSSSSSSSSSSSS");
-};
-
-spec.init(api, cb);
-
+explorer.init(config, api, spec);
+explorer.start();

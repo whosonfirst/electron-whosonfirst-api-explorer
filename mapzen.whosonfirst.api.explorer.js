@@ -28,20 +28,163 @@
 	var _api = undefined;
 	var _spec = undefined;
 	var _cfg = undefined;
+	var _log = [];
 	
 	var _parrot = require("./mapzen.whosonfirst.partyparrot.js");
 	
 	var self = {
 
 		'init': function(config, api, spec) {
+			
 			_cfg = config;
 			_api = api;
 			_spec = spec;
+
+			if (navigator.onLine){
+				self.log("info", "Network is available");
+				self.network_notice(true);
+			}
+
+			else {
+				self.log("info", "Network is unavailable");
+				self.network_notice(false);
+			}
+
+			if (_cfg.has("api_key")){
+
+				self.log("warning", "Missing API key.");
+				
+				_api.set_handler('authentication', function(){
+					return _cfg.get("api_key");
+				});	
+			}
+			
+			else {
+				var el = document.getElementById("show-settings");
+				self.append_class(el, "warning");
+			}
+			
+			window.addEventListener("offline", function(e){
+				self.log("info", "Network became unavailable");				
+				self.network_notice(false);
+			});
+			
+			window.addEventListener("online", function(e){
+				self.log("info", "Network became available");				
+				self.network_notice(true);
+			});
+
+			self.log("info", "Initialization complete.");
 		},
 
+		'start': function(){
+
+			self.log("info", "Starting API explorer.");
+			
+			var cb = function(){
+	
+				if (_spec.loaded()){
+					self.draw_methods_list();
+					return;
+				}
+				
+				if (! _cfg.has("api_key")){
+					explorer.draw_settings();
+					return;
+				}
+				
+				self.log("error", "Attacked by INVISIBLE ERROR CAT.");
+
+				var root = document.createElement("div");
+
+				var h3 = document.createElement("h3");
+				h3.setAttribute("class", "warning");
+				h3.appendChild(document.createTextNode("INVISIBLE ERROR CAT"));
+				
+				var p = document.createElement("p");
+				p.appendChild(document.createTextNode("Something has gone horribly wrong."));
+				
+				root.appendChild(h3);
+				root.appendChild(p);
+
+				self.clear_all();
+				self.draw_main(root);
+			};
+
+			self.reload_spec(cb);
+		},
+		
+		'log': function(status, msg){
+
+			var dt = new Date();
+			_log.push({'date': dt, 'status': status, 'message': msg});
+		},
+
+		'draw_log': function(){
+
+			var root = document.createElement("root");
+
+			var h3 = document.createElement("h3");
+			h3.appendChild(document.createTextNode("Application log"));
+			root.appendChild(h3);
+			
+			var table = document.createElement("table");
+			table.setAttribute("class", "table");			
+			table.setAttribute("id", "log");
+
+			var th_row = document.createElement("tr");
+
+			var th_status = document.createElement("th");
+			th_status.appendChild(document.createTextNode("Status"));
+
+			var th_message = document.createElement("th");		
+			th_message.appendChild(document.createTextNode("Message"));
+
+			var th_date = document.createElement("th");
+			th_date.appendChild(document.createTextNode("Date"));			
+
+			th_row.appendChild(th_status);
+			th_row.appendChild(th_date);
+			th_row.appendChild(th_message);
+			
+			table.appendChild(th_row);
+			
+			var count = _log.length;
+
+			for (var i=0; i < count; i++){
+
+				var e = _log[i];
+				
+				var dt = e.date;
+				var status = e.status;
+				var message = e.message;
+				
+				var row = document.createElement("tr");
+
+				var td_status = document.createElement("td");
+				td_status.appendChild(document.createTextNode(status));
+
+				var td_message = document.createElement("td");
+				td_message.appendChild(document.createTextNode(message));
+
+				var td_date = document.createElement("td");				
+				td_date.appendChild(document.createTextNode(dt.toISOString()));
+
+				row.appendChild(td_status);
+				row.appendChild(td_date);
+				row.appendChild(td_message);
+				
+				table.appendChild(row);
+			}
+
+			root.appendChild(table);
+			
+			self.clear_all();
+			self.draw_main(root);
+		},
+		
 		'draw_settings': function(){
 
-			self.clear_all();
 			self.toggle_print_button(false);
 
 			var root = document.createElement("div");
@@ -82,14 +225,16 @@
 			submit.onclick = onsubmit;
 			form.onsubmit = onsubmit;
 
-			// to do add a remove key button
-			
 			form.appendChild(submit);			
 			root.appendChild(form);
-			
+
+			self.clear_all();			
 			self.draw_main(root);
 
 			if (api_key == ""){
+
+				self.log("warning", "API key is missing");
+				
 				var el = document.getElementById("label-api_key");
 				self.append_class(el, "warning");
 			}
@@ -97,6 +242,8 @@
 
 		'save_settings': function(){
 
+			self.log("Saved settings.");
+			
 			var form = document.getElementById("settings-form");
 			var data = new FormData(form);
 
@@ -136,18 +283,7 @@
 				_parrot.stop();
 
 				if (! _spec.loaded()){
-
-					_parrot.start("Reloading API data");
-				
-					_spec.init(_api, function(){
-					
-						_parrot.stop();
-						_parrot.start("API data successfully updated");
-						
-						setTimeout(function(){
-							_parrot.stop();
-						}, 1500);					
-					});
+					self.reload_spec();
 				}
 				
 			}, 1500);
@@ -163,9 +299,15 @@
 			if (! methods){
 
 				var root = document.createElement("div");
+
+				var p = document.createElement("p");
+				p.setAttribute("class", "warning");
+				p.appendChild(document.createTextNode("Unable to display methods list."));
 				
 				var reload = self.reload_button(self.draw_methods_list);
 				reload.setAttribute("title", "reload API methods");
+
+				root.appendChild(p);
 				root.appendChild(reload);
 
 				self.draw_sidebar(root);
@@ -238,6 +380,10 @@
 
 			self.clear_all();			
 			self.draw_sidebar(root);
+
+			if (_spec.is_cache()){
+				self.cache_notice(true);
+			}
 		},
 
 		'draw_errors_list': function(){
@@ -248,9 +394,15 @@
 			if (! errors){
 
 				var root = document.createElement("div");
+
+				var p = document.createElement("p");
+				p.setAttribute("class", "warning");
+				p.appendChild(document.createTextNode("Unable to display errors list."));
 				
 				var reload = self.reload_button(self.draw_errors_list);
 				reload.setAttribute("title", "reload API errors");
+
+				root.appendChild(p);
 				root.appendChild(reload);
 
 				self.draw_sidebar(root);
@@ -274,15 +426,6 @@
 				h3.setAttribute("data-error-code", code);
 				h3.appendChild(document.createTextNode(code));
 
-				/*
-				h3.onclick = function(e){
-					var el = e.target;
-					var code = el.getAttribute("data-error-code");
-
-					self.draw_error(code);
-				};
-				*/
-				
 				var p = document.createElement("p");
 				p.appendChild(document.createTextNode(desc));
 				
@@ -304,6 +447,10 @@
 
 			self.clear_sidebar();			
 			self.draw_main(root);
+
+			if (_spec.is_cache()){
+				self.cache_notice(true);
+			}			
 		},
 
 		'draw_formats_list': function(){
@@ -314,9 +461,15 @@
 			if (! formats){
 
 				var root = document.createElement("div");
+
+				var p = document.createElement("p");
+				p.setAttribute("class", "warning");
+				p.appendChild(document.createTextNode("Unable to display formats list."));
 				
 				var reload = self.reload_button(self.draw_formats_list);
 				reload.setAttribute("title", "reload API formats");
+
+				root.appendChild(p);
 				root.appendChild(reload);
 
 				self.draw_sidebar(root);
@@ -356,6 +509,11 @@
 			root.appendChild(reload);
 			
 			self.draw_main(root);
+
+			if (_spec.is_cache()){
+				self.cache_notice(true);
+			}			
+			
 		},
 
 		'draw_method': function(method_name) {
@@ -395,8 +553,6 @@
 			root.appendChild(h3);
 			root.appendChild(desc);
 
-			// parameters
-			
 			var params_header = document.createElement("h3");
 			params_header.appendChild(document.createTextNode("Parameters"));
 
@@ -790,8 +946,6 @@
 			root.appendChild(h2);
 			root.appendChild(desc);
 
-			//
-
 			var modify_req = self.modify_button();
 			var modify_res = self.modify_button();			
 			
@@ -828,8 +982,6 @@
 			root.appendChild(req);
 			root.appendChild(res);			
 
-			//
-			
 			var form = document.createElement("form");
 			form.setAttribute("id", "api-form");
 			form.setAttribute("data-method-name", name);
@@ -1008,8 +1160,6 @@
 
 			form.append(group);
 			
-			// 
-			
 			var submit = document.createElement("button");
 			submit.setAttribute("type", "submit");
 			submit.setAttribute("class", "btn btn-default make-it-so submit-button");			
@@ -1022,9 +1172,6 @@
 
 			submit.onclick = onsubmit;			
 			form.onsubmit = onsubmit;
-
-			// var hr = document.createElement("hr");
-			// form.appendChild(hr);
 			
 			form.appendChild(submit);
 			root.appendChild(form);
@@ -1114,6 +1261,8 @@
 			
 			_api.execute_method(m, data, on_response, on_response);
 
+			self.log("info", "Calling API method " + method);
+			
 			_parrot.start("calling " + method);
 		},
 				
@@ -1217,13 +1366,12 @@
 			button.onclick = function(){
 
 				if (! navigator.onLine){
-					alert("Unable to reload API data because the Internets are unavailable.");
+					alert("Unable to reload API data because the Internets are not available.");
 					return false;
 					
 				}
 
 				self.reload_spec(cb);
-				
 				return true;
 			};
 
@@ -1233,24 +1381,28 @@
 		'reload_spec': function(cb){
 
 			_parrot.start("Reloading API data");
-				
+			
 			_spec.init(_api, function(){
 
 				_parrot.stop();
 				
 				if (! _spec.loaded()){
+
+					self.log("error", "Failed to reload API spec");
 					
 					_parrot.start("Unable to fetch API spec");
 					
 					setTimeout(function(){
 						_parrot.stop();
 					}, 3000);
-					
+
+					cb(false);					
 					return;
 				}
 				
 				if (_spec.is_cache()){
-					
+
+					self.log("notice", "Loading cached API spec data");
 					_parrot.start("Unable to fetch API spec, so using local cache");
 					
 					setTimeout(function(){
@@ -1258,18 +1410,21 @@
 					}, 3000);
 					
 					self.cache_notice(true);
+
+					cb(true);
 					return;
 				}
 				
 				self.cache_notice(false);
-				
+
+				self.log("info", "API spec reloaded");
 				_parrot.start("API data successfully updated");
 				
 				setTimeout(function(){
 					_parrot.stop();
 				}, 1500);
 				
-				cb();
+				cb(true);
 			});
 		},
 		
@@ -1417,6 +1572,21 @@
 			return group;
 		},
 
+		'network_notice': function(enabled){
+
+			if (enabled){
+				var el = document.getElementById("network-status");
+				el.setAttribute("class", "online");
+				el.setAttribute("title", "you are awake and connected to the network");
+			}
+
+			else {
+				var el = document.getElementById("network-status");
+				el.setAttribute("class", "offline");
+				el.setAttribute("title", "unable to locate the internets");				
+			}
+		},
+		
 		'cache_notice': function(enabled){
 
 			if (enabled){

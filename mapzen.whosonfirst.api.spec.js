@@ -81,7 +81,8 @@
 				_default_format = rsp["default_format"];
 				
 				self.set("formats", rsp["formats"]);
-				self.set("default_format", rsp["default_format"]);				
+				self.set("default_format", rsp["default_format"]);
+				
 				wg.done();
 				
 			}, function(){ _err_remote = true; wg.done(); });
@@ -185,11 +186,6 @@
 
 		'loaded': function(){
 
-			console.log("loaded");
-			console.log("remote " + _err_remote);
-			console.log("local " + _err_local);
-			console.log("cache " + _cache);			
-			
 			if ((_err_remote) && (_err_local)){
 				return false;
 			}
