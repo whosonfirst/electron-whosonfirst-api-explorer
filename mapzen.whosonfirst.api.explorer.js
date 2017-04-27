@@ -1222,39 +1222,7 @@
 					
 				}
 
-				_parrot.start("Reloading API data");
-				
-				_spec.init(_api, function(){
-
-					_parrot.stop();
-					
-					if (! _spec.loaded()){
-
-						_parrot.start("Unable to fetch API spec");
-
-						setTimeout(function(){
-							_parrot.stop();
-						}, 3000);
-
-						return;
-					}
-
-					if (_spec.is_cache()){
-
-						self.cache_notice(true);
-						return;
-					}
-
-					self.cache_notice(false);
-					
-					_parrot.start("API data successfully updated");
-
-					setTimeout(function(){
-						_parrot.stop();
-					}, 1500);
-					
-					cb();
-				});
+				self.reload_spec(cb);
 				
 				return true;
 			};
@@ -1262,6 +1230,49 @@
 			return button;
 		},
 
+		'reload_spec': function(cb){
+
+			_parrot.start("Reloading API data");
+				
+			_spec.init(_api, function(){
+
+				_parrot.stop();
+				
+				if (! _spec.loaded()){
+					
+					_parrot.start("Unable to fetch API spec");
+					
+					setTimeout(function(){
+						_parrot.stop();
+					}, 3000);
+					
+					return;
+				}
+				
+				if (_spec.is_cache()){
+					
+					_parrot.start("Unable to fetch API spec, so using local cache");
+					
+					setTimeout(function(){
+						_parrot.stop();
+					}, 3000);
+					
+					self.cache_notice(true);
+					return;
+				}
+				
+				self.cache_notice(false);
+				
+				_parrot.start("API data successfully updated");
+				
+				setTimeout(function(){
+					_parrot.stop();
+				}, 1500);
+				
+				cb();
+			});
+		},
+		
 		'params_table': function(){
 
 			var table = document.createElement("table");
