@@ -26,8 +26,9 @@ show_f.onclick = function(){ explorer.draw_formats_list(); };
 var show_l = document.getElementById("show-log");
 show_l.onclick = function(){ explorer.draw_log(); };
 
-var print_b = document.getElementById("print-button");
-print_b.onclick = function(){ ipcRenderer.send('renderer', 'print'); };
+// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/29
+// var print_b = document.getElementById("print-button");
+// print_b.onclick = function(){ ipcRenderer.send('renderer', 'print'); };
 
 config.init(udata);
 

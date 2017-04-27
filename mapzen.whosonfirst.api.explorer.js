@@ -1366,10 +1366,15 @@
 
 		'toggle_print_button': function(enabled){
 
-			var display = (enabled) ? "inline" : "none";
+			// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/29
 
 			var el = document.getElementById("print-button");
-			el.style.display = display;
+
+			if (el){
+				var display = (enabled) ? "inline" : "none";
+				el.style.display = display;
+			}
+			
 		},
 
 		'reload_button': function(cb){
