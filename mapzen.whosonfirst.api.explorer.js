@@ -89,7 +89,7 @@
 				}
 				
 				if (! _cfg.has("api_key")){
-					explorer.draw_settings();
+					self.draw_settings();
 					return;
 				}
 				
@@ -205,7 +205,21 @@
 			if (api_key == ""){
 				var p = document.createElement("p");
 				p.setAttribute("class", "caveat");
-				p.appendChild(document.createTextNode("You can create a new Mapzen API key..."));
+				p.appendChild(document.createTextNode("You can create a new Mapzen API key at "));
+
+				var link = document.createElement("a");
+				link.appendChild(document.createTextNode("https://www.mapzen.com/developers"));
+
+				/*
+				link.onclick = function(){
+					_shell.openExternal("https://www.mapzen.com/developers");
+					return false;
+				};
+				*/
+				
+				p.appendChild(link);
+
+				p.appendChild(document.createTextNode("."));
 				form.appendChild(p);
 			}
 			
@@ -1404,7 +1418,7 @@
 				if (_spec.is_cache()){
 
 					self.log("notice", "Loading cached API spec data");
-					_parrot.start("Unable to fetch API spec, so using local cache");
+					_parrot.start("Unable to fetch API spec, trying local cache");
 					
 					setTimeout(function(){
 						_parrot.stop();

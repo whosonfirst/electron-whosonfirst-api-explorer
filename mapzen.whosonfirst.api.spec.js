@@ -1,3 +1,5 @@
+// this needs to be cleaned up (20170427/thisisaaronland)
+
 (function(f){
 
         if (typeof exports === "object" && typeof module !== "undefined"){
@@ -108,17 +110,30 @@
 			wg.add(4);
 			
 			lf.getItem("methods").then(function(rsp) {
+
+				if (! rsp){
+					_err_local = true;
+					wg.done();
+					return;
+				}
+				
 				_methods = rsp;
 				wg.done();
 				
 			}).catch(function (err) {
 				console.log("failed to get 'methods' because " + err);
-
 				_err_local = true;
 				wg.done();				
 			});
 
 			lf.getItem("errors").then(function(rsp) {
+
+				if (! rsp){
+					_err_local = true;
+					wg.done();
+					return;
+				}
+				
 				_errors = rsp;				
 				wg.done();
 				
@@ -129,6 +144,13 @@
 			});
 
 			lf.getItem("formats").then(function(rsp) {
+
+				if (! rsp){
+					_err_local = true;
+					wg.done();
+					return;
+				}
+				
 				_formats = rsp;
 				wg.done();
 				
@@ -139,6 +161,13 @@
 			});
 
 			lf.getItem("default_format").then(function(rsp) {
+
+				if (! rsp){
+					_err_local = true;
+					wg.done();
+					return;
+				}
+				
 				_default_format = rsp;
 				wg.done();
 				
