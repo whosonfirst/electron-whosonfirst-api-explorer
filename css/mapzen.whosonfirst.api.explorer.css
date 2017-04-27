@@ -285,13 +285,42 @@ h4 {
     color: #ff0000 !important;
 }
 
+.online:hover:after {
+    content: "online";
+}
+
+.offline:hover:after {
+    content: "offline";
+}
+
 .cached {
-    background-color:#ccc;
+
 }
 
 .cached:after {
-    content: " cached";
-    font-size:small;
-    font-family:monospace;
-    color:#fff;
+    content: "💼";
+    padding-left: 1em;
+}
+
+.cached:hover:after {
+    font-weight: 500;
+    font-style: italic;
+    padding-left: 0;
+    line-height: 1.4em;
+    content: " – this is cached data";
+}
+
+#spec-status {
+    float:right;
+    margin-left:.5em;
+    padding-top:.3em;
+    font-size:1.5em;
+}
+
+.remote:after {
+    content: "🤖";
+}
+
+.local:after {
+    content: "💼";
 }

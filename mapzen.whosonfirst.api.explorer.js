@@ -51,8 +51,6 @@
 			}
 
 			if (_cfg.has("api_key")){
-
-				self.log("warning", "Missing API key.");
 				
 				_api.set_handler('authentication', function(){
 					return _cfg.get("api_key");
@@ -60,6 +58,8 @@
 			}
 			
 			else {
+				self.log("warning", "Missing API key.");
+				
 				var el = document.getElementById("show-settings");
 				self.append_class(el, "warning");
 			}
@@ -242,7 +242,7 @@
 
 		'save_settings': function(){
 
-			self.log("Saved settings.");
+			self.log("info", "Saved settings.");
 			
 			var form = document.getElementById("settings-form");
 			var data = new FormData(form);
@@ -282,7 +282,7 @@
 				
 				_parrot.stop();
 
-				if (! _spec.loaded()){
+				if ((! _spec.loaded()) || (_spec.is_cache())){
 					self.reload_spec();
 				}
 				
@@ -549,7 +549,8 @@
 			};
 			
 			var desc = document.createElement("p");
-
+			desc.appendChild(document.createTextNode(m["description"]));
+				
 			root.appendChild(h3);
 			root.appendChild(desc);
 
