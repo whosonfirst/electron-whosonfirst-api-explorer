@@ -91,7 +91,7 @@
 
 			if (api_key == ""){
 				var el = document.getElementById("label-api_key");
-				self.add_warning(el);
+				self.append_class(el, "warning");
 			}
 		},
 
@@ -109,14 +109,14 @@
 
 			if (api_key == ""){
 				var el = document.getElementById("show-settings");
-				self.add_warning(el);
+				self.append_class(el, "warning");
 				
 			} else {
 				var el = document.getElementById("show-settings");
-				self.remove_warning(el);
+				self.remove_class(el, "warning");
 
 				var el = document.getElementById("label-api_key");
-				self.remove_warning(el);
+				self.remove_class(el, "warning");
 			}
 			
 			var api_endpoint = data.get("api_endpoint");
@@ -1225,8 +1225,28 @@
 				_parrot.start("Reloading API data");
 				
 				_spec.init(_api, function(){
-					
+
 					_parrot.stop();
+					
+					if (! _spec.loaded()){
+
+						_parrot.start("Unable to fetch API spec");
+
+						setTimeout(function(){
+							_parrot.stop();
+						}, 3000);
+
+						return;
+					}
+
+					if (_spec.is_cache()){
+
+						self.cache_notice(true);
+						return;
+					}
+
+					self.cache_notice(false);
+					
 					_parrot.start("API data successfully updated");
 
 					setTimeout(function(){
@@ -1386,26 +1406,51 @@
 			return group;
 		},
 
-		'add_warning': function(el){
+		'cache_notice': function(enabled){
+
+			if (enabled){
+
+				var headers = document.getElementsByClassName("sidebar-item-header");
+				var count = headers.length;
+
+				for (var i=0; i < count; i++){
+					var el = headers[i];
+					self.append_class(el, "cached");
+				}
+			}
+
+			else {
+
+				var headers = document.getElementsByClassName("sitebar-item-header-cached");
+				var count = headers.length;
+
+				for (var i=0; i < count; i++){
+					var el = headers[i];
+					self.remove_class(el, "cached");
+				}
+			}
+		},
+		
+		'append_class': function(el, class_name){
 
 			if (! el){
-				console.log("trying to call add_warning on a null element");
+				console.log("trying to call append_class on a null element");
 				return;
 			}
 			
 			var c = el.getAttribute("class");
 			c = (c) ? c.split(" ") : [];
 			
-			c.push("warning");
+			c.push(class_name);
 			c = c.join(" ");
 			
 			el.setAttribute("class", c);
 		},
-
-		'remove_warning': function(el){
-
+		
+		'remove_class': function(el, class_name){
+			
 			if (! el){
-				console.log("trying to call remove_warning on a null element");
+				console.log("trying to call remove_class on a null element");
 				return;
 			}
 
@@ -1419,7 +1464,7 @@
 
 				var cl = c[i];
 
-				if (cl != "warning"){
+				if (cl != class_name){
 					tmp.push(cl);
 				}
 			}

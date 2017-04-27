@@ -32,6 +32,11 @@
 	var _errors = undefined;
 	var _formats = undefined;
 	var _default_format = undefined;
+
+	var _err_remote = false;
+	var _err_local = false;
+	
+	var _cache = false;
 	
 	var self = {
 
@@ -47,6 +52,8 @@
 		},
 
 		'init_remote': function(api, cb){
+
+			_err_remote = false;
 			
 			wg.add(3);
 			
@@ -56,7 +63,8 @@
 
 				self.set("methods", rsp["methods"]);
 				wg.done();
-			}, function(){ wg.done(); });
+				
+			}, function(){ _err_remote = true; wg.done(); });
 
 			api.execute_method("api.spec.errors", {}, function(rsp){
 
@@ -64,7 +72,8 @@
 
 				self.set("errors", rsp["errors"]);				
 				wg.done();
-			}, function(){ wg.done(); });
+				
+			}, function(){ _err_remote = true; wg.done(); });
 
 			api.execute_method("api.spec.formats", {}, function(rsp){
 
@@ -74,17 +83,27 @@
 				self.set("formats", rsp["formats"]);
 				self.set("default_format", rsp["default_format"]);				
 				wg.done();
-			}, function(){ wg.done(); });
+				
+			}, function(){ _err_remote = true; wg.done(); });
 
-			wg.wait(cb);
+			wg.wait(function(){
 
-			if (! self.loaded()){
+				if (! _err_remote){
+					cb();
+					return;
+				}
+				
+				console.log("check local");
 				self.init_local(cb);
-			}
+			});
+			
 		},
 
 		'init_local': function(cb){
 
+			_cache = false;
+			_err_local = false;
+			
 			wg.add(4);
 			
 			lf.getItem("methods").then(function(rsp) {
@@ -93,15 +112,18 @@
 				
 			}).catch(function (err) {
 				console.log("failed to get 'methods' because " + err);
+
+				_err_local = true;
 				wg.done();				
 			});
 
 			lf.getItem("errors").then(function(rsp) {
-				_errors = rsp;
+				_errors = rsp;				
 				wg.done();
 				
 			}).catch(function (err) {
 				console.log("failed to get 'errors' because " + err);
+				_err_local = true;
 				wg.done();
 			});
 
@@ -111,6 +133,7 @@
 				
 			}).catch(function (err) {
 				console.log("failed to get 'formats' because " + err);
+				_err_local = true;				
 				wg.done();
 			});
 
@@ -120,10 +143,18 @@
 				
 			}).catch(function (err) {
 				console.log("failed to get 'default_format' because " + err);
+				_err_local = true;
 				wg.done();
 			});
 			
-			wg.wait(cb);
+			wg.wait(function(){
+
+				if (! _err_local){
+					_cache = true;
+				}
+
+				cb();
+			});
 		},
 		
 		'methods': function(){
@@ -154,19 +185,20 @@
 
 		'loaded': function(){
 
-			if (! _methods){
-				return false;
-			}
-
-			if (! _errors){
-				return false;
-			}
-
-			if (! _formats){
+			console.log("loaded");
+			console.log("remote " + _err_remote);
+			console.log("local " + _err_local);
+			console.log("cache " + _cache);			
+			
+			if ((_err_remote) && (_err_local)){
 				return false;
 			}
 
 			return true;
+		},
+
+		'is_cache': function(){
+			return _cache;
 		}
 	};
 	

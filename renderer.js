@@ -16,16 +16,7 @@ window.addEventListener("offline", function(e){
 	el.setAttribute("class", "offline");
 	el.setAttribute("title", "unable to locate the internets");
 
-	var headers = document.getElementsByClassName("sidebar-item-header");
-	var count = headers.length;
-
-	for (var i=0; i < count; i++){
-		var el = headers[i];
-
-		if (el){
-			el.setAttribute("class", "sidebar-item-header-cached");
-		}
-	}
+	// explorer.cache_notice(true);
 });
 
 window.addEventListener("online", function(e){
@@ -33,17 +24,7 @@ window.addEventListener("online", function(e){
 	el.setAttribute("class", "online");
 	el.setAttribute("title", "you are awake and connected to the network");
 
-	var headers = document.getElementsByClassName("sitebar-item-header-cached");
-	var count = headers.length;
-
-	for (var i=0; i < count; i++){
-		var el = headers[i];
-
-		if (el){
-			el.setAttribute("class", "sidebar-item-header");
-		}
-	}
-	
+	// explorer.cache_notice(false);
 });
 
 config.init(udata);
@@ -84,6 +65,15 @@ var cb = function(){
 	partyparrot.stop();
 
 	if (spec.loaded()){
+
+		if (spec.is_cache()){
+			explorer.cache_notice(true);
+		}
+
+		else {
+			explorer.cache_notice(false);			
+		}
+		
 		show_m.click();
 		return;
 	}

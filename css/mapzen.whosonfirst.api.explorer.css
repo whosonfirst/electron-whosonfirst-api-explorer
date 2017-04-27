@@ -285,6 +285,13 @@ h4 {
     color: #ff0000 !important;
 }
 
-.sidebar-item-header-cached:after {
-    content: " (cached)";
+.cached {
+    background-color:#ccc;
+}
+
+.cached:after {
+    content: " cached";
+    font-size:small;
+    font-family:monospace;
+    color:#fff;
 }
