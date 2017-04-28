@@ -38,5 +38,6 @@ Pre-compiled native binaries are on the list but they haven't happened yet. Sorr
 
 ## See also
 
+* https://mapzen.com/blog/whosonfirst-api-explorer/
 * https://mapzen.com/documentation/wof/
 * https://electron.atom.io/
