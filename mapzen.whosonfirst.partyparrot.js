@@ -28,9 +28,11 @@
 	
 }(function(){
 
+	var _timeout = undefined;
+	
 	var self = {
 		
-		'start': function(msg){
+		'start': function(msg, ttl){
 			
 			var el = document.getElementById("party-parrot");
 			
@@ -50,6 +52,19 @@
 
 			el.appendChild(span);
 			el.appendChild(img);
+
+			ttl = parseInt(ttl);
+			
+			if (ttl){
+
+				if (_timeout){
+					clearTimeout(_timeout);
+				}
+				
+				_timeout = setTimeout(function(){
+					self.stop();
+				}, ttl);
+			}
 			
 			return true;
 		},

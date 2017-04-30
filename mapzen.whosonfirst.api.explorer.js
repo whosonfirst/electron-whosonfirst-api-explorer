@@ -97,7 +97,7 @@
 
 				var root = document.createElement("div");
 
-				var h3 = document.createElement("h3");
+				var h3a = document.createElement("h3");
 				h3.setAttribute("class", "warning");
 				h3.appendChild(document.createTextNode("INVISIBLE ERROR CAT"));
 				
@@ -242,6 +242,56 @@
 			form.appendChild(submit);			
 			root.appendChild(form);
 
+			var adv = document.createElement("div");
+			adv.setAttribute("id", "advanced");
+			
+			var h3 = document.createElement("h3");
+			h3.appendChild(document.createTextNode("Advanced"));
+
+			var b = document.createElement("button");
+			b.setAttribute("class", "btn btn-sm");
+			b.appendChild(document.createTextNode("Purge local cache"));
+
+			b.onclick = function(){
+
+				if (! confirm("Are you sure you want to purge the local cache?")){
+					return false;
+				}
+
+				_parrot.start("Purging local cache data");
+				self.log("info", "Purge local cache.");
+				
+				_spec.purge(function(ok){
+
+					_parrot.stop();
+
+					if (! ok){
+
+						_parrot.start("Unable to purge local cache", 2000);
+						self.log("error", "Failed to purge local cache.");
+						
+						return false;
+					}
+
+					_parrot.start("Local cache data is all gone!", 2000);
+					
+					if (navigator.onLine){
+
+						if (confirm("Would you like to reload the API spec?")){
+							self.reload_spec(function(){});
+						}
+
+					}
+				});
+				
+				return false;
+			};
+			
+			adv.appendChild(h3);
+			adv.appendChild(b);
+
+			root.appendChild(adv);
+			
 			self.clear_all();			
 			self.draw_main(root);
 
@@ -1410,12 +1460,8 @@
 
 					self.log("error", "Failed to reload API spec");
 					
-					_parrot.start("Unable to fetch API spec");
+					_parrot.start("Unable to fetch API spec", 3000);
 					
-					setTimeout(function(){
-						_parrot.stop();
-					}, 3000);
-
 					cb(false);					
 					return;
 				}
@@ -1423,11 +1469,7 @@
 				if (_spec.is_cache()){
 
 					self.log("notice", "Loading cached API spec data");
-					_parrot.start("Unable to fetch API spec, trying local cache");
-					
-					setTimeout(function(){
-						_parrot.stop();
-					}, 3000);
+					_parrot.start("Unable to fetch API spec, trying local cache", 3000);
 					
 					self.cache_notice(true);
 
@@ -1438,11 +1480,7 @@
 				self.cache_notice(false);
 
 				self.log("info", "API spec reloaded");
-				_parrot.start("API data successfully updated");
-				
-				setTimeout(function(){
-					_parrot.stop();
-				}, 1500);
+				_parrot.start("API data successfully updated", 1500);
 				
 				cb(true);
 			});

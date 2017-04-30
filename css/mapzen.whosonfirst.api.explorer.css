@@ -325,3 +325,7 @@ h4 {
 .local:after {
     content: "💼";
 }
+
+#advanced {
+    margin-bottom:2em;
+}

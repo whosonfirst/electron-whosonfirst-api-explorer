@@ -37,7 +37,8 @@
 
 	var _err_remote = false;
 	var _err_local = false;
-	
+
+	var _init = false;
 	var _cache = false;
 	
 	var self = {
@@ -224,6 +225,15 @@
 
 		'is_cache': function(){
 			return _cache;
+		},
+
+		'purge': function(cb){
+
+			lf.clear().then(function(){
+				cb(true);
+			}).catch(function(e){
+				cb(false);
+			});
 		}
 	};
 	
