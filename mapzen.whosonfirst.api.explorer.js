@@ -188,13 +188,20 @@
 			self.toggle_print_button(false);
 
 			var root = document.createElement("div");
-			
-			var h3 = document.createElement("h3");
-			h3.appendChild(document.createTextNode("API Explorer Settings"));
-			root.appendChild(h3);
 
 			var form = document.createElement("form");
 			form.setAttribute("id", "settings-form");
+			
+			var h3 = document.createElement("h3");
+			h3.appendChild(document.createTextNode("API Explorer Settings"));
+
+			var select = document.createElement("select");
+			select.setAttribute("id", "config");
+			select.setAttribute("data-config", "default");
+
+			h3.appendChild(select);
+			
+			form.appendChild(h3);
 
 			var api_key = _cfg.get("api_key");
 			var api_endpoint = _cfg.get("api_endpoint");			
@@ -225,6 +232,9 @@
 			
 			var ep_group = self.input_group_prefs("API endpoint", "api_endpoint", "https://whosonfirst-api.mapzen.com", api_endpoint);
 			form.appendChild(ep_group);
+
+			var nm_group = self.input_group_prefs("Name", "config_name", "Save these settings as a name configuration. Optional", "");
+			form.appendChild(nm_group);
 			
 			var submit = document.createElement("button");
 			submit.setAttribute("type", "submit");
