@@ -992,7 +992,8 @@
 			}
 				
 			var root = document.createElement("div");
-
+			root.setAttribute("id", "root");
+			
 			var h2 = document.createElement("h2");
 			h2.setAttribute("class", "docs");
 			h2.setAttribute("data-method-name", name);
@@ -1043,7 +1044,6 @@
 			req.appendChild(req_body);
 			res.appendChild(res_body);			
 
-			
 			root.appendChild(req);
 			root.appendChild(res);			
 
@@ -1304,6 +1304,28 @@
 
 				var res = document.getElementById("api-response");
 				res.style.display = "block";			
+
+				var root = document.getElementById("root");
+
+				var p = document.createElement("p");
+				p.setAttribute("class", "caveat warning");			
+
+				p.appendChild(document.createTextNode("You can add an API key in the "));
+
+				var b = document.createElement("button");
+				b.setAttribute("class", "btn btn-sm button-settings");
+
+				b.appendChild(document.createTextNode("settings"));
+				
+				b.onclick = function(){
+					self.draw_settings();
+					return false;
+				};
+			
+				p.appendChild(b);
+				
+				p.appendChild(document.createTextNode(" control panel."));
+				root.appendChild(p);
 				
 				return;
 			}
@@ -1319,7 +1341,7 @@
 				res_body.appendChild(document.createTextNode(str));
 
 				var res = document.getElementById("api-response");
-				res.style.display = "block";			
+				res.style.display = "block";
 			};
 
 			var  m = _api.method(method);

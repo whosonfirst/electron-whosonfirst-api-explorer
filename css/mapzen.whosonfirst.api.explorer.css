@@ -329,3 +329,10 @@ h4 {
 #advanced {
     margin-bottom:2em;
 }
+
+.button-settings {
+    border: none;
+    background-color:#fff;
+    padding-left:0;
+    padding-right:0;
+}
