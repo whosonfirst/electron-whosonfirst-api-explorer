@@ -1331,11 +1331,16 @@
 			}
 			
 			var on_response = function(rsp){
-
+				
 				_parrot.stop();
 				self.toggle_print_button(true);
 
-				var str = JSON.stringify(rsp, undefined, 2);
+				var fmt = data.get("format");				
+				var str = rsp;
+				
+				if ((fmt == "") || (fmt == "json") || (fmt == "geojson")){
+					str = JSON.stringify(rsp, undefined, 2);
+				}
 				
 				var res_body = document.getElementById("api-response-body");
 				res_body.appendChild(document.createTextNode(str));
