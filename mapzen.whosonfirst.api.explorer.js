@@ -312,6 +312,8 @@
 			var data = new FormData(form);
 
 			var api_key = data.get("api_key");
+			api_key = api_key.trim();
+			
 			_cfg.set("api_key", api_key);
 			
 			_api.set_handler('authentication', function(){
@@ -331,6 +333,8 @@
 			}
 			
 			var api_endpoint = data.get("api_endpoint");
+			api_endpoint = api_endpoint.trim();
+			
 			_cfg.set("api_endpoint", api_endpoint);
 
 			_api.set_handler('endpoint', function(){
@@ -347,7 +351,7 @@
 				_parrot.stop();
 
 				if ((! _spec.loaded()) || (_spec.is_cache())){
-					self.reload_spec();
+					self.reload_spec(function(){});
 				}
 				
 			}, 1500);
