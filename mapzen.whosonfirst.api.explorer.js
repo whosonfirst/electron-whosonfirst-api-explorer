@@ -63,6 +63,20 @@
 				var el = document.getElementById("show-settings");
 				self.append_class(el, "warning");
 			}
+
+			if (_cfg.has("api_endpoint")){
+				
+				_api.set_handler('endpoint', function(){
+					return _cfg.get("api_endpoint");
+				});	
+			}
+			
+			else {
+				self.log("warning", "Missing API endpoint.");
+				
+				var el = document.getElementById("show-settings");
+				self.append_class(el, "warning");
+			}
 			
 			window.addEventListener("offline", function(e){
 				self.log("info", "Network became unavailable");				
