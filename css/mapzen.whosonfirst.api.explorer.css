@@ -5,6 +5,20 @@ body {
     line-height: 1.5em;
 }
 
+/* unsupported in chromium? */
+
+input[type=text]:not([value=""]) {
+    border-width:2px;
+    background-color:#fafad2;
+    border-color:#000;    
+}
+
+input[type=text]:hover {
+    border-width:2px;
+    border-color:#000;
+    background-color:#fafad2;
+}
+
 .api-param-name {
     font-weight: 700;
     // background-color: #000 !important;
