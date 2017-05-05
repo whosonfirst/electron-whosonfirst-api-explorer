@@ -29,7 +29,7 @@
 	var _spec = undefined;
 	var _cfg = undefined;
 	var _log = [];
-	
+
 	var _parrot = require("./mapzen.whosonfirst.partyparrot.js");
 	
 	var self = {
@@ -224,12 +224,11 @@
 				var link = document.createElement("a");
 				link.appendChild(document.createTextNode("https://www.mapzen.com/developers"));
 
-				/*
 				link.onclick = function(){
-					_shell.openExternal("https://www.mapzen.com/developers");
+					const {shell} = require('electron');
+					shell.openExternal("https://www.mapzen.com/developers");
 					return false;
 				};
-				*/
 				
 				p.appendChild(link);
 
