@@ -95,14 +95,12 @@ app.on('ready', function(){
 				{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
 			]
 		},
-		/*
 		{
 			label: "Mapzen",
 			submenu: [
-				{ label: "Settings", accelerator: "Command+D", click: function() { createSettingsWindow() }},
+				{ label: "Settings", accelerator: "Ctrl+M", click: function() { createSettingsWindow() }},
 			]
 		},
-		*/
 		{
 			label: "Developer",
 			submenu: [
