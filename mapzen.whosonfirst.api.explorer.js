@@ -29,7 +29,7 @@
 	var _spec = undefined;
 	var _cfg = undefined;
 	var _log = [];
-	
+
 	var _parrot = require("./mapzen.whosonfirst.partyparrot.js");
 	
 	var self = {
@@ -59,6 +59,20 @@
 			
 			else {
 				self.log("warning", "Missing API key.");
+				
+				var el = document.getElementById("show-settings");
+				self.append_class(el, "warning");
+			}
+
+			if (_cfg.has("api_endpoint")){
+				
+				_api.set_handler('endpoint', function(){
+					return _cfg.get("api_endpoint");
+				});	
+			}
+			
+			else {
+				self.log("warning", "Missing API endpoint.");
 				
 				var el = document.getElementById("show-settings");
 				self.append_class(el, "warning");
@@ -217,12 +231,11 @@
 				var link = document.createElement("a");
 				link.appendChild(document.createTextNode("https://www.mapzen.com/developers"));
 
-				/*
 				link.onclick = function(){
-					_shell.openExternal("https://www.mapzen.com/developers");
+					const {shell} = require('electron');
+					shell.openExternal("https://www.mapzen.com/developers");
 					return false;
 				};
-				*/
 				
 				p.appendChild(link);
 
@@ -322,6 +335,8 @@
 			var data = new FormData(form);
 
 			var api_key = data.get("api_key");
+			api_key = api_key.trim();
+			
 			_cfg.set("api_key", api_key);
 			
 			_api.set_handler('authentication', function(){
@@ -341,6 +356,8 @@
 			}
 			
 			var api_endpoint = data.get("api_endpoint");
+			api_endpoint = api_endpoint.trim();
+			
 			_cfg.set("api_endpoint", api_endpoint);
 
 			_api.set_handler('endpoint', function(){
@@ -357,7 +374,7 @@
 				_parrot.stop();
 
 				if ((! _spec.loaded()) || (_spec.is_cache())){
-					self.reload_spec();
+					self.reload_spec(function(){});
 				}
 				
 			}, 1500);
@@ -1341,11 +1358,16 @@
 			}
 			
 			var on_response = function(rsp){
-
+				
 				_parrot.stop();
 				self.toggle_print_button(true);
 
-				var str = JSON.stringify(rsp, undefined, 2);
+				var fmt = data.get("format");				
+				var str = rsp;
+				
+				if ((fmt == "") || (fmt == "json") || (fmt == "geojson")){
+					str = JSON.stringify(rsp, undefined, 2);
+				}
 				
 				var res_body = document.getElementById("api-response-body");
 				res_body.appendChild(document.createTextNode(str));
@@ -1609,6 +1631,26 @@
 			input.setAttribute("value", "");
 			input.setAttribute("placeholder", desc);
 
+			// we should be able to do this in CSS with the :empty selector
+			// but it seems like Chromium doesn't support that yet...
+			// (20170505/thisisaaronland)
+
+			var on_input = function(e){
+				
+				var el = e.target;
+				var txt = el.value;
+				
+				if (txt.trim() == ""){
+					self.remove_class(el, "has_value");
+				}
+
+				else {
+					self.append_class(el, "has_value");
+				}
+			};
+			
+			input.oninput = on_input;
+			
 			group.appendChild(label);
 			group.appendChild(input);
 			
@@ -1627,7 +1669,12 @@
 					var input = document.getElementById(id);
 					
 					if (input){
+						
 						input.setAttribute("value", ex);
+
+						// should I really have to do this? see above for
+						// what's going on (20170505/thisisaaronland)
+						on_input({target: input});
 					}
 				};
 				

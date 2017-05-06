@@ -2,7 +2,7 @@ const electron = require('electron')
 
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
-const Tray = electron.Tray
+const Menu = electron.Menu
 
 const ipcMain = require('electron').ipcMain;
 
@@ -23,18 +23,17 @@ was compiled against a different Node.js version using
 NODE_MODULE_VERSION 51. This version of Node.js requires
 NODE_MODULE_VERSION 53. Please try re-compiling or re-installing
 the module (for instance, using `npm rebuild` or`npm install`).
+
+const keytar = require('keytar')	
+api_key = keytar.getPassword("whosonfirst", "api_explorer")
 */
 
-// const keytar = require('keytar')	
-// api_key = keytar.getPassword("whosonfirst", "api_explorer")
-
 let mainWindow
+let settingsWindow
 
-function createWindow () {
+function createMainWindow () {
 
-	const icon_path = path.join(__dirname, 'images/64x64.png')
-	
-	mainWindow = new BrowserWindow({width: 1024, height: 600, icon: icon_path})
+	mainWindow = new BrowserWindow({width: 1024, height: 600})
 	
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, 'index.html'),
@@ -42,36 +41,95 @@ function createWindow () {
 		slashes: true
 	}))
 	
-	// mainWindow.webContents.openDevTools()
-	
-	mainWindow.on('closed', function () {
+	mainWindow.on('closed', function (){
 		mainWindow = null
 	})
 }
 
-app.on('ready', createWindow)
+function createSettingsWindow () {
 
-app.on('window-all-closed', function () {
-	if (process.platform !== 'darwin') {
+	settingsWindow = new BrowserWindow({width: 1024, height: 600})
+	
+	settingsWindow.loadURL(url.format({
+		pathname: path.join(__dirname, 'settings.html'),
+		protocol: 'file:',
+		slashes: true
+	}))
+	
+	settingsWindow.on('closed', function (){
+		settingsWindow = null
+	})
+}
+
+app.on('ready', function(){
+
+	createMainWindow();
+
+	// https://pracucci.com/atom-electron-enable-copy-and-paste.html
+
+	var name = app.getName();
+
+	var about = "About " + name;
+	var hide = "Hide " + name;
+	var quit = "Quit " + name;
+	
+	var template = [
+		{
+			label: "Application",
+			submenu: [
+				{ label: about, selector: "orderFrontStandardAboutPanel:" },
+				{ type: "separator" },
+				{ label: hide, accelerator: "Command+H", click: function() { app.hide(); }},			
+				{ label: quit, accelerator: "Command+Q", click: function() { app.quit(); }}
+			]
+		},
+		{
+			label: "Edit",
+			submenu: [
+				{ label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+				{ label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+				{ type: "separator" },
+				{ label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+				{ label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+				{ label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+				{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+			]
+		},
+		/*
+		{
+			label: "Mapzen",
+			submenu: [
+				{ label: "Settings", accelerator: "Command+D", click: function() { createSettingsWindow() }},
+			]
+		},
+		*/
+		{
+			label: "Developer",
+			submenu: [
+				{ label: "Developer Console", accelerator: "Command+D", click: function() { mainWindow.webContents.openDevTools() }},
+			]
+		}
+	];
+	
+	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+});
+
+app.on('window-all-closed', function (){
+	
+	if (process.platform !== 'darwin'){
 		app.quit();
 	}
 })
 
-app.on('activate', function () {
-	if (mainWindow === null) {
-		createWindow();
+app.on('activate', function (){
+	
+	if (mainWindow === null){
+		createMainWindow();
 	}
 })
 
 ipcMain.on('renderer', (event, arg) => {
 
-	/*
-	if (arg == "question"){
-		const d = require('electron').dialog;
-		d.showMessageBox(mainWindow, {'type': 'question', 'message': 'what', 'buttons': ['submit', 'cancel']})		
-	}
-	*/
-	
 	if (arg == "print"){
 
 		// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/10	
