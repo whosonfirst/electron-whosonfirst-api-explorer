@@ -23,10 +23,10 @@ was compiled against a different Node.js version using
 NODE_MODULE_VERSION 51. This version of Node.js requires
 NODE_MODULE_VERSION 53. Please try re-compiling or re-installing
 the module (for instance, using `npm rebuild` or`npm install`).
-*/
 
-// const keytar = require('keytar')	
-// api_key = keytar.getPassword("whosonfirst", "api_explorer")
+const keytar = require('keytar')	
+api_key = keytar.getPassword("whosonfirst", "api_explorer")
+*/
 
 let mainWindow
 let settingsWindow
@@ -41,7 +41,7 @@ function createMainWindow () {
 		slashes: true
 	}))
 	
-	mainWindow.on('closed', function () {
+	mainWindow.on('closed', function (){
 		mainWindow = null
 	})
 }
@@ -56,7 +56,7 @@ function createSettingsWindow () {
 		slashes: true
 	}))
 	
-	settingsWindow.on('closed', function () {
+	settingsWindow.on('closed', function (){
 		settingsWindow = null
 	})
 }
@@ -112,30 +112,24 @@ app.on('ready', function(){
 	];
 	
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-	
 });
 
-app.on('window-all-closed', function () {
-	if (process.platform !== 'darwin') {
+app.on('window-all-closed', function (){
+	
+	if (process.platform !== 'darwin'){
 		app.quit();
 	}
 })
 
-app.on('activate', function () {
-	if (mainWindow === null) {
+app.on('activate', function (){
+	
+	if (mainWindow === null){
 		createMainWindow();
 	}
 })
 
 ipcMain.on('renderer', (event, arg) => {
 
-	/*
-	if (arg == "question"){
-		const d = require('electron').dialog;
-		d.showMessageBox(mainWindow, {'type': 'question', 'message': 'what', 'buttons': ['submit', 'cancel']})		
-	}
-	*/
-	
 	if (arg == "print"){
 
 		// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/10	
