@@ -5,18 +5,33 @@ body {
     line-height: 1.5em;
 }
 
-/* unsupported in chromium? */
+input[type=text].has_value {
+    border-width:2px;
+    border-color:#000;
+    background-color:#fafad2;
+}
 
-input[type=text]:not([value=""]) {
+/* 
+
+unsupported in chromium? for now we toggle in/out a 'has_value'
+class defined above in JS... (20170505/thisisaaronland)
+
+input[type=text]: {
     border-width:2px;
     background-color:#fafad2;
     border-color:#000;    
 }
 
+input[type=text]:empty {
+    border-width:1px;
+    border-color:#ccc;    
+}
+
+*/
+
 input[type=text]:hover {
     border-width:2px;
     border-color:#000;
-    background-color:#fafad2;
 }
 
 .api-param-name {

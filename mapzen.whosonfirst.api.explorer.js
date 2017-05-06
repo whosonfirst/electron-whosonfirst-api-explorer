@@ -1621,6 +1621,26 @@
 			input.setAttribute("value", "");
 			input.setAttribute("placeholder", desc);
 
+			// we should be able to do this in CSS with the :empty selector
+			// but it seems like Chromium doesn't support that yet...
+			// (20170505/thisisaaronland)
+
+			var on_input = function(e){
+				
+				var el = e.target;
+				var txt = el.value;
+				
+				if (txt.trim() == ""){
+					self.remove_class(el, "has_value");
+				}
+
+				else {
+					self.append_class(el, "has_value");
+				}
+			};
+			
+			input.oninput = on_input;
+			
 			group.appendChild(label);
 			group.appendChild(input);
 			
@@ -1639,7 +1659,12 @@
 					var input = document.getElementById(id);
 					
 					if (input){
+						
 						input.setAttribute("value", ex);
+
+						// should I really have to do this? see above for
+						// what's going on (20170505/thisisaaronland)
+						on_input({target: input});
 					}
 				};
 				

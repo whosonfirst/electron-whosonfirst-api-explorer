@@ -61,14 +61,17 @@ app.on('ready', function(){
 	var hide = "Hide " + name;
 	var quit = "Quit " + name;
 	
-	var template = [{
-		label: "Application",
-		submenu: [
-			{ label: about, selector: "orderFrontStandardAboutPanel:" },
-			{ type: "separator" },
-			{ label: hide, accelerator: "Command+H", click: function() { app.hide(); }},			
-			{ label: quit, accelerator: "Command+Q", click: function() { app.quit(); }}
-		]}, {
+	var template = [
+		{
+			label: "Application",
+			submenu: [
+				{ label: about, selector: "orderFrontStandardAboutPanel:" },
+				{ type: "separator" },
+				{ label: hide, accelerator: "Command+H", click: function() { app.hide(); }},			
+				{ label: quit, accelerator: "Command+Q", click: function() { app.quit(); }}
+			]
+		},
+		{
 			label: "Edit",
 			submenu: [
 				{ label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
@@ -78,13 +81,19 @@ app.on('ready', function(){
 				{ label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
 				{ label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
 				{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-			]}
-		       ];
+			]
+		},
+		{
+			label: "Developer",
+			submenu: [
+				{ label: "Developer Console", accelerator: "Command+D", click: function() { mainWindow.webContents.openDevTools() }},
+			]
+		}
+	];
 	
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 	
 });
-
 
 app.on('window-all-closed', function () {
 	if (process.platform !== 'darwin') {
