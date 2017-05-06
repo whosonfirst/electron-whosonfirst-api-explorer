@@ -29,12 +29,11 @@ the module (for instance, using `npm rebuild` or`npm install`).
 // api_key = keytar.getPassword("whosonfirst", "api_explorer")
 
 let mainWindow
+let settingsWindow
 
-function createWindow () {
+function createMainWindow () {
 
-	const icon_path = path.join(__dirname, 'images/64x64.png')
-	
-	mainWindow = new BrowserWindow({width: 1024, height: 600, icon: icon_path})
+	mainWindow = new BrowserWindow({width: 1024, height: 600})
 	
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, 'index.html'),
@@ -42,16 +41,29 @@ function createWindow () {
 		slashes: true
 	}))
 	
-	// mainWindow.webContents.openDevTools()
-	
 	mainWindow.on('closed', function () {
 		mainWindow = null
 	})
 }
 
+function createSettingsWindow () {
+
+	settingsWindow = new BrowserWindow({width: 1024, height: 600})
+	
+	settingsWindow.loadURL(url.format({
+		pathname: path.join(__dirname, 'settings.html'),
+		protocol: 'file:',
+		slashes: true
+	}))
+	
+	settingsWindow.on('closed', function () {
+		settingsWindow = null
+	})
+}
+
 app.on('ready', function(){
 
-	createWindow();
+	createMainWindow();
 
 	// https://pracucci.com/atom-electron-enable-copy-and-paste.html
 
@@ -83,6 +95,14 @@ app.on('ready', function(){
 				{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
 			]
 		},
+		/*
+		{
+			label: "Mapzen",
+			submenu: [
+				{ label: "Settings", accelerator: "Command+D", click: function() { createSettingsWindow() }},
+			]
+		},
+		*/
 		{
 			label: "Developer",
 			submenu: [
@@ -103,7 +123,7 @@ app.on('window-all-closed', function () {
 
 app.on('activate', function () {
 	if (mainWindow === null) {
-		createWindow();
+		createMainWindow();
 	}
 })
 
