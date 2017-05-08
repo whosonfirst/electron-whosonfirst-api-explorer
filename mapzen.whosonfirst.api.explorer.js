@@ -103,7 +103,8 @@
 				}
 				
 				if (! _cfg.has("api_key")){
-					self.draw_settings();
+					// self.draw_settings();
+					alert("no api key");
 					return;
 				}
 				
@@ -196,7 +197,8 @@
 			self.clear_all();
 			self.draw_main(root);
 		},
-		
+
+		/*
 		'draw_settings': function(){
 
 			self.toggle_print_button(false);
@@ -381,6 +383,8 @@
 			
 			return false;			
 		},
+		
+		*/
 		
 		'draw_methods_list': function(){
 			
@@ -1345,7 +1349,8 @@
 				b.appendChild(document.createTextNode("settings"));
 				
 				b.onclick = function(){
-					self.draw_settings();
+					alert("settings!");
+					// self.draw_settings();
 					return false;
 				};
 			

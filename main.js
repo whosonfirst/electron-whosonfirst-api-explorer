@@ -130,6 +130,11 @@ app.on('activate', function (){
 
 ipcMain.on('renderer', (event, arg) => {
 
+	if (arg == "settings"){
+		createSettingsWindow();
+		return;
+	}
+	
 	if (arg == "print"){
 
 		// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/10	

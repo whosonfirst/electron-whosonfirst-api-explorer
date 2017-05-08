@@ -12,8 +12,10 @@ const app = electron.app || electron.remote.app;
 const udata = app.getPath("userData");
 
 var show_s = document.getElementById("show-settings");
-show_s.onclick = function(){ explorer.draw_settings(); };
-	
+show_s.onclick = function(){ ipcRenderer.send('renderer', 'settings'); };
+
+// show_s.onclick = function(){ explorer.draw_settings(); };
+
 var show_m = document.getElementById("show-methods");
 show_m.onclick = function(){ explorer.draw_methods_list(); };
 
