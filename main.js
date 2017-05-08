@@ -55,6 +55,8 @@ function createSettingsWindow () {
 		protocol: 'file:',
 		slashes: true
 	}))
+
+	settingsWindow.webContents.openDevTools();
 	
 	settingsWindow.on('closed', function (){
 		settingsWindow = null

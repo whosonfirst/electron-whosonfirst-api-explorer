@@ -1,0 +1,13 @@
+#settings {
+    padding-left:2em;
+    padding-right:2em;    
+    
+}
+
+#settings-new {
+    display:none;
+}
+
+#settings-remove {
+    display:none;
+}

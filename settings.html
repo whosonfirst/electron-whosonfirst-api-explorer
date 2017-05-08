@@ -6,12 +6,43 @@
 
     <link rel="stylesheet" type="text/css" href="css/mapzen.styleguide.css" />
     <link rel="stylesheet" type="text/css" href="css/mapzen.whosonfirst.api.explorer.css" />
-    <link rel="stylesheet" href="css/mapzen.whosonfirst.api.explorer.print.css" type="text/css" media="print"/>    
+    <link rel="stylesheet" type="text/css" href="css/mapzen.whosonfirst.api.settings.css" />    
   </head>
   <body>
-
-    <h3>Settings</h3>
     
+    <div class="row" id="settings">
+      <div class="col-md-12">
+	
+	<h3>
+	  Settings
+	  <select id="settings-select">
+	  </select>
+	</h3>
+	
+	<form class="form" id="settings-form">
+	  
+	  <div id="id" class="form-group">
+	    <label for="name">Name</label>
+	    <input type="text" id="name" placeholder="A name" class="form-control" />
+	  </div>
+	  
+	  <div id="id" class="form-group">
+	    <label for="api_key">API key</label>
+	    <input type="text" id="api_key" placeholder="A valid Mapzen API key" class="form-control" />
+	  </div>
+	  
+	  <div id="id" class="form-group">
+	    <label for="endpoint">Endpoint</label>
+	    <input type="text" id="endpoint" placeholder="A valid Mapzen API endpoint" class="form-control" />
+	  </div>
+	  
+	  <button class="btn btn-default submit-button" id="settings-save">Save</button>
+	  <button class="btn btn-default submit-button" id="settings-remove">Remove</button>      
+	  
+	</form>
+      </div>
+    </div>
+
   </body>
 
   <script>
