@@ -1,3 +1,4 @@
+// https://github.com/nathanbuchar/electron-settings/wiki/API-documentation
 const settings = require('electron-settings');
 
 function save_settings(){
@@ -24,11 +25,21 @@ function save_settings(){
 
 function delete_settings(){
 
-	alert("please write me");
-	return false;
+	var name = document.getElementById("name");
+	name = name.value;
+
+	var msg = "Are you sure you want to remove the API settings named '" + name + "' ?";
+	
+	if (! confirm(msg)){
+		return false;
+	}
+
+	settings.delete(name);
+	reload_settings();
 }
 
 function load_settings(name){
+	
 	var config = settings.get(name);
 
 	var name_el = document.getElementById("name");
@@ -42,8 +53,18 @@ function load_settings(name){
 	key_el.value = config.api_key;	
 	
 	var delete_button = document.getElementById("settings-remove");
-	delete_button.onclick = delete_settings;
 	delete_button.style.display = "inline";
+
+	delete_button.onclick = function(){
+
+		try {
+			delete_settings();
+		} catch (e) {
+			console.log(e);
+		}
+
+		return false;
+	};
 }
 
 function new_settings(){
@@ -62,42 +83,52 @@ function new_settings(){
 function reload_settings(){
 
 	var all = settings.getAll();
-	var count = 0;
+	var configs = [];
+
+	for (name in all){
+		configs.push(name);
+	}
+
+	configs.sort();
+
+	var count = configs.length;
 
 	var select = document.getElementById("settings-select");
 	select.innerHTML = "";
-	
-	for (name in all){
 
-		var option = document.createElement("option");
-		option.setAttribute("value", name);
-		option.appendChild(document.createTextNode(name));
+	if (count) {
 
-		select.appendChild(option);
-		select.onchange = function(e){
+		for (var i=0; i < count; i++){
 
-			var el = e.target;
-			var name = el.options[el.selectedIndex].value;
+			var name = configs[i];
 
-			if (name == -1){
-				new_settings();
-				return;
-			}
-
-			load_settings(name);
-		};
-		
-		count += 1;
-	}
-	
-	if (count){
+			var option = document.createElement("option");
+			option.setAttribute("value", name);
+			option.appendChild(document.createTextNode(name));
+			
+			select.appendChild(option);
+			select.onchange = function(e){
+				
+				var el = e.target;
+				var name = el.options[el.selectedIndex].value;
+				
+				if (name == -1){
+					new_settings();
+					return;
+				}
+				
+				load_settings(name);
+			};
+		}
 
 		var option = document.createElement("option");
 		option.setAttribute("value", -1);
 		option.appendChild(document.createTextNode("create new settings"));
-
-		select.appendChild(option);
+		
+		select.appendChild(option);	
 		select.style.display = "inline";
+		
+		load_settings(configs[0]);
 	}
 	
 	else {
@@ -107,8 +138,10 @@ function reload_settings(){
 		
 		endpoint_el.value = "https://whosonfirst-api.mapzen.com";
 		name_el.value = "default";
-	}
 
+		select.style.display = "none";		
+	}
+	
 	var save_button = document.getElementById("settings-save");
 	save_button.onclick = function(){
 
