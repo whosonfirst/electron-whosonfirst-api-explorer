@@ -58,6 +58,14 @@ input[type=text]:hover {
     padding:1%;
 }
 
+#show-settings:after {
+    padding-left:.5em;
+    font-size:.8em !important;
+    font-weight: 200 !important;
+    content: attr(data-config-name);
+    color:darkslategrey;
+}
+
 #sidebar {
     position: fixed;
     font-side: small;

@@ -37,9 +37,6 @@ function get_named_config(name){
 
 function remove_named_config(name){
 
-	var configs = get_configs();
-	del(configs[name]);
-
 	var path = [ "configs", name ];
 	path = path.join(".");
 	
@@ -104,8 +101,12 @@ function delete_settings(){
 }
 
 function load_settings(name){
+
+	var d = settings.get("default");
 	
 	var config = get_named_config(name);
+
+	console.log("LOAD " + name + " ... " + d);
 	
 	var name_el = document.getElementById("name");
 	name_el.setAttribute("disabled", "disabled");
@@ -164,10 +165,16 @@ function reload_settings(){
 	var count = config_names.length;
 	
 	var default_config = settings.get("default");
+	var current_config = settings.get("current");	
 
+	// console.log("default " + default_config);
+	// console.log("current " + current_config);	
+	
 	var select = document.getElementById("settings-select");
 	select.innerHTML = "";
 
+	var selected = null;
+	
 	if (count) {
 
 		for (var i=0; i < count; i++){
@@ -178,8 +185,19 @@ function reload_settings(){
 			option.setAttribute("value", name);
 			option.appendChild(document.createTextNode(name));
 
-			if (name == default_config){
+			if (name == current_config){
+
+				if (selected){
+					selected.removeAttribute("selected");
+				}
+				
 				option.setAttribute("selected", "selected");
+				selected = option;
+			}
+			
+			if ((name == default_config) && (! selected)){
+				option.setAttribute("selected", "selected");
+				selected = option;
 			}
 			
 			select.appendChild(option);
@@ -192,10 +210,10 @@ function reload_settings(){
 					new_settings();
 					return;
 				}
-				
-				load_settings(name);
 
 				settings.set("current", name);
+				
+				load_settings(name);
 			};
 		}
 
@@ -206,10 +224,14 @@ function reload_settings(){
 		select.appendChild(option);	
 		select.style.display = "inline";
 
-		if (default_config){
-			load_settings(default_config);
+		if (current_config){
+			load_settings(current_config);
 		}
 
+		else if (default_config){
+			load_settings(default_config);
+		}
+		
 		else {
 			load_settings(config_names[0]);
 		}
@@ -240,5 +262,3 @@ function reload_settings(){
 }
 
 reload_settings();
-
-// console.log(settings.getAll())

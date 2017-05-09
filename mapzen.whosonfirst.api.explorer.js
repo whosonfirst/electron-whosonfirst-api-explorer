@@ -50,18 +50,13 @@
 				self.network_notice(false);
 			}
 
-			// PLEASE MAKE ME GOOD
-			var current = "prod";
-
-			var config = _settings.get(current);
-
+			var config = self.config();
+			
 			if ((config) && (config.api_key)){
 				
 				_api.set_handler('authentication', function(){
 					
 					var key = config.api_key;
-					key = key.trim();
-					
 					return key;
 				});	
 			}
@@ -86,6 +81,11 @@
 				
 				var el = document.getElementById("show-settings");
 				self.append_class(el, "warning");
+			}
+
+			if ((config) && (config.name)){
+				var s = document.getElementById("show-settings");
+				s.setAttribute("data-config-name", config.name);
 			}
 			
 			window.addEventListener("offline", function(e){
@@ -112,10 +112,7 @@
 					return;
 				}
 
-				// PLEASE MAKE ME GOOD
-				var current = "prod";
-				
-				var config = _settings.get(current);
+				var config = self.config();
 			
 				if ((! config) || (! config.api_key)){
 					alert("no api key");
@@ -1152,10 +1149,7 @@
 				return;
 			}
 
-			// PLEASE MAKE ME GOOD
-			var current = "prod";
-
-			var config = _settings.get(current);
+			var config = self.config();
 			
 			if ((! config) || (! config.api_key)){
 
@@ -1625,8 +1619,40 @@
 
 			c = tmp.join(" ");
 			el.setAttribute("class", c);
+		},
+
+		'config': function(){
+
+			var name = _settings.get("name");
+
+			if (! name){
+				name = _settings.get("default");
+			}
+
+			if (! name){
+
+				var configs = _settings.get("configs");
+
+				for (name in configs){
+					name = name;
+					break;
+				}
+			}
+
+			if (! name){
+				return null;
+			}
+			
+			var path = [ "configs", name ];
+			path = path.join(".");
+
+			// console.log("path is " + path);
+			
+			var config = _settings.get(path);
+			config['name'] = name;
+			
+			return config;
 		}
-		
 	};
 	
 	return self;
