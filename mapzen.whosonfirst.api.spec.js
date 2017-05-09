@@ -43,6 +43,9 @@
 	
 	var self = {
 
+		// please flip all this logic per issue #40
+		// https://github.com/whosonfirst/electron-whosonfirst-api-explorer/issues/40
+		
 		'init': function(api, cb){
 
 			if (navigator.onLine){
