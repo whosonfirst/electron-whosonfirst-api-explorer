@@ -27,16 +27,16 @@
 
 	var _api = undefined;
 	var _spec = undefined;
-	var _cfg = undefined;
+	var _settings = undefined;
 	var _log = [];
 
 	var _parrot = require("./mapzen.whosonfirst.partyparrot.js");
 	
 	var self = {
 
-		'init': function(config, api, spec) {
+		'init': function(settings, api, spec) {
 			
-			_cfg = config;
+			_settings = settings;
 			_api = api;
 			_spec = spec;
 
@@ -50,10 +50,19 @@
 				self.network_notice(false);
 			}
 
-			if (_cfg.has("api_key")){
+			// PLEASE MAKE ME GOOD
+			var current = "prod";
+
+			var config = _settings.get(current);
+
+			if ((config) && (config.api_key)){
 				
 				_api.set_handler('authentication', function(){
-					return _cfg.get("api_key");
+					
+					var key = config.api_key;
+					key = key.trim();
+					
+					return key;
 				});	
 			}
 			
@@ -64,10 +73,11 @@
 				self.append_class(el, "warning");
 			}
 
-			if (_cfg.has("api_endpoint")){
+			if ((config) && (config.endpoint)){
 				
 				_api.set_handler('endpoint', function(){
-					return _cfg.get("api_endpoint");
+					var endpoint = config.endpoint;
+					return endpoint;
 				});	
 			}
 			
@@ -101,9 +111,13 @@
 					self.draw_methods_list();
 					return;
 				}
+
+				// PLEASE MAKE ME GOOD
+				var current = "prod";
 				
-				if (! _cfg.has("api_key")){
-					// self.draw_settings();
+				var config = _settings.get(current);
+			
+				if ((! config) || (! config.api_key)){
 					alert("no api key");
 					return;
 				}
@@ -197,194 +211,6 @@
 			self.clear_all();
 			self.draw_main(root);
 		},
-
-		/*
-		'draw_settings': function(){
-
-			self.toggle_print_button(false);
-
-			var root = document.createElement("div");
-
-			var form = document.createElement("form");
-			form.setAttribute("id", "settings-form");
-			
-			var h3 = document.createElement("h3");
-			h3.appendChild(document.createTextNode("API Explorer Settings"));
-
-			var select = document.createElement("select");
-			select.setAttribute("id", "config");
-			select.setAttribute("data-config", "default");
-
-			h3.appendChild(select);
-			
-			form.appendChild(h3);
-
-			var api_key = _cfg.get("api_key");
-			var api_endpoint = _cfg.get("api_endpoint");			
-			
-			var key_group = self.input_group_prefs("API key", "api_key", "Please add a valid Mapzen API key", api_key);
-			form.appendChild(key_group);
-
-			if (api_key == ""){
-				var p = document.createElement("p");
-				p.setAttribute("class", "caveat");
-				p.appendChild(document.createTextNode("You can create a new Mapzen API key at "));
-
-				var link = document.createElement("a");
-				link.appendChild(document.createTextNode("https://www.mapzen.com/developers"));
-
-				link.onclick = function(){
-					const {shell} = require('electron');
-					shell.openExternal("https://www.mapzen.com/developers");
-					return false;
-				};
-				
-				p.appendChild(link);
-
-				p.appendChild(document.createTextNode("."));
-				form.appendChild(p);
-			}
-			
-			var ep_group = self.input_group_prefs("API endpoint", "api_endpoint", "https://whosonfirst-api.mapzen.com", api_endpoint);
-			form.appendChild(ep_group);
-
-			var nm_group = self.input_group_prefs("Name", "config_name", "Save these settings as a name configuration. Optional", "");
-			form.appendChild(nm_group);
-			
-			var submit = document.createElement("button");
-			submit.setAttribute("type", "submit");
-			submit.setAttribute("class", "btn btn-default submit-button");			
-			submit.appendChild(document.createTextNode("Save"));
-
-			var onsubmit = function(){
-				self.save_settings();
-				return false;
-			};
-
-			submit.onclick = onsubmit;
-			form.onsubmit = onsubmit;
-
-			form.appendChild(submit);			
-			root.appendChild(form);
-
-			var adv = document.createElement("div");
-			adv.setAttribute("id", "advanced");
-			
-			var h3 = document.createElement("h3");
-			h3.appendChild(document.createTextNode("Advanced"));
-
-			var b = document.createElement("button");
-			b.setAttribute("class", "btn btn-sm");
-			b.appendChild(document.createTextNode("Purge local cache"));
-
-			b.onclick = function(){
-
-				if (! confirm("Are you sure you want to purge the local cache?")){
-					return false;
-				}
-
-				_parrot.start("Purging local cache data");
-				self.log("info", "Purge local cache.");
-				
-				_spec.purge(function(ok){
-
-					_parrot.stop();
-
-					if (! ok){
-
-						_parrot.start("Unable to purge local cache", 2000);
-						self.log("error", "Failed to purge local cache.");
-						
-						return false;
-					}
-
-					_parrot.start("Local cache data is all gone!", 2000);
-					
-					if (navigator.onLine){
-
-						if (confirm("Would you like to reload the API spec?")){
-							self.reload_spec(function(){});
-						}
-
-					}
-				});
-				
-				return false;
-			};
-			
-			adv.appendChild(h3);
-			adv.appendChild(b);
-
-			root.appendChild(adv);
-			
-			self.clear_all();			
-			self.draw_main(root);
-
-			if (api_key == ""){
-
-				self.log("warning", "API key is missing");
-				
-				var el = document.getElementById("label-api_key");
-				self.append_class(el, "warning");
-			}
-		},
-
-		'save_settings': function(){
-
-			self.log("info", "Saved settings.");
-			
-			var form = document.getElementById("settings-form");
-			var data = new FormData(form);
-
-			var api_key = data.get("api_key");
-			api_key = api_key.trim();
-			
-			_cfg.set("api_key", api_key);
-			
-			_api.set_handler('authentication', function(){
-				return api_key;
-			});				
-
-			if (api_key == ""){
-				var el = document.getElementById("show-settings");
-				self.append_class(el, "warning");
-				
-			} else {
-				var el = document.getElementById("show-settings");
-				self.remove_class(el, "warning");
-
-				var el = document.getElementById("label-api_key");
-				self.remove_class(el, "warning");
-			}
-			
-			var api_endpoint = data.get("api_endpoint");
-			api_endpoint = api_endpoint.trim();
-			
-			_cfg.set("api_endpoint", api_endpoint);
-
-			_api.set_handler('endpoint', function(){
-				return api_endpoint;
-			});				
-
-			// TO DO: check whether API endpoint has changed and
-			// reload if true (20170425/thisisaaronland)
-			
-			_parrot.start("API settings have been saved");
-
-			setTimeout(function(){
-				
-				_parrot.stop();
-
-				if ((! _spec.loaded()) || (_spec.is_cache())){
-					self.reload_spec(function(){});
-				}
-				
-			}, 1500);
-			
-			return false;			
-		},
-		
-		*/
 		
 		'draw_methods_list': function(){
 			
@@ -1326,7 +1152,12 @@
 				return;
 			}
 
-			if (! _cfg.has("api_key")){
+			// PLEASE MAKE ME GOOD
+			var current = "prod";
+
+			var config = _settings.get(current);
+			
+			if ((! config) || (! config.api_key)){
 
 				var msg = "Can't execute API request because you haven't added an API key.";
 			

@@ -11,6 +11,8 @@ const electron = require('electron');
 const app = electron.app || electron.remote.app;
 const udata = app.getPath("userData");
 
+const settings = require('electron').remote.require('electron-settings');
+
 var show_s = document.getElementById("show-settings");
 show_s.onclick = function(){ ipcRenderer.send('renderer', 'settings'); };
 
@@ -32,7 +34,5 @@ show_l.onclick = function(){ explorer.draw_log(); };
 // var print_b = document.getElementById("print-button");
 // print_b.onclick = function(){ ipcRenderer.send('renderer', 'print'); };
 
-config.init(udata);
-
-explorer.init(config, api, spec);
+explorer.init(settings, api, spec);
 explorer.start();

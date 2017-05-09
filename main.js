@@ -4,6 +4,8 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
 
+const settings = require('electron-settings');
+
 const ipcMain = require('electron').ipcMain;
 
 const path = require('path')

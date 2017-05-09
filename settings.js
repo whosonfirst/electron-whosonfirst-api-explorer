@@ -1,5 +1,36 @@
-// https://github.com/nathanbuchar/electron-settings/wiki/API-documentation
-const settings = require('electron-settings');
+const settings = require('electron').remote.require('electron-settings');
+
+function get_configs(){
+
+	var configs = settings.get("configs");
+
+	if (! configs){
+		configs = {};
+	}
+
+	return configs;
+}
+
+function set_named_config(name, config){
+
+	var configs = get_configs();
+	configs[name] = config;
+
+	settings.set("configs", configs);
+}
+
+function get_named_config(name){
+	var configs = get_configs();
+	return configs[name];
+}
+
+function remove_named_config(name){
+
+	var configs = get_configs();
+	del(configs[name]);
+
+	settings.set("configs", configs);	
+}
 
 function save_settings(){
 
@@ -12,13 +43,33 @@ function save_settings(){
 	var name = document.getElementById("name");
 	name = name.value;
 
+	api_key = api_key.trim();
+	endpoint = endpoint.trim();
+	name = name.trim();
+
+	// PLEASE VALIDATE ME HERE...
+	
 	var config = {
 		"api_key": api_key,
 		"endpoint": endpoint
 	};
 
-	settings.set(name, config);
-		
+	set_named_config(name, config);
+
+	var is_default = document.getElementById("default");
+
+	if (is_default.checked){
+		settings.set("default", name);
+	}
+
+	else if (settings.get("default") == name){
+		settings.set("default", null);
+	}
+
+	else {}
+
+	settings.set("current", name);
+	
 	reload_settings();
 	return false;
 }
@@ -34,14 +85,16 @@ function delete_settings(){
 		return false;
 	}
 
-	settings.delete(name);
+	remove_named_config(name);
 	reload_settings();
 }
 
 function load_settings(name){
 	
-	var config = settings.get(name);
-
+	var config = get_named_config(name);
+	console.log(name);
+	console.log(config);
+	
 	var name_el = document.getElementById("name");
 	name_el.setAttribute("disabled", "disabled");
 	name_el.value = name;
@@ -51,10 +104,13 @@ function load_settings(name){
 	
 	var key_el = document.getElementById("api_key");		
 	key_el.value = config.api_key;	
+
+	var is_default = document.getElementById("default");
+	is_default.checked = (settings.get("default") == name) ? true : false;
 	
 	var delete_button = document.getElementById("settings-remove");
 	delete_button.style.display = "inline";
-
+	
 	delete_button.onclick = function(){
 
 		try {
@@ -77,21 +133,24 @@ function new_settings(){
 	endpoint_el.value = "";
 	
 	var key_el = document.getElementById("api_key");
-	key_el.value = "";	
+	key_el.value = "";
+
+	var is_default = document.getElementById("default");
+	is_default.checked = false;
 }
 
 function reload_settings(){
 
-	var all = settings.getAll();
-	var configs = [];
+	var configs = get_configs();
+	var config_names = [];
 
-	for (name in all){
-		configs.push(name);
+	for (name in configs){
+		config_names.push(name);
 	}
 
-	configs.sort();
+	config_names.sort();
 
-	var count = configs.length;
+	var count = config_names.length;
 
 	var select = document.getElementById("settings-select");
 	select.innerHTML = "";
@@ -100,7 +159,7 @@ function reload_settings(){
 
 		for (var i=0; i < count; i++){
 
-			var name = configs[i];
+			var name = config_names[i];
 
 			var option = document.createElement("option");
 			option.setAttribute("value", name);
@@ -118,6 +177,8 @@ function reload_settings(){
 				}
 				
 				load_settings(name);
+
+				settings.set("current", name);
 			};
 		}
 
@@ -156,3 +217,5 @@ function reload_settings(){
 }
 
 reload_settings();
+
+// console.log(settings.getAll())
