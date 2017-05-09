@@ -98,6 +98,24 @@
 				self.network_notice(true);
 			});
 
+			_settings.watch("current", function(e){
+
+				var config = self.config();
+
+				_api.set_handler('authentication', function(){					
+					var key = config.api_key;
+					return key;
+				});	
+
+				_api.set_handler('endpoint', function(){					
+					var key = config.endpoint;
+					return key;
+				});	
+				
+				var s = document.getElementById("show-settings");
+				s.setAttribute("data-config-name", config.name);				
+			});
+			
 			self.log("info", "Initialization complete.");
 		},
 
@@ -1623,7 +1641,7 @@
 
 		'config': function(){
 
-			var name = _settings.get("name");
+			var name = _settings.get("current");
 
 			if (! name){
 				name = _settings.get("default");

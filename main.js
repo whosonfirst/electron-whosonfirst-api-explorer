@@ -58,7 +58,7 @@ function createSettingsWindow () {
 		slashes: true
 	}))
 
-	settingsWindow.webContents.openDevTools();
+	// settingsWindow.webContents.openDevTools();
 	
 	settingsWindow.on('closed', function (){
 		settingsWindow = null
