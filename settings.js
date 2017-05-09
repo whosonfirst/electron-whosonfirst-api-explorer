@@ -11,15 +11,21 @@ function get_configs(){
 	return configs;
 }
 
+// Y U NO WORK?
+
 function set_named_config(name, config){
 
 	var configs = get_configs();
 	configs[name] = config;
 
+	console.log("SET " + name);
+	console.log(configs);
+	
 	settings.set("configs", configs);
 }
 
 function get_named_config(name){
+
 	var configs = get_configs();
 	return configs[name];
 }
@@ -141,15 +147,22 @@ function new_settings(){
 
 function reload_settings(){
 
+	console.log("RELOAD");
+	
 	var configs = get_configs();
 	var config_names = [];
 
+	console.log(configs);
 	for (name in configs){
+		console.log(name);
 		config_names.push(name);
 	}
 
 	config_names.sort();
+	console.log(config_names);
 
+	var default_config = settings.get("default");
+	
 	var count = config_names.length;
 
 	var select = document.getElementById("settings-select");
@@ -164,6 +177,10 @@ function reload_settings(){
 			var option = document.createElement("option");
 			option.setAttribute("value", name);
 			option.appendChild(document.createTextNode(name));
+
+			if (name == default_config){
+				option.setAttribute("selected", "selected");
+			}
 			
 			select.appendChild(option);
 			select.onchange = function(e){
@@ -188,8 +205,14 @@ function reload_settings(){
 		
 		select.appendChild(option);	
 		select.style.display = "inline";
-		
-		load_settings(configs[0]);
+
+		if (default_config){
+			load_settings(default_config);
+		}
+
+		else {
+			load_settings(config_names[0]);
+		}
 	}
 	
 	else {
