@@ -11,23 +11,28 @@ function get_configs(){
 	return configs;
 }
 
-// Y U NO WORK?
-
 function set_named_config(name, config){
 
 	var configs = get_configs();
 	configs[name] = config;
 
-	console.log("SET " + name);
-	console.log(configs);
+	// https://github.com/nathanbuchar/electron-settings/wiki/API-documentation#set
 	
-	settings.set("configs", configs);
+	for (k in config) {
+
+		var path = [ "configs", name, k ];
+		path = path.join(".");
+
+		settings.set(path, config[k]);
+	}
 }
 
 function get_named_config(name){
-
-	var configs = get_configs();
-	return configs[name];
+	
+	var path = [ "configs", name ];
+	path = path.join(".");
+	
+	return settings.get(path);
 }
 
 function remove_named_config(name){
@@ -35,7 +40,10 @@ function remove_named_config(name){
 	var configs = get_configs();
 	del(configs[name]);
 
-	settings.set("configs", configs);	
+	var path = [ "configs", name ];
+	path = path.join(".");
+	
+	settings.delete(path);
 }
 
 function save_settings(){
@@ -98,8 +106,6 @@ function delete_settings(){
 function load_settings(name){
 	
 	var config = get_named_config(name);
-	console.log(name);
-	console.log(config);
 	
 	var name_el = document.getElementById("name");
 	name_el.setAttribute("disabled", "disabled");
@@ -147,23 +153,17 @@ function new_settings(){
 
 function reload_settings(){
 
-	console.log("RELOAD");
-	
 	var configs = get_configs();
 	var config_names = [];
 
-	console.log(configs);
 	for (name in configs){
-		console.log(name);
 		config_names.push(name);
 	}
 
 	config_names.sort();
-	console.log(config_names);
-
-	var default_config = settings.get("default");
-	
 	var count = config_names.length;
+	
+	var default_config = settings.get("default");
 
 	var select = document.getElementById("settings-select");
 	select.innerHTML = "";
