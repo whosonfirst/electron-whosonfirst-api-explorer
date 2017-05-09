@@ -45,11 +45,16 @@ function createMainWindow () {
 	
 	mainWindow.on('closed', function (){
 		mainWindow = null
-	})
+	});
 }
 
 function createSettingsWindow () {
 
+	if (settingsWindow){
+		settingsWindow.show();
+		return;
+	}
+	
 	settingsWindow = new BrowserWindow({width: 1024, height: 600})
 	
 	settingsWindow.loadURL(url.format({
@@ -58,11 +63,9 @@ function createSettingsWindow () {
 		slashes: true
 	}))
 
-	// settingsWindow.webContents.openDevTools();
-	
 	settingsWindow.on('closed', function (){
 		settingsWindow = null
-	})
+	});
 }
 
 app.on('ready', function(){
@@ -102,13 +105,16 @@ app.on('ready', function(){
 		{
 			label: "Mapzen",
 			submenu: [
-				{ label: "Settings", accelerator: "Ctrl+M", click: function() { createSettingsWindow() }},
+				{ label: "Settings", accelerator: "Ctrl+M", click: function() { createSettingsWindow();	}},
 			]
 		},
 		{
 			label: "Developer",
 			submenu: [
-				{ label: "Developer Console", accelerator: "Command+D", click: function() { mainWindow.webContents.openDevTools() }},
+				{ label: "Developer Console", accelerator: "Command+D", click: function(){
+					var win = BrowserWindow.getFocusedWindow();
+					if (win){ win.webContents.openDevTools(); }}
+				}
 			]
 		}
 	];
