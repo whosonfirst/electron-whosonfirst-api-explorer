@@ -99,6 +99,19 @@ function delete_settings(){
 	}
 
 	remove_named_config(name);
+
+	var select = document.getElementById("settings-select");
+
+	console.log(select);
+	console.log(select.options);	
+	console.log(select.selectedIndex);
+	
+	var current = select.options[ select.selectedIndex ];
+
+	current = (current) ? current.value : null;
+	console.log("set current as " + current);
+	
+	settings.set("current", current);
 	reload_settings();
 }
 
