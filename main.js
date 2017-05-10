@@ -42,6 +42,8 @@ function createMainWindow () {
 		protocol: 'file:',
 		slashes: true
 	}))
+
+	mainWindow.webContents.openDevTools();
 	
 	mainWindow.on('closed', function (){
 		mainWindow = null
@@ -63,6 +65,8 @@ function createSettingsWindow () {
 		slashes: true
 	}))
 
+	settingsWindow.webContents.openDevTools();
+	
 	settingsWindow.on('closed', function (){
 		settingsWindow = null
 	});

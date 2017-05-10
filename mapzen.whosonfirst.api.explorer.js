@@ -1641,6 +1641,11 @@
 
 		'config': function(){
 
+			// first just get all the possible configs and
+			// sort them alphabetically - this is in case
+			// we can't find the "current" config or one
+			// hasn't been set yet
+			
 			var configs = _settings.get("configs");
 			var possible = [];
 			
@@ -1649,6 +1654,10 @@
 			}
 
 			possible.sort();
+
+			// first try getting the current setting - if
+			// it's not set then use first of any possible
+			// configs
 			
 			var name = _settings.get("current");
 
@@ -1659,15 +1668,19 @@
 			if (! name){
 				name = possible[0];
 			}
+
+			// actually try to _get_ the config that maps
+			// to the value of 'current'
 			
 			var path = [ "configs", name ];
 			path = path.join(".");
 
 			var config = _settings.get(path);
-			
-			console.log("path is " + path);
-			console.log(config);
 
+			// if there isn't one, try again why the first
+			// possible - maybe repeat this with all the
+			// possible configs?
+			
 			if (! config){
 
 				name = possible[0];
@@ -1681,8 +1694,12 @@
 			if (! config){
 				return nul;;
 			}
+
+			// okay!
 			
 			config['name'] = name;
+
+			_settings.set("current", name);
 			return config;
 		}
 	};

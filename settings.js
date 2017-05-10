@@ -86,12 +86,7 @@ function delete_settings(){
 
 	remove_named_config(name);
 
-	var select = document.getElementById("settings-select");
-	var current = select.options[ select.selectedIndex ];
-
-	current = (current) ? current.value : null;
-	
-	settings.set("current", current);
+	settings.set("current", null);
 	reload_settings();
 }
 
@@ -99,6 +94,11 @@ function load_settings(name){
 
 	var config = get_named_config(name);
 
+	if (! config){
+		new_settings();
+		return;
+	}
+	
 	var name_el = document.getElementById("name");
 	name_el.setAttribute("disabled", "disabled");
 	name_el.value = name;
@@ -112,16 +112,7 @@ function load_settings(name){
 	var delete_button = document.getElementById("settings-remove");
 	delete_button.style.display = "inline";
 	
-	delete_button.onclick = function(){
-
-		try {
-			delete_settings();
-		} catch (e) {
-			console.log(e);
-		}
-
-		return false;
-	};
+	delete_button.onclick = delete_settings;
 }
 
 function new_settings(){
@@ -188,7 +179,6 @@ function reload_settings(){
 				}
 
 				settings.set("current", name);
-				
 				load_settings(name);
 			};
 		}
@@ -221,16 +211,7 @@ function reload_settings(){
 	}
 	
 	var save_button = document.getElementById("settings-save");
-	save_button.onclick = function(){
-
-		try {
-			save_settings();
-		} catch (e) {
-			console.log(e);
-		}
-
-		return false;
-	}
+	save_button.onclick = save_settings;
 }
 
 reload_settings();
