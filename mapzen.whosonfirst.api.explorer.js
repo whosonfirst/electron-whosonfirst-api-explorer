@@ -1641,34 +1641,48 @@
 
 		'config': function(){
 
+			var configs = _settings.get("configs");
+			var possible = [];
+			
+			for (name in configs){
+				possible.push(name);
+			}
+
+			possible.sort();
+			
 			var name = _settings.get("current");
 
-			if (! name){
-				name = _settings.get("default");
-			}
-
-			if (! name){
-
-				var configs = _settings.get("configs");
-
-				for (name in configs){
-					name = name;
-					break;
-				}
-			}
-
-			if (! name){
+			if ((! name) && (possible.length == 0)){
 				return null;
+			}
+
+			if (! name){
+				name = possible[0];
 			}
 			
 			var path = [ "configs", name ];
 			path = path.join(".");
 
-			// console.log("path is " + path);
-			
 			var config = _settings.get(path);
-			config['name'] = name;
 			
+			console.log("path is " + path);
+			console.log(config);
+
+			if (! config){
+
+				name = possible[0];
+				
+				path = [ "configs", name ];
+				path = path.join(".");
+
+				config = _settings.get(path);
+			}
+
+			if (! config){
+				return nul;;
+			}
+			
+			config['name'] = name;
 			return config;
 		}
 	};

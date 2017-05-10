@@ -67,20 +67,6 @@ function save_settings(){
 
 	set_named_config(name, config);
 
-	/*
-	var is_default = document.getElementById("default");
-
-	if (is_default.checked){
-		settings.set("default", name);
-	}
-
-	else if (settings.get("default") == name){
-		settings.set("default", null);
-	}
-
-	else {}
-	*/
-	
 	settings.set("current", name);
 	
 	reload_settings();
@@ -101,15 +87,9 @@ function delete_settings(){
 	remove_named_config(name);
 
 	var select = document.getElementById("settings-select");
-
-	console.log(select);
-	console.log(select.options);	
-	console.log(select.selectedIndex);
-	
 	var current = select.options[ select.selectedIndex ];
 
 	current = (current) ? current.value : null;
-	console.log("set current as " + current);
 	
 	settings.set("current", current);
 	reload_settings();
@@ -117,8 +97,6 @@ function delete_settings(){
 
 function load_settings(name){
 
-	var d = settings.get("default");
-	
 	var config = get_named_config(name);
 
 	var name_el = document.getElementById("name");
@@ -131,9 +109,6 @@ function load_settings(name){
 	var key_el = document.getElementById("api_key");		
 	key_el.value = config.api_key;	
 
-	// var is_default = document.getElementById("default");
-	// is_default.checked = (settings.get("default") == name) ? true : false;
-	
 	var delete_button = document.getElementById("settings-remove");
 	delete_button.style.display = "inline";
 	
@@ -160,9 +135,6 @@ function new_settings(){
 	
 	var key_el = document.getElementById("api_key");
 	key_el.value = "";
-
-	// var is_default = document.getElementById("default");
-	// is_default.checked = false;
 }
 
 function reload_settings(){
@@ -177,12 +149,8 @@ function reload_settings(){
 	config_names.sort();
 	var count = config_names.length;
 	
-	var default_config = settings.get("default");
 	var current_config = settings.get("current");	
 
-	// console.log("default " + default_config);
-	// console.log("current " + current_config);	
-	
 	var select = document.getElementById("settings-select");
 	select.innerHTML = "";
 
@@ -207,12 +175,7 @@ function reload_settings(){
 				option.setAttribute("selected", "selected");
 				selected = option;
 			}
-			
-			if ((name == default_config) && (! selected)){
-				option.setAttribute("selected", "selected");
-				selected = option;
-			}
-			
+						
 			select.appendChild(option);
 			select.onchange = function(e){
 				
@@ -241,10 +204,6 @@ function reload_settings(){
 			load_settings(current_config);
 		}
 
-		else if (default_config){
-			load_settings(default_config);
-		}
-		
 		else {
 			load_settings(config_names[0]);
 		}
