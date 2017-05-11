@@ -58,6 +58,21 @@ function save_settings(){
 	endpoint = endpoint.trim();
 	name = name.trim();
 
+	if (api_key == ""){
+		alert("API key can not be empty.");
+		return false;
+	}
+	
+	if (endpoint == ""){
+		alert("API endpoint can not be empty.");
+		return false;
+	}
+
+	if (name == ""){
+		alert("Name can not be empty.");
+		return false;
+	}
+	
 	// PLEASE VALIDATE ME HERE...
 	
 	var config = {
@@ -122,7 +137,7 @@ function new_settings(){
 	name_el.value = "";
 	
 	var endpoint_el = document.getElementById("endpoint");
-	endpoint_el.value = "";
+	endpoint_el.value = "https://whosonfirst-api.mapzen.com";
 	
 	var key_el = document.getElementById("api_key");
 	key_el.value = "";

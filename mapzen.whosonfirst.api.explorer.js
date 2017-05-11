@@ -100,20 +100,35 @@
 
 			_settings.watch("current", function(e){
 
+				var el = document.getElementById("show-settings");
 				var config = self.config();
 
-				_api.set_handler('authentication', function(){					
-					var key = config.api_key;
+				var key = "";
+				var ep = "";
+				
+				if (config){
+				
+					key = config.api_key;
+					ep = config.endpoint;
+					
+					el.setAttribute("data-config-name", config.name);
+					self.remove_class(el, "warning");
+				}
+
+				else {
+
+					el.setAttribute("data-config-name", "");					
+					self.append_class(el, "warning");
+				}
+				
+				_api.set_handler('authentication', function(){
 					return key;
 				});	
 
-				_api.set_handler('endpoint', function(){					
-					var key = config.endpoint;
-					return key;
-				});	
+				_api.set_handler('endpoint', function(){
+					return ep;
+				});
 				
-				var s = document.getElementById("show-settings");
-				s.setAttribute("data-config-name", config.name);				
 			});
 			
 			self.log("info", "Initialization complete.");
