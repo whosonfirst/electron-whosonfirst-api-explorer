@@ -36,6 +36,10 @@ npm start
 
 Pre-compiled native binaries are on the list but they haven't happened yet. Sorry.
 
+## What's up with the application icon?
+
+`※` is the Unicode character for a [reference mark](https://thisisaaronland.github.io/unicode-table/#8251).
+
 ## See also
 
 * https://mapzen.com/blog/whosonfirst-api-explorer/
